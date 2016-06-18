@@ -23,7 +23,7 @@ Public Enum PolicyRegistryValueType
     Numeric
     Text
 End Enum
-Public Class PolicyElement
+Public MustInherit Class PolicyElement
     Public ID As String
     Public ClientExtension As Boolean
     Public RegistryKey As String

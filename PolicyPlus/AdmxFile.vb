@@ -107,12 +107,6 @@ Public Class AdmxFile
                         admx.Categories.Add(category)
                     Next
                 Case "policies"
-                    Dim attributeOrNull = Function(Node As XmlNode, Attribute As String) As String
-                                              If Node.Attributes(Attribute) Is Nothing Then Return Nothing Else Return Node.Attributes(Attribute).Value
-                                          End Function
-                    Dim attributeOrDefault = Function(Node As XmlNode, Attribute As String, DefaultVal As Object) As Object
-                                                 If Node.Attributes(Attribute) Is Nothing Then Return DefaultVal Else Return Node.Attributes(Attribute).Value
-                                             End Function
                     Dim loadRegItem = Function(Node As XmlNode) As PolicyRegistryValue
                                           Dim regItem As New PolicyRegistryValue
                                           For Each subElement As XmlNode In Node.ChildNodes
@@ -133,13 +127,13 @@ Public Class AdmxFile
                                       End Function
                     Dim loadOneRegList = Function(Node As XmlNode) As PolicyRegistrySingleList
                                              Dim singleList As New PolicyRegistrySingleList
-                                             singleList.DefaultRegistryKey = attributeOrNull(Node, "defaultKey")
+                                             singleList.DefaultRegistryKey = AttributeOrNull(Node, "defaultKey")
                                              singleList.AffectedValues = New List(Of PolicyRegistryListEntry)
                                              For Each itemElement As XmlNode In Node.ChildNodes
                                                  If itemElement.LocalName <> "item" Then Continue For
                                                  Dim listEntry As New PolicyRegistryListEntry
                                                  listEntry.RegistryValue = itemElement.Attributes("valueName").Value
-                                                 listEntry.RegistryKey = attributeOrNull(itemElement, "key")
+                                                 listEntry.RegistryKey = AttributeOrNull(itemElement, "key")
                                                  For Each valElement As XmlNode In itemElement.ChildNodes
                                                      If valElement.LocalName = "value" Then
                                                          listEntry.Value = loadRegItem(valElement)
@@ -180,9 +174,9 @@ Public Class AdmxFile
                             Case Else
                                 policy.Section = AdmxPolicySection.Both
                         End Select
-                        policy.ExplainCode = attributeOrNull(polElement, "explainText")
-                        policy.PresentationID = attributeOrNull(polElement, "presentation")
-                        policy.RegistryValue = attributeOrNull(polElement, "valueName")
+                        policy.ExplainCode = AttributeOrNull(polElement, "explainText")
+                        policy.PresentationID = AttributeOrNull(polElement, "presentation")
+                        policy.RegistryValue = AttributeOrNull(polElement, "valueName")
                         policy.AffectedValues = loadOnOffValList("enabledValue", "disabledValue", "enabledList", "disabledList", polElement)
                         For Each polInfo As XmlNode In polElement.ChildNodes
                             Select Case polInfo.LocalName
@@ -197,10 +191,10 @@ Public Class AdmxFile
                                         Select Case uiElement.LocalName
                                             Case "decimal"
                                                 Dim decimalEntry As New DecimalPolicyElement
-                                                decimalEntry.Minimum = attributeOrDefault(uiElement, "minValue", 0)
-                                                decimalEntry.Maximum = attributeOrDefault(uiElement, "maxValue", UInteger.MaxValue)
-                                                decimalEntry.NoOverwrite = attributeOrDefault(uiElement, "soft", False)
-                                                decimalEntry.StoreAsText = attributeOrDefault(uiElement, "storeAsText", False)
+                                                decimalEntry.Minimum = AttributeOrDefault(uiElement, "minValue", 0)
+                                                decimalEntry.Maximum = AttributeOrDefault(uiElement, "maxValue", UInteger.MaxValue)
+                                                decimalEntry.NoOverwrite = AttributeOrDefault(uiElement, "soft", False)
+                                                decimalEntry.StoreAsText = AttributeOrDefault(uiElement, "storeAsText", False)
                                                 entry = decimalEntry
                                             Case "boolean"
                                                 Dim boolEntry As New BooleanPolicyElement
@@ -208,21 +202,21 @@ Public Class AdmxFile
                                                 entry = boolEntry
                                             Case "text"
                                                 Dim textEntry As New TextPolicyElement
-                                                textEntry.MaxLength = attributeOrDefault(uiElement, "maxLength", 255)
-                                                textEntry.Required = attributeOrDefault(uiElement, "required", False)
-                                                textEntry.RegExpandSz = attributeOrDefault(uiElement, "expandable", False)
-                                                textEntry.NoOverwrite = attributeOrDefault(uiElement, "soft", False)
+                                                textEntry.MaxLength = AttributeOrDefault(uiElement, "maxLength", 255)
+                                                textEntry.Required = AttributeOrDefault(uiElement, "required", False)
+                                                textEntry.RegExpandSz = AttributeOrDefault(uiElement, "expandable", False)
+                                                textEntry.NoOverwrite = AttributeOrDefault(uiElement, "soft", False)
                                                 entry = textEntry
                                             Case "list"
                                                 Dim listEntry As New ListPolicyElement
-                                                listEntry.NoPurgeOthers = attributeOrDefault(uiElement, "additive", False)
-                                                listEntry.RegExpandSz = attributeOrDefault(uiElement, "expandable", False)
-                                                listEntry.UserProvidesNames = attributeOrDefault(uiElement, "explicitValue", False)
-                                                listEntry.RegistryValue = attributeOrNull(uiElement, "valuePrefix")
+                                                listEntry.NoPurgeOthers = AttributeOrDefault(uiElement, "additive", False)
+                                                listEntry.RegExpandSz = AttributeOrDefault(uiElement, "expandable", False)
+                                                listEntry.UserProvidesNames = AttributeOrDefault(uiElement, "explicitValue", False)
+                                                listEntry.RegistryValue = AttributeOrNull(uiElement, "valuePrefix")
                                                 entry = listEntry
                                             Case "enum"
                                                 Dim enumEntry As New EnumPolicyElement
-                                                enumEntry.Required = attributeOrDefault(uiElement, "required", False)
+                                                enumEntry.Required = AttributeOrDefault(uiElement, "required", False)
                                                 enumEntry.Items = New List(Of EnumPolicyElementItem)
                                                 For Each itemElement As XmlNode In uiElement.ChildNodes
                                                     If itemElement.LocalName = "item" Then
@@ -241,9 +235,9 @@ Public Class AdmxFile
                                                 entry = enumEntry
                                         End Select
                                         If entry IsNot Nothing Then
-                                            entry.ClientExtension = attributeOrDefault(uiElement, "clientExtension", False)
-                                            entry.RegistryKey = attributeOrNull(uiElement, "key")
-                                            If entry.RegistryValue = "" Then entry.RegistryValue = attributeOrNull(uiElement, "valueName")
+                                            entry.ClientExtension = AttributeOrDefault(uiElement, "clientExtension", False)
+                                            entry.RegistryKey = AttributeOrNull(uiElement, "key")
+                                            If entry.RegistryValue = "" Then entry.RegistryValue = AttributeOrNull(uiElement, "valueName")
                                             entry.ID = uiElement.Attributes("id").Value
                                             policy.Elements.Add(entry)
                                         End If

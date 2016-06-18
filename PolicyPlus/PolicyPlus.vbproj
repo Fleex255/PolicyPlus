@@ -99,6 +99,8 @@
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
     <Compile Include="PolicyStructures.vb" />
+    <Compile Include="PresentationStructures.vb" />
+    <Compile Include="XmlExtensions.vb" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Main.resx">
