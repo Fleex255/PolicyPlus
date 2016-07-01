@@ -4,6 +4,7 @@
     Public Type As AdmxProductType
     Public Version As Integer
     Public Parent As AdmxProduct
+    Public DefinedIn As AdmxFile
 End Class
 Public Enum AdmxProductType
     Product
@@ -15,6 +16,7 @@ Public Class AdmxSupportDefinition
     Public DisplayCode As String
     Public Logic As AdmxSupportLogicType
     Public Entries As List(Of AdmxSupportEntry)
+    Public DefinedIn As AdmxFile
 End Class
 Public Enum AdmxSupportLogicType
     Blank
@@ -31,6 +33,7 @@ Public Class AdmxCategory
     Public ID As String
     Public DisplayCode As String
     Public ParentID As String
+    Public DefinedIn As AdmxFile
 End Class
 Public Class AdmxPolicy
     Public ID As String
@@ -44,6 +47,7 @@ Public Class AdmxPolicy
     Public RegistryValue As String
     Public AffectedValues As PolicyRegistryList
     Public Elements As List(Of PolicyElement)
+    Public DefinedIn As AdmxFile
 End Class
 Public Enum AdmxPolicySection
     Machine = 1

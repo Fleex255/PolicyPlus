@@ -76,6 +76,7 @@
     <Compile Include="AdmxBundle.vb" />
     <Compile Include="AdmxFile.vb" />
     <Compile Include="AdmxStructures.vb" />
+    <Compile Include="CompiledStructures.vb" />
     <Compile Include="Main.vb">
       <SubType>Form</SubType>
     </Compile>

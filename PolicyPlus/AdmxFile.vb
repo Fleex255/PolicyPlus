@@ -67,6 +67,7 @@ Public Class AdmxFile
                                         Exit For
                                     End If
                                 Next
+                                definition.DefinedIn = admx
                                 admx.SupportedOnDefinitions.Add(definition)
                             Next
                         ElseIf supportInfo.LocalName = "products" Then
@@ -79,6 +80,7 @@ Public Class AdmxFile
                                                    product.DisplayCode = subproductElement.Attributes("displayName").Value
                                                    If Parent IsNot Nothing Then product.Version = subproductElement.Attributes("versionIndex").Value
                                                    product.Parent = Parent
+                                                   product.DefinedIn = admx
                                                    admx.Products.Add(product)
                                                    If Parent Is Nothing Then
                                                        product.Type = AdmxProductType.Product
@@ -104,6 +106,7 @@ Public Class AdmxFile
                             Dim parentCatElement = categoryElement("parentCategory")
                             category.ParentID = parentCatElement.Attributes("ref").Value
                         End If
+                        category.DefinedIn = admx
                         admx.Categories.Add(category)
                     Next
                 Case "policies"
@@ -163,6 +166,7 @@ Public Class AdmxFile
                         If polElement.LocalName <> "policy" Then Continue For
                         Dim policy As New AdmxPolicy
                         policy.ID = polElement.Attributes("name").Value
+                        policy.DefinedIn = admx
                         policy.DisplayCode = polElement.Attributes("displayName").Value
                         policy.RegistryKey = polElement.Attributes("key").Value
                         Dim polClass = polElement.Attributes("class").Value
@@ -235,7 +239,7 @@ Public Class AdmxFile
                                                 entry = enumEntry
                                         End Select
                                         If entry IsNot Nothing Then
-                                            entry.ClientExtension = AttributeOrDefault(uiElement, "clientExtension", False)
+                                            entry.ClientExtension = AttributeOrNull(uiElement, "clientExtension")
                                             entry.RegistryKey = AttributeOrNull(uiElement, "key")
                                             If entry.RegistryValue = "" Then entry.RegistryValue = AttributeOrNull(uiElement, "valueName")
                                             entry.ID = uiElement.Attributes("id").Value

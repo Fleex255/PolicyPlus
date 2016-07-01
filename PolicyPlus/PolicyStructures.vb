@@ -25,7 +25,7 @@ Public Enum PolicyRegistryValueType
 End Enum
 Public MustInherit Class PolicyElement
     Public ID As String
-    Public ClientExtension As Boolean
+    Public ClientExtension As String
     Public RegistryKey As String
     Public RegistryValue As String
 End Class
