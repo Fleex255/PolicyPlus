@@ -30,7 +30,13 @@ Public Class AdmxBundle
     Private Sub BuildStructures() ' TODO: the rest of the structures
         Dim catIds As New Dictionary(Of String, PolicyPlusCategory)
         Dim findCatById = Function(UniqueID As String) As PolicyPlusCategory
-                              If catIds.ContainsKey(UniqueID) Then Return catIds(UniqueID) Else Return Categories(UniqueID)
+                              If catIds.ContainsKey(UniqueID) Then
+                                  Return catIds(UniqueID)
+                              ElseIf Categories.ContainsKey(UniqueID) Then
+                                  Return Categories(UniqueID)
+                              Else
+                                  Return Nothing
+                              End If
                           End Function
         ' First pass: Build the structures without resolving references
         For Each rawCat In RawCategories
@@ -44,8 +50,8 @@ Public Class AdmxBundle
         For Each cat In catIds.Values
             If cat.RawCategory.ParentID <> "" Then
                 Dim parentCatName = ResolveRef(cat.RawCategory.ParentID, cat.RawCategory.DefinedIn)
-                If Not catIds.ContainsKey(parentCatName) Then Continue For
-                Dim parentCat = catIds(parentCatName)
+                Dim parentCat = findCatById(parentCatName)
+                If parentCat Is Nothing Then Continue For
                 parentCat.Children.Add(cat)
                 cat.Parent = parentCat
             End If
