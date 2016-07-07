@@ -101,6 +101,7 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
+    <Compile Include="PolicySource.vb" />
     <Compile Include="PolicyStructures.vb" />
     <Compile Include="PresentationStructures.vb" />
     <Compile Include="XmlExtensions.vb" />

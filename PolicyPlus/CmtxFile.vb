@@ -17,6 +17,7 @@ Public Class CmtxFile
             Select Case child.LocalName
                 Case "policyNamespaces"
                     For Each usingElement As XmlNode In child.ChildNodes
+                        If usingElement.LocalName <> "using" Then Continue For
                         Dim prefix = usingElement.AttributeOrNull("prefix")
                         Dim ns = usingElement.AttributeOrNull("namespace")
                         cmtx.Prefixes.Add(prefix, ns)
