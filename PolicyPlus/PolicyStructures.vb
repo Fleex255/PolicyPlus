@@ -50,6 +50,7 @@ Public Class TextPolicyElement ' <text>
 End Class
 Public Class ListPolicyElement ' <list>
     Inherits PolicyElement
+    Public HasPrefix As Boolean
     Public NoPurgeOthers As Boolean
     Public RegExpandSz As Boolean
     Public UserProvidesNames As Boolean

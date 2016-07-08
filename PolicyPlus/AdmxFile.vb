@@ -216,6 +216,7 @@ Public Class AdmxFile
                                                 listEntry.NoPurgeOthers = AttributeOrDefault(uiElement, "additive", False)
                                                 listEntry.RegExpandSz = AttributeOrDefault(uiElement, "expandable", False)
                                                 listEntry.UserProvidesNames = AttributeOrDefault(uiElement, "explicitValue", False)
+                                                listEntry.HasPrefix = (uiElement.Attributes("valuePrefix") IsNot Nothing)
                                                 listEntry.RegistryValue = AttributeOrNull(uiElement, "valuePrefix")
                                                 entry = listEntry
                                             Case "enum"
