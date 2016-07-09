@@ -4,6 +4,7 @@ Public Interface IPolicySource
     Function ContainsValue(Key As String, Value As String) As Boolean
     Function GetValue(Key As String, Value As String) As Object
     Function WillDeleteValue(Key As String, Value As String) As Boolean
+    Function GetValueNames(Key As String) As List(Of String)
     Sub SetValue(Key As String, Value As String, Data As Object, DataType As RegistryValueKind)
     Sub ForgetValue(Key As String, Value As String) ' Stop keeping track of a value
     Sub DeleteValue(Key As String, Value As String) ' Mark a value as queued for deletion
@@ -91,6 +92,14 @@ Public Class PolFile
         End If
         Return False
     End Function
+    Public Function GetValueNames(Key As String) As List(Of String) Implements IPolicySource.GetValueNames
+        Dim prefix = GetDictKey(Key, "")
+        Dim valNames As New List(Of String)
+        For Each k In Entries.Keys
+            If k.StartsWith(prefix) Then valNames.Add(k)
+        Next
+        Return valNames
+    End Function
     Private Class PolEntryData
         Public Kind As RegistryValueKind
         Public Data As Byte()
@@ -103,8 +112,9 @@ Public Class PolFile
             Next
             Return sb.ToString
         End Function
-        Public Shared Function FromString(Text As String) As PolEntryData
+        Public Shared Function FromString(Text As String, Optional Expand As Boolean = False) As PolEntryData
             Dim ped As New PolEntryData With {.Kind = RegistryValueKind.String}
+            If Expand Then ped.Kind = RegistryValueKind.ExpandString
             Dim data((Text.Length * 2) + 1) As Byte
             For x = 0 To Text.Length - 1
                 Dim charCode = AscW(Text(x))
@@ -127,14 +137,42 @@ Public Class PolFile
             ped.Data = data
             Return ped
         End Function
+        Public Function AsQword() As ULong
+            Dim value As ULong = 0
+            For n = 0 To 7
+                value += (Data(n) << (n * 8))
+            Next
+            Return value
+        End Function
+        Public Shared Function FromQword(Qword As ULong) As PolEntryData
+            Dim ped As New PolEntryData With {.Kind = RegistryValueKind.QWord}
+            Dim data(7) As Byte
+            For n = 0 To 7
+                data(n) = (Qword >> (n * 8)) And &HFF
+            Next
+            ped.Data = data
+            Return ped
+        End Function
+        Public Function AsBinary() As Byte()
+            Return Data.Clone
+        End Function
+        Public Shared Function FromBinary(Binary As Byte(), Optional Kind As RegistryValueKind = RegistryValueKind.Binary) As PolEntryData
+            Dim ped As New PolEntryData With {.Kind = Kind}
+            ped.Data = Binary.Clone
+            Return ped
+        End Function
         Public Function AsArbitrary() As Object
             Select Case Kind
                 Case RegistryValueKind.String
                     Return AsString()
                 Case RegistryValueKind.DWord
                     Return AsDword()
+                Case RegistryValueKind.ExpandString
+                    Return AsString()
+                Case RegistryValueKind.QWord
+                    Return AsQword()
                 Case Else
-                    ' TODO: Other types of entries
+                    Return AsBinary()
             End Select
         End Function
         Public Shared Function FromArbitrary(Data As Object, Kind As RegistryValueKind) As PolEntryData
@@ -143,28 +181,56 @@ Public Class PolFile
                     Return FromString(Data)
                 Case RegistryValueKind.DWord
                     Return FromDword(Data)
+                Case RegistryValueKind.ExpandString
+                    Return FromString(Data, True)
+                Case RegistryValueKind.QWord
+                    Return FromQword(Data)
                 Case Else
-                    ' TODO: Other types of entries
+                    Return FromBinary(Data, Kind)
             End Select
         End Function
     End Class
 End Class
 Public Class RegistryPolicyProxy
     Implements IPolicySource
+    Private RootKey As RegistryKey
+    Public Shared Function EncapsulateKey(Key As RegistryKey) As RegistryPolicyProxy
+        Return New RegistryPolicyProxy With {.RootKey = Key}
+    End Function
+    Public Shared Function EncapsulateKey(Key As RegistryHive) As RegistryPolicyProxy
+        Return EncapsulateKey(RegistryKey.OpenBaseKey(Key, RegistryView.Default))
+    End Function
     Public Sub DeleteValue(Key As String, Value As String) Implements IPolicySource.DeleteValue
-        Throw New NotImplementedException()
+        Using regKey = RootKey.OpenSubKey(Key, True)
+            If regKey Is Nothing Then Exit Sub
+            regKey.DeleteValue(Value)
+        End Using
     End Sub
     Public Sub ForgetValue(Key As String, Value As String) Implements IPolicySource.ForgetValue
-        Throw New NotImplementedException()
+        DeleteValue(Key, Value) ' The Registry has no concept of "will delete this when I see it"
     End Sub
     Public Sub SetValue(Key As String, Value As String, Data As Object, DataType As RegistryValueKind) Implements IPolicySource.SetValue
-        Throw New NotImplementedException()
+        Using regKey = RootKey.CreateSubKey(Key)
+            regKey.SetValue(Value, Data, DataType)
+        End Using
     End Sub
     Public Function ContainsValue(Key As String, Value As String) As Boolean Implements IPolicySource.ContainsValue
-        Throw New NotImplementedException()
+        Using regKey = RootKey.OpenSubKey(Key)
+            If regKey Is Nothing Then Return False
+            If Value = "" Then Return True
+            Return regKey.GetValueNames().Any(Function(s) s.Equals(Value, StringComparison.InvariantCultureIgnoreCase))
+        End Using
     End Function
     Public Function GetValue(Key As String, Value As String) As Object Implements IPolicySource.GetValue
-        Throw New NotImplementedException()
+        Using regKey = RootKey.OpenSubKey(Key, False)
+            If regKey Is Nothing Then Return Nothing
+            Return regKey.GetValue(Value, Nothing, RegistryValueOptions.DoNotExpandEnvironmentNames)
+        End Using
+    End Function
+    Public Function GetValueNames(Key As String) As List(Of String) Implements IPolicySource.GetValueNames
+        Using regKey = RootKey.OpenSubKey(Key)
+            If regKey Is Nothing Then Return New List(Of String) Else Return regKey.GetValueNames.ToList
+        End Using
     End Function
     Public Function WillDeleteValue(Key As String, Value As String) As Boolean Implements IPolicySource.WillDeleteValue
         Return False
