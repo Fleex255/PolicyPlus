@@ -81,16 +81,22 @@ Public Class PolFile
         Return Entries(GetDictKey(Key, Value)).AsArbitrary
     End Function
     Public Function WillDeleteValue(Key As String, Value As String) As Boolean Implements IPolicySource.WillDeleteValue
-        If Entries.ContainsKey(GetDictKey(Key, "**del." & Value)) Then Return True
-        If Entries.ContainsKey(GetDictKey(Key, "**delvals")) Then Return True
-        Dim delValuesDict = GetDictKey(Key, "**delvalues")
-        If Entries.ContainsKey(delValuesDict) Then
-            Dim delEntry = Entries(delValuesDict)
-            Dim lowerVal = Value.ToLowerInvariant
-            Dim deletedValues = Split(delEntry.AsString, ";")
-            If deletedValues.Any(Function(s) s.ToLowerInvariant = lowerVal) Then Return True
-        End If
-        Return False
+        Dim willDelete = False
+        Dim keyRoot = GetDictKey(Key, "")
+        For Each kv In Entries.Where(Function(e) e.Key.StartsWith(keyRoot))
+            If kv.Key = GetDictKey(Key, "**del." & Value) Then
+                willDelete = True
+            ElseIf kv.Key.StartsWith(GetDictKey(Key, "**delvals")) Then ' MS POL files also use "**delvals."
+                willDelete = True
+            ElseIf kv.Key = GetDictKey(Key, "**deletevalues") Then
+                Dim lowerVal = Value.ToLowerInvariant
+                Dim deletedValues = Split(kv.Value.AsString, ";")
+                If deletedValues.Any(Function(s) s.ToLowerInvariant = lowerVal) Then willDelete = True
+            ElseIf kv.Key = GetDictKey(Key, Value) Then
+                willDelete = False ' In case the key is cleared out before setting the values
+            End If
+        Next
+        Return willDelete
     End Function
     Public Function GetValueNames(Key As String) As List(Of String) Implements IPolicySource.GetValueNames
         Dim prefix = GetDictKey(Key, "")
