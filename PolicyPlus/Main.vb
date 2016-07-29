@@ -2,6 +2,7 @@
     Dim AdmxWorkspace As New AdmxBundle
     Dim CurrentCategory As PolicyPlusCategory
     Dim CurrentSetting As PolicyPlusPolicy
+    Dim CategoryNodes As New Dictionary(Of PolicyPlusCategory, TreeNode)
     Private Sub Main_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         AdmxWorkspace.LoadFolder(Environment.ExpandEnvironmentVariables("%windir%\PolicyDefinitions"), Globalization.CultureInfo.CurrentCulture.Name)
         PopulateAdmxUi()
@@ -9,12 +10,14 @@
     Sub PopulateAdmxUi()
         ' Populate the left categories tree
         CategoriesTree.Nodes.Clear()
+        CategoryNodes.Clear()
         Dim addCategory As Action(Of IEnumerable(Of PolicyPlusCategory), TreeNodeCollection)
         addCategory = Sub(CategoryList, ParentNode)
                           For Each category In CategoryList
                               Dim newNode = ParentNode.Add(category.UniqueID, category.DisplayName, GetImageIndexForCategory(category))
                               newNode.SelectedImageIndex = 3 ' "Go" arrow
                               newNode.Tag = category
+                              CategoryNodes.Add(category, newNode)
                               addCategory(category.Children, newNode.Nodes)
                           Next
                       End Sub
@@ -28,16 +31,25 @@
     Sub UpdateCategoryListing()
         PoliciesList.Items.Clear()
         If CurrentCategory IsNot Nothing Then
-            For Each category In CurrentCategory.Children.OrderBy(Function(c) c.DisplayName)
+            If CurrentCategory.Parent IsNot Nothing Then ' Add the parent
+                Dim listItem = PoliciesList.Items.Add("Up: " & CurrentCategory.Parent.DisplayName)
+                listItem.Tag = CurrentCategory.Parent
+                listItem.ImageIndex = 6 ' Up arrow
+                listItem.SubItems.Add("Parent")
+            End If
+            For Each category In CurrentCategory.Children.OrderBy(Function(c) c.DisplayName) ' Add subcategories
                 Dim listItem = PoliciesList.Items.Add(category.DisplayName)
                 listItem.Tag = category
                 listItem.ImageIndex = GetImageIndexForCategory(category)
             Next
-            For Each policy In CurrentCategory.Policies.OrderBy(Function(p) p.DisplayName)
+            For Each policy In CurrentCategory.Policies.OrderBy(Function(p) p.DisplayName) ' Add policies
                 Dim listItem = PoliciesList.Items.Add(policy.DisplayName)
                 listItem.Tag = policy
                 listItem.ImageIndex = GetImageIndexForSetting(policy)
             Next
+            If CategoriesTree.SelectedNode.Tag IsNot CurrentCategory Then ' Update the tree view
+                CategoriesTree.SelectedNode = CategoryNodes(CurrentCategory)
+            End If
         End If
     End Sub
     Sub UpdatePolicyInfo()
@@ -91,5 +103,32 @@
     End Sub
     Private Sub ExitToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles ExitToolStripMenuItem.Click
         Close()
+    End Sub
+    Private Sub OpenADMXFolderToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles OpenADMXFolderToolStripMenuItem.Click
+        If OpenAdmxFolder.ShowDialog = DialogResult.OK Then
+            AdmxWorkspace.LoadFolder(OpenAdmxFolder.SelectedFolder, Globalization.CultureInfo.CurrentCulture.Name)
+            PopulateAdmxUi()
+        End If
+    End Sub
+    Private Sub OpenADMXFileToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles OpenADMXFileToolStripMenuItem.Click
+        Using ofd As New OpenFileDialog
+            ofd.Filter = "Policy definitions files|*.admx"
+            ofd.Title = "Open ADMX file"
+            If ofd.ShowDialog <> DialogResult.OK Then Exit Sub
+            AdmxWorkspace.LoadFile(ofd.FileName, Globalization.CultureInfo.CurrentCulture.Name)
+            PopulateAdmxUi()
+        End Using
+    End Sub
+    Private Sub CloseADMXWorkspaceToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles CloseADMXWorkspaceToolStripMenuItem.Click
+        AdmxWorkspace = New AdmxBundle
+        PopulateAdmxUi()
+    End Sub
+    Private Sub PoliciesList_DoubleClick(sender As Object, e As EventArgs) Handles PoliciesList.DoubleClick
+        If PoliciesList.SelectedItems.Count = 0 Then Exit Sub
+        Dim policyItem = PoliciesList.SelectedItems(0).Tag
+        If TypeOf policyItem Is PolicyPlusCategory Then
+            CurrentCategory = policyItem
+            UpdateCategoryListing()
+        End If
     End Sub
 End Class

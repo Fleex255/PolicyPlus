@@ -56,11 +56,13 @@ Partial Class Main
         'ChSettingEnabled
         '
         ChSettingEnabled.Text = "State"
+        ChSettingEnabled.TextAlign = System.Windows.Forms.HorizontalAlignment.Center
         ChSettingEnabled.Width = 79
         '
         'ChSettingCommented
         '
         ChSettingCommented.Text = "Commented"
+        ChSettingCommented.TextAlign = System.Windows.Forms.HorizontalAlignment.Center
         ChSettingCommented.Width = 90
         '
         'MainMenu
@@ -124,7 +126,9 @@ Partial Class Main
         '
         'CategoriesTree
         '
+        Me.CategoriesTree.BorderStyle = System.Windows.Forms.BorderStyle.None
         Me.CategoriesTree.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.CategoriesTree.HideSelection = False
         Me.CategoriesTree.ImageIndex = 0
         Me.CategoriesTree.ImageList = Me.PolicyIcons
         Me.CategoriesTree.Location = New System.Drawing.Point(0, 0)
@@ -143,6 +147,7 @@ Partial Class Main
         Me.PolicyIcons.Images.SetKeyName(3, "folder_go.png")
         Me.PolicyIcons.Images.SetKeyName(4, "page_white.png")
         Me.PolicyIcons.Images.SetKeyName(5, "page_white_gear.png")
+        Me.PolicyIcons.Images.SetKeyName(6, "arrow_up.png")
         '
         'PoliciesList
         '
@@ -151,6 +156,7 @@ Partial Class Main
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.PoliciesList.BorderStyle = System.Windows.Forms.BorderStyle.None
         Me.PoliciesList.Columns.AddRange(New System.Windows.Forms.ColumnHeader() {Me.ChSettingName, ChSettingEnabled, ChSettingCommented})
+        Me.PoliciesList.FullRowSelect = True
         Me.PoliciesList.Location = New System.Drawing.Point(190, 0)
         Me.PoliciesList.MultiSelect = False
         Me.PoliciesList.Name = "PoliciesList"
