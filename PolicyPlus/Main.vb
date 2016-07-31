@@ -1,10 +1,16 @@
 ﻿Public Class Main
     Dim AdmxWorkspace As New AdmxBundle
+    Dim UserPolicySource, CompPolicySource As IPolicySource
     Dim CurrentCategory As PolicyPlusCategory
     Dim CurrentSetting As PolicyPlusPolicy
     Dim CategoryNodes As New Dictionary(Of PolicyPlusCategory, TreeNode)
+    Dim ViewEmptyCategories As Boolean = False
+    Dim ViewPolicyTypes As AdmxPolicySection = AdmxPolicySection.Both
     Private Sub Main_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         AdmxWorkspace.LoadFolder(Environment.ExpandEnvironmentVariables("%windir%\PolicyDefinitions"), Globalization.CultureInfo.CurrentCulture.Name)
+        UserPolicySource = PolFile.Load(Environment.ExpandEnvironmentVariables("%windir%\System32\GroupPolicy\User\Registry.pol"))
+        CompPolicySource = PolFile.Load(Environment.ExpandEnvironmentVariables("%windir%\System32\GroupPolicy\Machine\Registry.pol"))
+        ComboAppliesTo.Text = ComboAppliesTo.Items(0)
         PopulateAdmxUi()
     End Sub
     Sub PopulateAdmxUi()
@@ -13,7 +19,7 @@
         CategoryNodes.Clear()
         Dim addCategory As Action(Of IEnumerable(Of PolicyPlusCategory), TreeNodeCollection)
         addCategory = Sub(CategoryList, ParentNode)
-                          For Each category In CategoryList
+                          For Each category In CategoryList.Where(AddressOf ShouldShowCategory)
                               Dim newNode = ParentNode.Add(category.UniqueID, category.DisplayName, GetImageIndexForCategory(category))
                               newNode.SelectedImageIndex = 3 ' "Go" arrow
                               newNode.Tag = category
@@ -37,17 +43,18 @@
                 listItem.ImageIndex = 6 ' Up arrow
                 listItem.SubItems.Add("Parent")
             End If
-            For Each category In CurrentCategory.Children.OrderBy(Function(c) c.DisplayName) ' Add subcategories
+            For Each category In CurrentCategory.Children.Where(AddressOf ShouldShowCategory).OrderBy(Function(c) c.DisplayName) ' Add subcategories
                 Dim listItem = PoliciesList.Items.Add(category.DisplayName)
                 listItem.Tag = category
                 listItem.ImageIndex = GetImageIndexForCategory(category)
             Next
-            For Each policy In CurrentCategory.Policies.OrderBy(Function(p) p.DisplayName) ' Add policies
+            For Each policy In CurrentCategory.Policies.Where(AddressOf ShouldShowPolicy).OrderBy(Function(p) p.DisplayName) ' Add policies
                 Dim listItem = PoliciesList.Items.Add(policy.DisplayName)
                 listItem.Tag = policy
                 listItem.ImageIndex = GetImageIndexForSetting(policy)
+                listItem.SubItems.Add(GetPolicyState(policy))
             Next
-            If CategoriesTree.SelectedNode.Tag IsNot CurrentCategory Then ' Update the tree view
+            If CategoriesTree.SelectedNode Is Nothing OrElse CategoriesTree.SelectedNode.Tag IsNot CurrentCategory Then ' Update the tree view
                 CategoriesTree.SelectedNode = CategoryNodes(CurrentCategory)
             End If
         End If
@@ -83,6 +90,59 @@
         Else
             Return 5 ' Extra configuration
         End If
+    End Function
+    Function ShouldShowCategory(Category As PolicyPlusCategory) As Boolean
+        If ViewEmptyCategories Then
+            Return True
+        Else
+            Return Category.Policies.Any(AddressOf ShouldShowPolicy) OrElse Category.Children.Any(AddressOf ShouldShowCategory)
+        End If
+    End Function
+    Function ShouldShowPolicy(Policy As PolicyPlusPolicy) As Boolean
+        Return (ViewPolicyTypes And Policy.RawPolicy.Section) > 0
+    End Function
+    Sub MoveToVisibleCategoryAndReload()
+        Dim newFocusCategory = CurrentCategory
+        Dim newFocusPolicy = CurrentSetting
+        Do Until newFocusCategory Is Nothing OrElse ShouldShowCategory(newFocusCategory)
+            newFocusCategory = newFocusCategory.Parent
+            newFocusPolicy = Nothing
+        Loop
+        If newFocusPolicy IsNot Nothing AndAlso Not ShouldShowPolicy(newFocusPolicy) Then newFocusPolicy = Nothing
+        PopulateAdmxUi()
+        CurrentCategory = newFocusCategory
+        UpdateCategoryListing()
+        CurrentSetting = newFocusPolicy
+        UpdatePolicyInfo()
+    End Sub
+    Function GetPolicyState(Policy As PolicyPlusPolicy) As String
+        If ViewPolicyTypes = AdmxPolicySection.Both Then
+            Dim userState = GetPolicyState(Policy, AdmxPolicySection.User)
+            Dim machState = GetPolicyState(Policy, AdmxPolicySection.Machine)
+            If userState = machState Then
+                Return userState & " (2)"
+            ElseIf userState = "Not Configured" Then
+                Return machState & " (C)"
+            ElseIf machState = "Not Configured" Then
+                Return userState & " (U)"
+            Else
+                Return "Mixed"
+            End If
+        Else
+            Return GetPolicyState(Policy, ViewPolicyTypes)
+        End If
+    End Function
+    Function GetPolicyState(Policy As PolicyPlusPolicy, Section As AdmxPolicySection) As String
+        Select Case PolicyProcessing.GetPolicyState(IIf(Section = AdmxPolicySection.Machine, CompPolicySource, UserPolicySource), Policy)
+            Case PolicyState.Disabled
+                Return "Disabled"
+            Case PolicyState.Enabled
+                Return "Enabled"
+            Case PolicyState.NotConfigured
+                Return "Not Configured"
+            Case Else
+                Return "Unknown"
+        End Select
     End Function
     Private Sub CategoriesTree_AfterSelect(sender As Object, e As TreeViewEventArgs) Handles CategoriesTree.AfterSelect
         CurrentCategory = e.Node.Tag
@@ -122,6 +182,22 @@
     Private Sub CloseADMXWorkspaceToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles CloseADMXWorkspaceToolStripMenuItem.Click
         AdmxWorkspace = New AdmxBundle
         PopulateAdmxUi()
+    End Sub
+    Private Sub EmptyCategoriesToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles EmptyCategoriesToolStripMenuItem.Click
+        ViewEmptyCategories = Not ViewEmptyCategories
+        EmptyCategoriesToolStripMenuItem.Checked = ViewEmptyCategories
+        MoveToVisibleCategoryAndReload()
+    End Sub
+    Private Sub ComboAppliesTo_SelectedIndexChanged(sender As Object, e As EventArgs) Handles ComboAppliesTo.SelectedIndexChanged
+        Select Case ComboAppliesTo.Text
+            Case "User"
+                ViewPolicyTypes = AdmxPolicySection.User
+            Case "Computer"
+                ViewPolicyTypes = AdmxPolicySection.Machine
+            Case Else
+                ViewPolicyTypes = AdmxPolicySection.Both
+        End Select
+        MoveToVisibleCategoryAndReload()
     End Sub
     Private Sub PoliciesList_DoubleClick(sender As Object, e As EventArgs) Handles PoliciesList.DoubleClick
         If PoliciesList.SelectedItems.Count = 0 Then Exit Sub

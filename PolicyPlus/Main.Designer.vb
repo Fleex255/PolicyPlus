@@ -42,6 +42,9 @@ Partial Class Main
         Me.PolicyTitleLabel = New System.Windows.Forms.Label()
         Me.PolicySupportedLabel = New System.Windows.Forms.Label()
         Me.PolicyDescLabel = New System.Windows.Forms.Label()
+        Me.ViewToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.EmptyCategoriesToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.ComboAppliesTo = New System.Windows.Forms.ComboBox()
         ChSettingEnabled = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
         ChSettingCommented = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
         Me.MainMenu.SuspendLayout()
@@ -57,20 +60,20 @@ Partial Class Main
         '
         ChSettingEnabled.Text = "State"
         ChSettingEnabled.TextAlign = System.Windows.Forms.HorizontalAlignment.Center
-        ChSettingEnabled.Width = 79
+        ChSettingEnabled.Width = 107
         '
         'ChSettingCommented
         '
-        ChSettingCommented.Text = "Commented"
+        ChSettingCommented.Text = "Comment"
         ChSettingCommented.TextAlign = System.Windows.Forms.HorizontalAlignment.Center
-        ChSettingCommented.Width = 90
+        ChSettingCommented.Width = 68
         '
         'MainMenu
         '
-        Me.MainMenu.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.FileToolStripMenuItem})
+        Me.MainMenu.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.FileToolStripMenuItem, Me.ViewToolStripMenuItem})
         Me.MainMenu.Location = New System.Drawing.Point(0, 0)
         Me.MainMenu.Name = "MainMenu"
-        Me.MainMenu.Size = New System.Drawing.Size(667, 24)
+        Me.MainMenu.Size = New System.Drawing.Size(706, 24)
         Me.MainMenu.TabIndex = 0
         Me.MainMenu.Text = "MenuStrip1"
         '
@@ -113,6 +116,7 @@ Partial Class Main
         '
         'SplitContainer.Panel1
         '
+        Me.SplitContainer.Panel1.Controls.Add(Me.ComboAppliesTo)
         Me.SplitContainer.Panel1.Controls.Add(Me.CategoriesTree)
         '
         'SplitContainer.Panel2
@@ -120,21 +124,23 @@ Partial Class Main
         Me.SplitContainer.Panel2.BackColor = System.Drawing.Color.White
         Me.SplitContainer.Panel2.Controls.Add(Me.PoliciesList)
         Me.SplitContainer.Panel2.Controls.Add(Me.SettingInfoPanel)
-        Me.SplitContainer.Size = New System.Drawing.Size(667, 350)
-        Me.SplitContainer.SplitterDistance = 180
+        Me.SplitContainer.Size = New System.Drawing.Size(706, 350)
+        Me.SplitContainer.SplitterDistance = 190
         Me.SplitContainer.TabIndex = 1
         '
         'CategoriesTree
         '
+        Me.CategoriesTree.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
+            Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.CategoriesTree.BorderStyle = System.Windows.Forms.BorderStyle.None
-        Me.CategoriesTree.Dock = System.Windows.Forms.DockStyle.Fill
         Me.CategoriesTree.HideSelection = False
         Me.CategoriesTree.ImageIndex = 0
         Me.CategoriesTree.ImageList = Me.PolicyIcons
-        Me.CategoriesTree.Location = New System.Drawing.Point(0, 0)
+        Me.CategoriesTree.Location = New System.Drawing.Point(0, 19)
         Me.CategoriesTree.Name = "CategoriesTree"
         Me.CategoriesTree.SelectedImageIndex = 0
-        Me.CategoriesTree.Size = New System.Drawing.Size(180, 350)
+        Me.CategoriesTree.Size = New System.Drawing.Size(190, 331)
         Me.CategoriesTree.TabIndex = 0
         '
         'PolicyIcons
@@ -160,7 +166,7 @@ Partial Class Main
         Me.PoliciesList.Location = New System.Drawing.Point(190, 0)
         Me.PoliciesList.MultiSelect = False
         Me.PoliciesList.Name = "PoliciesList"
-        Me.PoliciesList.Size = New System.Drawing.Size(293, 350)
+        Me.PoliciesList.Size = New System.Drawing.Size(322, 350)
         Me.PoliciesList.SmallImageList = Me.PolicyIcons
         Me.PoliciesList.TabIndex = 1
         Me.PoliciesList.UseCompatibleStateImageBehavior = False
@@ -231,11 +237,35 @@ Partial Class Main
         Me.PolicyDescLabel.TabIndex = 2
         Me.PolicyDescLabel.Text = "Policy description"
         '
+        'ViewToolStripMenuItem
+        '
+        Me.ViewToolStripMenuItem.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.EmptyCategoriesToolStripMenuItem})
+        Me.ViewToolStripMenuItem.Name = "ViewToolStripMenuItem"
+        Me.ViewToolStripMenuItem.Size = New System.Drawing.Size(44, 20)
+        Me.ViewToolStripMenuItem.Text = "View"
+        '
+        'EmptyCategoriesToolStripMenuItem
+        '
+        Me.EmptyCategoriesToolStripMenuItem.Name = "EmptyCategoriesToolStripMenuItem"
+        Me.EmptyCategoriesToolStripMenuItem.Size = New System.Drawing.Size(167, 22)
+        Me.EmptyCategoriesToolStripMenuItem.Text = "Empty Categories"
+        '
+        'ComboAppliesTo
+        '
+        Me.ComboAppliesTo.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.ComboAppliesTo.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
+        Me.ComboAppliesTo.Items.AddRange(New Object() {"User or Computer", "User", "Computer"})
+        Me.ComboAppliesTo.Location = New System.Drawing.Point(0, 0)
+        Me.ComboAppliesTo.Name = "ComboAppliesTo"
+        Me.ComboAppliesTo.Size = New System.Drawing.Size(190, 21)
+        Me.ComboAppliesTo.TabIndex = 1
+        '
         'Main
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
-        Me.ClientSize = New System.Drawing.Size(667, 374)
+        Me.ClientSize = New System.Drawing.Size(706, 374)
         Me.Controls.Add(Me.SplitContainer)
         Me.Controls.Add(Me.MainMenu)
         Me.MainMenuStrip = Me.MainMenu
@@ -272,4 +302,7 @@ Partial Class Main
     Friend WithEvents PolicySupportedLabel As Label
     Friend WithEvents PolicyDescLabel As Label
     Friend WithEvents ChSettingName As ColumnHeader
+    Friend WithEvents ViewToolStripMenuItem As ToolStripMenuItem
+    Friend WithEvents EmptyCategoriesToolStripMenuItem As ToolStripMenuItem
+    Friend WithEvents ComboAppliesTo As ComboBox
 End Class

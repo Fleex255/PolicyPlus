@@ -108,6 +108,7 @@
     <Compile Include="OpenAdmxFolder.vb">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="PolicyProcessing.vb" />
     <Compile Include="PolicySource.vb" />
     <Compile Include="PolicyStructures.vb" />
     <Compile Include="PresentationStructures.vb" />
