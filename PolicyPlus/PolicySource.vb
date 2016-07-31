@@ -56,6 +56,32 @@ Public Class PolFile
         Loop
         Return pol
     End Function
+    Public Sub Save(File As String)
+        Using fPol As New FileStream(File, FileMode.Create), binary As New BinaryWriter(fPol, Text.Encoding.Unicode)
+            Dim writeSz = Sub(Text As String)
+                              For Each c In Text
+                                  binary.Write(c)
+                              Next
+                              binary.Write(0S)
+                          End Sub
+            binary.Write(&H67655250UI)
+            binary.Write(1)
+            For Each kv In Entries
+                binary.Write("["c)
+                Dim pathparts = Split(CasePreservation(kv.Key), "\\")
+                writeSz(pathparts(0)) ' Key name
+                binary.Write(";"c)
+                writeSz(pathparts(1)) ' Value name
+                binary.Write(";"c)
+                binary.Write(kv.Value.Kind)
+                binary.Write(";"c)
+                binary.Write(kv.Value.Data.Length)
+                binary.Write(";"c)
+                binary.Write(kv.Value.Data)
+                binary.Write("]"c)
+            Next
+        End Using
+    End Sub
     Public Sub DeleteValue(Key As String, Value As String) Implements IPolicySource.DeleteValue
         ForgetValue(Key, Value)
         If Not WillDeleteValue(Key, Value) Then
