@@ -86,7 +86,7 @@ Public Class PolFile
         ForgetValue(Key, Value)
         If Not WillDeleteValue(Key, Value) Then
             Dim ped = PolEntryData.FromDword(32) ' It's what Microsoft does
-            Entries.Add(GetDictKey(Key, "**del." & Value), Nothing)
+            Entries.Add(GetDictKey(Key, "**del." & Value), ped)
         End If
     End Sub
     Public Sub ForgetValue(Key As String, Value As String) Implements IPolicySource.ForgetValue
@@ -132,6 +132,32 @@ Public Class PolFile
         Next
         Return valNames
     End Function
+    Public Sub ApplyDifference(OldVersion As PolFile, Target As IPolicySource)
+        If OldVersion Is Nothing Then OldVersion = New PolFile
+        Dim oldEntries = OldVersion.Entries.Keys.Where(Function(k) Not k.Contains("\\**")).ToList
+        For Each kv In Entries
+            Dim parts = Split(kv.Key, "\\", 2) ' Key, value
+            Dim casedParts = Split(CasePreservation(kv.Key), "\\", 2)
+            If parts(1).StartsWith("**del.") Then
+                Target.DeleteValue(parts(0), Split(parts(1), ".", 2)(1))
+            ElseIf parts(1).StartsWith("**delvals") Then
+                For Each entry In Target.GetValueNames(parts(0))
+                    Target.DeleteValue(parts(0), entry)
+                Next
+            ElseIf parts(1) = "**deletevalues" Then
+                For Each entry In Split(kv.Value.AsString, ";")
+                    Target.DeleteValue(parts(0), entry)
+                Next
+            ElseIf parts(1) <> "" And Not parts(1).StartsWith("**") Then
+                Target.SetValue(casedParts(0), casedParts(1), kv.Value.Data, kv.Value.Kind)
+                If oldEntries.Contains(kv.Key) Then oldEntries.Remove(kv.Key) ' It's not forgotten
+            End If
+        Next
+        For Each e In oldEntries.Where(AddressOf RegistryPolicyProxy.IsPolicyKey) ' Remove the forgotten entries from the Registry
+            Dim parts = Split(e, "\\", 2)
+            Target.ForgetValue(parts(0), parts(1))
+        Next
+    End Sub
     Private Class PolEntryData
         Public Kind As RegistryValueKind
         Public Data As Byte()
@@ -266,5 +292,9 @@ Public Class RegistryPolicyProxy
     End Function
     Public Function WillDeleteValue(Key As String, Value As String) As Boolean Implements IPolicySource.WillDeleteValue
         Return False
+    End Function
+    Public Shared Function IsPolicyKey(KeyPath As String) As Boolean
+        Return KeyPath.StartsWith("software\policies\", StringComparison.InvariantCultureIgnoreCase) Or
+            KeyPath.StartsWith("software\microsoft\windows\currentversion\policies\", StringComparison.InvariantCultureIgnoreCase)
     End Function
 End Class
