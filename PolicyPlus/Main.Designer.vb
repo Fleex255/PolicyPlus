@@ -32,7 +32,10 @@ Partial Class Main
         Me.OpenADMXFileToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.CloseADMXWorkspaceToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.ExitToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.ViewToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.EmptyCategoriesToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.SplitContainer = New System.Windows.Forms.SplitContainer()
+        Me.ComboAppliesTo = New System.Windows.Forms.ComboBox()
         Me.CategoriesTree = New System.Windows.Forms.TreeView()
         Me.PolicyIcons = New System.Windows.Forms.ImageList(Me.components)
         Me.PoliciesList = New System.Windows.Forms.ListView()
@@ -42,9 +45,7 @@ Partial Class Main
         Me.PolicyTitleLabel = New System.Windows.Forms.Label()
         Me.PolicySupportedLabel = New System.Windows.Forms.Label()
         Me.PolicyDescLabel = New System.Windows.Forms.Label()
-        Me.ViewToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.EmptyCategoriesToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.ComboAppliesTo = New System.Windows.Forms.ComboBox()
+        Me.PolicyIsPrefLabel = New System.Windows.Forms.Label()
         ChSettingEnabled = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
         ChSettingCommented = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
         Me.MainMenu.SuspendLayout()
@@ -108,6 +109,19 @@ Partial Class Main
         Me.ExitToolStripMenuItem.Size = New System.Drawing.Size(201, 22)
         Me.ExitToolStripMenuItem.Text = "Exit"
         '
+        'ViewToolStripMenuItem
+        '
+        Me.ViewToolStripMenuItem.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.EmptyCategoriesToolStripMenuItem})
+        Me.ViewToolStripMenuItem.Name = "ViewToolStripMenuItem"
+        Me.ViewToolStripMenuItem.Size = New System.Drawing.Size(44, 20)
+        Me.ViewToolStripMenuItem.Text = "View"
+        '
+        'EmptyCategoriesToolStripMenuItem
+        '
+        Me.EmptyCategoriesToolStripMenuItem.Name = "EmptyCategoriesToolStripMenuItem"
+        Me.EmptyCategoriesToolStripMenuItem.Size = New System.Drawing.Size(167, 22)
+        Me.EmptyCategoriesToolStripMenuItem.Text = "Empty Categories"
+        '
         'SplitContainer
         '
         Me.SplitContainer.Dock = System.Windows.Forms.DockStyle.Fill
@@ -127,6 +141,17 @@ Partial Class Main
         Me.SplitContainer.Size = New System.Drawing.Size(706, 350)
         Me.SplitContainer.SplitterDistance = 190
         Me.SplitContainer.TabIndex = 1
+        '
+        'ComboAppliesTo
+        '
+        Me.ComboAppliesTo.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.ComboAppliesTo.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
+        Me.ComboAppliesTo.Items.AddRange(New Object() {"User or Computer", "User", "Computer"})
+        Me.ComboAppliesTo.Location = New System.Drawing.Point(0, 0)
+        Me.ComboAppliesTo.Name = "ComboAppliesTo"
+        Me.ComboAppliesTo.Size = New System.Drawing.Size(190, 21)
+        Me.ComboAppliesTo.TabIndex = 1
         '
         'CategoriesTree
         '
@@ -154,6 +179,7 @@ Partial Class Main
         Me.PolicyIcons.Images.SetKeyName(4, "page_white.png")
         Me.PolicyIcons.Images.SetKeyName(5, "page_white_gear.png")
         Me.PolicyIcons.Images.SetKeyName(6, "arrow_up.png")
+        Me.PolicyIcons.Images.SetKeyName(7, "page_white_error.png")
         '
         'PoliciesList
         '
@@ -181,6 +207,7 @@ Partial Class Main
         '
         Me.SettingInfoPanel.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
             Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
+        Me.SettingInfoPanel.AutoScroll = True
         Me.SettingInfoPanel.Controls.Add(Me.PolicyInfoTable)
         Me.SettingInfoPanel.Location = New System.Drawing.Point(0, 0)
         Me.SettingInfoPanel.Name = "SettingInfoPanel"
@@ -189,77 +216,65 @@ Partial Class Main
         '
         'PolicyInfoTable
         '
+        Me.PolicyInfoTable.AutoSize = True
+        Me.PolicyInfoTable.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink
         Me.PolicyInfoTable.ColumnCount = 1
-        Me.PolicyInfoTable.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100.0!))
+        Me.PolicyInfoTable.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 706.0!))
         Me.PolicyInfoTable.Controls.Add(Me.PolicyTitleLabel, 0, 0)
         Me.PolicyInfoTable.Controls.Add(Me.PolicySupportedLabel, 0, 1)
-        Me.PolicyInfoTable.Controls.Add(Me.PolicyDescLabel, 0, 2)
-        Me.PolicyInfoTable.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.PolicyInfoTable.Controls.Add(Me.PolicyDescLabel, 0, 3)
+        Me.PolicyInfoTable.Controls.Add(Me.PolicyIsPrefLabel, 0, 2)
         Me.PolicyInfoTable.Location = New System.Drawing.Point(0, 0)
         Me.PolicyInfoTable.Name = "PolicyInfoTable"
-        Me.PolicyInfoTable.RowCount = 3
+        Me.PolicyInfoTable.RowCount = 4
         Me.PolicyInfoTable.RowStyles.Add(New System.Windows.Forms.RowStyle())
         Me.PolicyInfoTable.RowStyles.Add(New System.Windows.Forms.RowStyle())
         Me.PolicyInfoTable.RowStyles.Add(New System.Windows.Forms.RowStyle())
-        Me.PolicyInfoTable.Size = New System.Drawing.Size(184, 350)
+        Me.PolicyInfoTable.RowStyles.Add(New System.Windows.Forms.RowStyle())
+        Me.PolicyInfoTable.Size = New System.Drawing.Size(706, 124)
         Me.PolicyInfoTable.TabIndex = 0
         '
         'PolicyTitleLabel
         '
         Me.PolicyTitleLabel.AutoSize = True
-        Me.PolicyTitleLabel.Dock = System.Windows.Forms.DockStyle.Fill
         Me.PolicyTitleLabel.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.PolicyTitleLabel.Location = New System.Drawing.Point(3, 0)
         Me.PolicyTitleLabel.Margin = New System.Windows.Forms.Padding(3, 0, 3, 24)
         Me.PolicyTitleLabel.Name = "PolicyTitleLabel"
-        Me.PolicyTitleLabel.Size = New System.Drawing.Size(178, 13)
+        Me.PolicyTitleLabel.Size = New System.Drawing.Size(66, 13)
         Me.PolicyTitleLabel.TabIndex = 0
         Me.PolicyTitleLabel.Text = "Policy title"
         '
         'PolicySupportedLabel
         '
         Me.PolicySupportedLabel.AutoSize = True
-        Me.PolicySupportedLabel.Dock = System.Windows.Forms.DockStyle.Fill
         Me.PolicySupportedLabel.Location = New System.Drawing.Point(3, 37)
         Me.PolicySupportedLabel.Margin = New System.Windows.Forms.Padding(3, 0, 3, 24)
         Me.PolicySupportedLabel.Name = "PolicySupportedLabel"
-        Me.PolicySupportedLabel.Size = New System.Drawing.Size(178, 13)
+        Me.PolicySupportedLabel.Size = New System.Drawing.Size(72, 13)
         Me.PolicySupportedLabel.TabIndex = 1
         Me.PolicySupportedLabel.Text = "Requirements"
         '
         'PolicyDescLabel
         '
         Me.PolicyDescLabel.AutoSize = True
-        Me.PolicyDescLabel.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.PolicyDescLabel.Location = New System.Drawing.Point(3, 74)
+        Me.PolicyDescLabel.Location = New System.Drawing.Point(3, 111)
         Me.PolicyDescLabel.Name = "PolicyDescLabel"
-        Me.PolicyDescLabel.Size = New System.Drawing.Size(178, 276)
+        Me.PolicyDescLabel.Size = New System.Drawing.Size(89, 13)
         Me.PolicyDescLabel.TabIndex = 2
         Me.PolicyDescLabel.Text = "Policy description"
         '
-        'ViewToolStripMenuItem
+        'PolicyIsPrefLabel
         '
-        Me.ViewToolStripMenuItem.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.EmptyCategoriesToolStripMenuItem})
-        Me.ViewToolStripMenuItem.Name = "ViewToolStripMenuItem"
-        Me.ViewToolStripMenuItem.Size = New System.Drawing.Size(44, 20)
-        Me.ViewToolStripMenuItem.Text = "View"
-        '
-        'EmptyCategoriesToolStripMenuItem
-        '
-        Me.EmptyCategoriesToolStripMenuItem.Name = "EmptyCategoriesToolStripMenuItem"
-        Me.EmptyCategoriesToolStripMenuItem.Size = New System.Drawing.Size(167, 22)
-        Me.EmptyCategoriesToolStripMenuItem.Text = "Empty Categories"
-        '
-        'ComboAppliesTo
-        '
-        Me.ComboAppliesTo.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
-            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.ComboAppliesTo.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
-        Me.ComboAppliesTo.Items.AddRange(New Object() {"User or Computer", "User", "Computer"})
-        Me.ComboAppliesTo.Location = New System.Drawing.Point(0, 0)
-        Me.ComboAppliesTo.Name = "ComboAppliesTo"
-        Me.ComboAppliesTo.Size = New System.Drawing.Size(190, 21)
-        Me.ComboAppliesTo.TabIndex = 1
+        Me.PolicyIsPrefLabel.AutoSize = True
+        Me.PolicyIsPrefLabel.ImageAlign = System.Drawing.ContentAlignment.TopLeft
+        Me.PolicyIsPrefLabel.Location = New System.Drawing.Point(3, 74)
+        Me.PolicyIsPrefLabel.Margin = New System.Windows.Forms.Padding(3, 0, 3, 24)
+        Me.PolicyIsPrefLabel.Name = "PolicyIsPrefLabel"
+        Me.PolicyIsPrefLabel.Size = New System.Drawing.Size(700, 13)
+        Me.PolicyIsPrefLabel.TabIndex = 3
+        Me.PolicyIsPrefLabel.Text = "Because it is not stored in a Policies section of the Registry, this policy is a " &
+    "preference and will not be automatically undone if the setting is removed."
         '
         'Main
         '
@@ -279,6 +294,7 @@ Partial Class Main
         CType(Me.SplitContainer, System.ComponentModel.ISupportInitialize).EndInit()
         Me.SplitContainer.ResumeLayout(False)
         Me.SettingInfoPanel.ResumeLayout(False)
+        Me.SettingInfoPanel.PerformLayout()
         Me.PolicyInfoTable.ResumeLayout(False)
         Me.PolicyInfoTable.PerformLayout()
         Me.ResumeLayout(False)
@@ -305,4 +321,5 @@ Partial Class Main
     Friend WithEvents ViewToolStripMenuItem As ToolStripMenuItem
     Friend WithEvents EmptyCategoriesToolStripMenuItem As ToolStripMenuItem
     Friend WithEvents ComboAppliesTo As ComboBox
+    Friend WithEvents PolicyIsPrefLabel As Label
 End Class

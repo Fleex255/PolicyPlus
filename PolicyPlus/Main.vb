@@ -71,9 +71,12 @@
                 PolicySupportedLabel.Text = "Requirements:" & vbCrLf & CurrentSetting.SupportedOn.DisplayName
             End If
             PolicyDescLabel.Text = CurrentSetting.DisplayExplanation.TrimStart(" "c).TrimStart(vbTab(0)).TrimStart(vbCrLf)
+            PolicyIsPrefLabel.Visible = IsPreference(CurrentSetting)
         Else
             PolicyDescLabel.Text = "Select a setting on the right to see its description."
+            PolicyIsPrefLabel.Visible = False
         End If
+        SettingInfoPanel_ClientSizeChanged(Nothing, Nothing)
     End Sub
     Function GetImageIndexForCategory(Category As PolicyPlusCategory) As Integer
         If Category.Parent Is Nothing And Category.RawCategory.ParentID <> "" Then
@@ -85,7 +88,9 @@
         End If
     End Function
     Function GetImageIndexForSetting(Setting As PolicyPlusPolicy) As Integer
-        If Setting.RawPolicy.Elements Is Nothing OrElse Setting.RawPolicy.Elements.Count = 0 Then
+        If IsPreference(Setting) Then
+            Return 7 ' Preference, not policy (exclamation mark)
+        ElseIf Setting.RawPolicy.Elements Is Nothing OrElse Setting.RawPolicy.Elements.Count = 0 Then
             Return 4 ' Normal
         Else
             Return 5 ' Extra configuration
@@ -144,6 +149,9 @@
                 Return "Unknown"
         End Select
     End Function
+    Function IsPreference(Policy As PolicyPlusPolicy) As Boolean
+        Return Policy.RawPolicy.RegistryKey <> "" And Not RegistryPolicyProxy.IsPolicyKey(Policy.RawPolicy.RegistryKey)
+    End Function
     Private Sub CategoriesTree_AfterSelect(sender As Object, e As TreeViewEventArgs) Handles CategoriesTree.AfterSelect
         CurrentCategory = e.Node.Tag
         UpdateCategoryListing()
@@ -151,7 +159,7 @@
         UpdatePolicyInfo()
     End Sub
     Private Sub ResizePolicyNameColumn(sender As Object, e As EventArgs) Handles Me.SizeChanged, PoliciesList.SizeChanged
-        PoliciesList.Columns(0).Width = PoliciesList.Width - (PoliciesList.Columns(1).Width + PoliciesList.Columns(2).Width)
+        If IsHandleCreated Then BeginInvoke(Sub() PoliciesList.Columns(0).Width = PoliciesList.ClientSize.Width - (PoliciesList.Columns(1).Width + PoliciesList.Columns(2).Width))
     End Sub
     Private Sub PoliciesList_SelectedIndexChanged(sender As Object, e As EventArgs) Handles PoliciesList.SelectedIndexChanged
         If PoliciesList.SelectedItems.Count > 0 AndAlso TypeOf PoliciesList.SelectedItems(0).Tag Is PolicyPlusPolicy Then
@@ -206,5 +214,18 @@
             CurrentCategory = policyItem
             UpdateCategoryListing()
         End If
+    End Sub
+    Declare Function ShowScrollBar Lib "user32.dll" (Handle As IntPtr, Scrollbar As Integer, Show As Boolean) As Boolean
+    Private Sub SettingInfoPanel_ClientSizeChanged(sender As Object, e As EventArgs) Handles SettingInfoPanel.ClientSizeChanged, SettingInfoPanel.SizeChanged
+        SettingInfoPanel.AutoScrollMinSize = SettingInfoPanel.Size
+        PolicyTitleLabel.MaximumSize = New Size(PolicyInfoTable.Width, 0)
+        PolicySupportedLabel.MaximumSize = New Size(PolicyInfoTable.Width, 0)
+        PolicyDescLabel.MaximumSize = New Size(PolicyInfoTable.Width, 0)
+        PolicyIsPrefLabel.MaximumSize = New Size(PolicyInfoTable.Width, 0)
+        PolicyInfoTable.MaximumSize = New Size(SettingInfoPanel.Width - IIf(SettingInfoPanel.VerticalScroll.Visible, SystemInformation.VerticalScrollBarWidth, 0), 0)
+        PolicyInfoTable.Width = PolicyInfoTable.MaximumSize.Width
+        If PolicyInfoTable.ColumnCount > 0 Then PolicyInfoTable.ColumnStyles(0).Width = PolicyInfoTable.ClientSize.Width ' Only once everything is initialized
+        PolicyInfoTable.PerformLayout() ' Force the table to take up its full desired size
+        ShowScrollBar(SettingInfoPanel.Handle, 0, False) ' 0 means horizontal
     End Sub
 End Class
