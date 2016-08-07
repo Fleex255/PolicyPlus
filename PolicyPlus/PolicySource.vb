@@ -295,6 +295,7 @@ Public Class RegistryPolicyProxy
     End Function
     Public Shared Function IsPolicyKey(KeyPath As String) As Boolean
         Return KeyPath.StartsWith("software\policies\", StringComparison.InvariantCultureIgnoreCase) Or
-            KeyPath.StartsWith("software\microsoft\windows\currentversion\policies\", StringComparison.InvariantCultureIgnoreCase)
+            KeyPath.StartsWith("software\microsoft\windows\currentversion\policies\", StringComparison.InvariantCultureIgnoreCase) Or
+            KeyPath.StartsWith("system\currentcontrolset\policies\", StringComparison.InvariantCultureIgnoreCase)
     End Function
 End Class

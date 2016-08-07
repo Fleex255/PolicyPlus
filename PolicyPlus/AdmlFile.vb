@@ -52,6 +52,7 @@ Public Class AdmlFile
                             decTextPart.DefaultValue = AttributeOrDefault(uiElement, "defaultValue", 1)
                             decTextPart.HasSpinner = AttributeOrDefault(uiElement, "spin", True)
                             decTextPart.SpinnerIncrement = AttributeOrDefault(uiElement, "spinStep", 1)
+                            decTextPart.Label = uiElement.InnerText
                             presPart = decTextPart
                         Case "textBox"
                             Dim textPart As New TextBoxPresentationElement

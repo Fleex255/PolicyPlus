@@ -26,6 +26,7 @@ Partial Class Main
         Dim ChSettingEnabled As System.Windows.Forms.ColumnHeader
         Dim ChSettingCommented As System.Windows.Forms.ColumnHeader
         Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(Main))
+        Dim ToolStripSeparator1 As System.Windows.Forms.ToolStripSeparator
         Me.MainMenu = New System.Windows.Forms.MenuStrip()
         Me.FileToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.OpenADMXFolderToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
@@ -46,8 +47,10 @@ Partial Class Main
         Me.PolicySupportedLabel = New System.Windows.Forms.Label()
         Me.PolicyDescLabel = New System.Windows.Forms.Label()
         Me.PolicyIsPrefLabel = New System.Windows.Forms.Label()
+        Me.DeduplicatePoliciesToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         ChSettingEnabled = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
         ChSettingCommented = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
+        ToolStripSeparator1 = New System.Windows.Forms.ToolStripSeparator()
         Me.MainMenu.SuspendLayout()
         CType(Me.SplitContainer, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SplitContainer.Panel1.SuspendLayout()
@@ -111,7 +114,7 @@ Partial Class Main
         '
         'ViewToolStripMenuItem
         '
-        Me.ViewToolStripMenuItem.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.EmptyCategoriesToolStripMenuItem})
+        Me.ViewToolStripMenuItem.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.EmptyCategoriesToolStripMenuItem, ToolStripSeparator1, Me.DeduplicatePoliciesToolStripMenuItem})
         Me.ViewToolStripMenuItem.Name = "ViewToolStripMenuItem"
         Me.ViewToolStripMenuItem.Size = New System.Drawing.Size(44, 20)
         Me.ViewToolStripMenuItem.Text = "View"
@@ -276,6 +279,17 @@ Partial Class Main
         Me.PolicyIsPrefLabel.Text = "Because it is not stored in a Policies section of the Registry, this policy is a " &
     "preference and will not be automatically undone if the setting is removed."
         '
+        'ToolStripSeparator1
+        '
+        ToolStripSeparator1.Name = "ToolStripSeparator1"
+        ToolStripSeparator1.Size = New System.Drawing.Size(177, 6)
+        '
+        'DeduplicatePoliciesToolStripMenuItem
+        '
+        Me.DeduplicatePoliciesToolStripMenuItem.Name = "DeduplicatePoliciesToolStripMenuItem"
+        Me.DeduplicatePoliciesToolStripMenuItem.Size = New System.Drawing.Size(180, 22)
+        Me.DeduplicatePoliciesToolStripMenuItem.Text = "Deduplicate Policies"
+        '
         'Main
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
@@ -322,4 +336,5 @@ Partial Class Main
     Friend WithEvents EmptyCategoriesToolStripMenuItem As ToolStripMenuItem
     Friend WithEvents ComboAppliesTo As ComboBox
     Friend WithEvents PolicyIsPrefLabel As Label
+    Friend WithEvents DeduplicatePoliciesToolStripMenuItem As ToolStripMenuItem
 End Class

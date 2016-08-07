@@ -66,6 +66,24 @@
                 Throw New InvalidOperationException("Illegal value type")
         End Select
     End Function
+    Public Shared Function DeduplicatePolicies(Workspace As AdmxBundle) As Integer
+        Dim dedupeCount = 0
+        For Each cat In Workspace.Policies.GroupBy(Function(c) c.Value.Category)
+            For Each namegroup In cat.GroupBy(Function(p) p.Value.DisplayName).Select(Function(x) x.ToList).ToList
+                If namegroup.Count <> 2 Then Continue For
+                Dim a = namegroup(0).Value
+                Dim b = namegroup(1).Value
+                If a.RawPolicy.Section + b.RawPolicy.Section <> AdmxPolicySection.Both Then Continue For
+                If a.DisplayExplanation <> b.DisplayExplanation Then Continue For
+                If a.RawPolicy.RegistryKey <> b.RawPolicy.RegistryKey Then Continue For
+                a.Category.Policies.Remove(a)
+                Workspace.Policies.Remove(a.UniqueID)
+                b.RawPolicy.Section = AdmxPolicySection.Both
+                dedupeCount += 1
+            Next
+        Next
+        Return dedupeCount
+    End Function
 End Class
 Public Enum PolicyState
     NotConfigured = 0

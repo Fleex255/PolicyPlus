@@ -124,14 +124,19 @@
         If ViewPolicyTypes = AdmxPolicySection.Both Then
             Dim userState = GetPolicyState(Policy, AdmxPolicySection.User)
             Dim machState = GetPolicyState(Policy, AdmxPolicySection.Machine)
-            If userState = machState Then
-                Return userState & " (2)"
-            ElseIf userState = "Not Configured" Then
-                Return machState & " (C)"
-            ElseIf machState = "Not Configured" Then
-                Return userState & " (U)"
+            Dim section = Policy.RawPolicy.Section
+            If section = AdmxPolicySection.Both Then
+                If userState = machState Then
+                    Return userState & " (2)"
+                ElseIf userState = "Not Configured" Then
+                    Return machState & " (C)"
+                ElseIf machState = "Not Configured" Then
+                    Return userState & " (U)"
+                Else
+                    Return "Mixed"
+                End If
             Else
-                Return "Mixed"
+                If section = AdmxPolicySection.Machine Then Return machState & " (C)" Else Return userState & " (U)"
             End If
         Else
             Return GetPolicyState(Policy, ViewPolicyTypes)
@@ -213,7 +218,19 @@
         If TypeOf policyItem Is PolicyPlusCategory Then
             CurrentCategory = policyItem
             UpdateCategoryListing()
+        ElseIf TypeOf policyItem Is PolicyPlusPolicy Then
+            EditSetting.CurrentSetting = policyItem
+            EditSetting.CurrentSection = ViewPolicyTypes
+            EditSetting.AdmxWorkspace = AdmxWorkspace
+            If EditSetting.ShowDialog() = DialogResult.OK Then UpdateCategoryListing()
         End If
+    End Sub
+    Private Sub DeduplicatePoliciesToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles DeduplicatePoliciesToolStripMenuItem.Click
+        CurrentSetting = Nothing
+        Dim deduped = PolicyProcessing.DeduplicatePolicies(AdmxWorkspace)
+        MsgBox("Deduplicated " & deduped & " policies.", MsgBoxStyle.Information)
+        UpdateCategoryListing()
+        UpdatePolicyInfo()
     End Sub
     Declare Function ShowScrollBar Lib "user32.dll" (Handle As IntPtr, Scrollbar As Integer, Show As Boolean) As Boolean
     Private Sub SettingInfoPanel_ClientSizeChanged(sender As Object, e As EventArgs) Handles SettingInfoPanel.ClientSizeChanged, SettingInfoPanel.SizeChanged

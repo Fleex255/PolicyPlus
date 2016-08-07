@@ -15,6 +15,7 @@ Public Class NumericBoxPresentationElement ' <decimalTextBox>
     Public DefaultValue As UInteger ' defaultValue
     Public HasSpinner As Boolean = True ' spin
     Public SpinnerIncrement As UInteger ' spinStep
+    Public Label As String ' Inner text
 End Class
 Public Class TextBoxPresentationElement ' <textBox>
     Inherits PresentationElement

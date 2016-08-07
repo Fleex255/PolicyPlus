@@ -145,13 +145,13 @@ Public Class AdmxBundle
             Return Nothing
         End If
     End Function
-    Private Function ResolveString(DisplayCode As String, Admx As AdmxFile) As String
+    Public Function ResolveString(DisplayCode As String, Admx As AdmxFile) As String
         If Not DisplayCode.StartsWith("$(string.") Then Return DisplayCode
         Dim stringId = DisplayCode.Substring(9, DisplayCode.Length - 10)
         Dim dict = SourceFiles(Admx).StringTable
         If dict.ContainsKey(stringId) Then Return dict(stringId) Else Return DisplayCode
     End Function
-    Private Function ResolvePresentation(DisplayCode As String, Admx As AdmxFile) As Presentation
+    Public Function ResolvePresentation(DisplayCode As String, Admx As AdmxFile) As Presentation
         If Not DisplayCode.StartsWith("$(presentation.") Then Return Nothing
         Dim presId = DisplayCode.Substring(15, DisplayCode.Length - 16)
         Dim dict = SourceFiles(Admx).PresentationTable
