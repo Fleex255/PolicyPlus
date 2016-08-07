@@ -244,6 +244,7 @@ Public Class AdmxFile
                                             entry.RegistryKey = AttributeOrNull(uiElement, "key")
                                             If entry.RegistryValue = "" Then entry.RegistryValue = AttributeOrNull(uiElement, "valueName")
                                             entry.ID = uiElement.Attributes("id").Value
+                                            entry.ElementType = uiElement.LocalName
                                             policy.Elements.Add(entry)
                                         End If
                                     Next

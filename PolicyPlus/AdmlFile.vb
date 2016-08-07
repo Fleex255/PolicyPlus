@@ -96,6 +96,7 @@ Public Class AdmlFile
                     End Select
                     If presPart IsNot Nothing Then
                         If uiElement.Attributes("refId") IsNot Nothing Then presPart.ID = uiElement.Attributes("refId").Value
+                        presPart.ElementType = uiElement.LocalName
                         presentation.Elements.Add(presPart)
                     End If
                 Next

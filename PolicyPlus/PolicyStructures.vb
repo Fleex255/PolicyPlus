@@ -28,6 +28,7 @@ Public MustInherit Class PolicyElement
     Public ClientExtension As String
     Public RegistryKey As String
     Public RegistryValue As String
+    Public ElementType As String
 End Class
 Public Class DecimalPolicyElement ' <decimal>
     Inherits PolicyElement

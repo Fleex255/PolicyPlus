@@ -4,6 +4,7 @@
 End Class
 Public MustInherit Class PresentationElement
     Public ID As String ' refId
+    Public ElementType As String
 End Class
 Public Class LabelPresentationElement ' <text>
     Inherits PresentationElement

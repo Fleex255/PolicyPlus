@@ -76,6 +76,7 @@ Public Class AdmxBundle
             Dim pol As New PolicyPlusPolicy
             pol.DisplayExplanation = ResolveString(rawPol.ExplainCode, rawPol.DefinedIn)
             pol.DisplayName = ResolveString(rawPol.DisplayCode, rawPol.DefinedIn)
+            If rawPol.PresentationID <> "" Then pol.Presentation = ResolvePresentation(rawPol.PresentationID, rawPol.DefinedIn)
             pol.UniqueID = QualifyName(rawPol.ID, rawPol.DefinedIn)
             pol.RawPolicy = rawPol
             polIds.Add(pol.UniqueID, pol)
@@ -149,6 +150,12 @@ Public Class AdmxBundle
         Dim stringId = DisplayCode.Substring(9, DisplayCode.Length - 10)
         Dim dict = SourceFiles(Admx).StringTable
         If dict.ContainsKey(stringId) Then Return dict(stringId) Else Return DisplayCode
+    End Function
+    Private Function ResolvePresentation(DisplayCode As String, Admx As AdmxFile) As Presentation
+        If Not DisplayCode.StartsWith("$(presentation.") Then Return Nothing
+        Dim presId = DisplayCode.Substring(15, DisplayCode.Length - 16)
+        Dim dict = SourceFiles(Admx).PresentationTable
+        If dict.ContainsKey(presId) Then Return dict(presId) Else Return Nothing
     End Function
     Private Function QualifyName(ID As String, Admx As AdmxFile) As String
         Return Admx.AdmxNamespace & ":" & ID

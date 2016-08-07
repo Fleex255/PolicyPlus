@@ -29,6 +29,6 @@ Public Class PolicyPlusPolicy
     Public DisplayName As String
     Public DisplayExplanation As String
     Public SupportedOn As PolicyPlusSupport
-    ' TODO: Presentation
+    Public Presentation As Presentation
     Public RawPolicy As AdmxPolicy
 End Class
