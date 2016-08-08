@@ -7,8 +7,8 @@ Public Class AdmxBundle
     Private RawPolicies As New List(Of AdmxPolicy)
     Private RawSupport As New List(Of AdmxSupportDefinition)
     ' Lists that include all items, even those that are children of others
-    Private FlatCategories As New Dictionary(Of String, PolicyPlusCategory)
-    Private FlatProducts As New Dictionary(Of String, PolicyPlusProduct)
+    Public FlatCategories As New Dictionary(Of String, PolicyPlusCategory)
+    Public FlatProducts As New Dictionary(Of String, PolicyPlusProduct)
     ' Lists of top-level items only
     Public Categories As New Dictionary(Of String, PolicyPlusCategory)
     Public Products As New Dictionary(Of String, PolicyPlusProduct)

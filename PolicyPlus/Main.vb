@@ -157,6 +157,12 @@
     Function IsPreference(Policy As PolicyPlusPolicy) As Boolean
         Return Policy.RawPolicy.RegistryKey <> "" And Not RegistryPolicyProxy.IsPolicyKey(Policy.RawPolicy.RegistryKey)
     End Function
+    Sub ShowSettingEditor(Policy As PolicyPlusPolicy, Section As AdmxPolicySection)
+        EditSetting.CurrentSetting = Policy
+        EditSetting.CurrentSection = Section
+        EditSetting.AdmxWorkspace = AdmxWorkspace
+        If EditSetting.ShowDialog() = DialogResult.OK Then UpdateCategoryListing()
+    End Sub
     Private Sub CategoriesTree_AfterSelect(sender As Object, e As TreeViewEventArgs) Handles CategoriesTree.AfterSelect
         CurrentCategory = e.Node.Tag
         UpdateCategoryListing()
@@ -219,10 +225,7 @@
             CurrentCategory = policyItem
             UpdateCategoryListing()
         ElseIf TypeOf policyItem Is PolicyPlusPolicy Then
-            EditSetting.CurrentSetting = policyItem
-            EditSetting.CurrentSection = ViewPolicyTypes
-            EditSetting.AdmxWorkspace = AdmxWorkspace
-            If EditSetting.ShowDialog() = DialogResult.OK Then UpdateCategoryListing()
+            ShowSettingEditor(policyItem, ViewPolicyTypes)
         End If
     End Sub
     Private Sub DeduplicatePoliciesToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles DeduplicatePoliciesToolStripMenuItem.Click
@@ -231,6 +234,25 @@
         MsgBox("Deduplicated " & deduped & " policies.", MsgBoxStyle.Information)
         UpdateCategoryListing()
         UpdatePolicyInfo()
+    End Sub
+    Private Sub FindByIDToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles FindByIDToolStripMenuItem.Click
+        FindById.AdmxWorkspace = AdmxWorkspace
+        If FindById.ShowDialog() = DialogResult.OK Then
+            Dim selCat = FindById.SelectedCategory
+            Dim selPol = FindById.SelectedPolicy
+            If selCat IsNot Nothing Then
+                If CategoryNodes.ContainsKey(selCat) Then
+                    CurrentCategory = selCat
+                    UpdateCategoryListing()
+                Else
+                    MsgBox("The category is not currently visible. Change the view settings and try again.", MsgBoxStyle.Exclamation)
+                End If
+            ElseIf selPol IsNot Nothing Then
+                ShowSettingEditor(selPol, Math.Min(ViewPolicyTypes, FindById.SelectedSection))
+            Else
+                MsgBox("That object could not be found.", MsgBoxStyle.Exclamation)
+            End If
+        End If
     End Sub
     Declare Function ShowScrollBar Lib "user32.dll" (Handle As IntPtr, Scrollbar As Integer, Show As Boolean) As Boolean
     Private Sub SettingInfoPanel_ClientSizeChanged(sender As Object, e As EventArgs) Handles SettingInfoPanel.ClientSizeChanged, SettingInfoPanel.SizeChanged

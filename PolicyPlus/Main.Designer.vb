@@ -48,6 +48,8 @@ Partial Class Main
         Me.PolicyDescLabel = New System.Windows.Forms.Label()
         Me.PolicyIsPrefLabel = New System.Windows.Forms.Label()
         Me.DeduplicatePoliciesToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.EditToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.FindByIDToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         ChSettingEnabled = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
         ChSettingCommented = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
         ToolStripSeparator1 = New System.Windows.Forms.ToolStripSeparator()
@@ -74,7 +76,7 @@ Partial Class Main
         '
         'MainMenu
         '
-        Me.MainMenu.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.FileToolStripMenuItem, Me.ViewToolStripMenuItem})
+        Me.MainMenu.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.FileToolStripMenuItem, Me.EditToolStripMenuItem, Me.ViewToolStripMenuItem})
         Me.MainMenu.Location = New System.Drawing.Point(0, 0)
         Me.MainMenu.Name = "MainMenu"
         Me.MainMenu.Size = New System.Drawing.Size(706, 24)
@@ -122,7 +124,7 @@ Partial Class Main
         'EmptyCategoriesToolStripMenuItem
         '
         Me.EmptyCategoriesToolStripMenuItem.Name = "EmptyCategoriesToolStripMenuItem"
-        Me.EmptyCategoriesToolStripMenuItem.Size = New System.Drawing.Size(167, 22)
+        Me.EmptyCategoriesToolStripMenuItem.Size = New System.Drawing.Size(180, 22)
         Me.EmptyCategoriesToolStripMenuItem.Text = "Empty Categories"
         '
         'SplitContainer
@@ -183,6 +185,8 @@ Partial Class Main
         Me.PolicyIcons.Images.SetKeyName(5, "page_white_gear.png")
         Me.PolicyIcons.Images.SetKeyName(6, "arrow_up.png")
         Me.PolicyIcons.Images.SetKeyName(7, "page_white_error.png")
+        Me.PolicyIcons.Images.SetKeyName(8, "delete.png")
+        Me.PolicyIcons.Images.SetKeyName(9, "arrow_right.png")
         '
         'PoliciesList
         '
@@ -290,6 +294,20 @@ Partial Class Main
         Me.DeduplicatePoliciesToolStripMenuItem.Size = New System.Drawing.Size(180, 22)
         Me.DeduplicatePoliciesToolStripMenuItem.Text = "Deduplicate Policies"
         '
+        'EditToolStripMenuItem
+        '
+        Me.EditToolStripMenuItem.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.FindByIDToolStripMenuItem})
+        Me.EditToolStripMenuItem.Name = "EditToolStripMenuItem"
+        Me.EditToolStripMenuItem.Size = New System.Drawing.Size(39, 20)
+        Me.EditToolStripMenuItem.Text = "Edit"
+        '
+        'FindByIDToolStripMenuItem
+        '
+        Me.FindByIDToolStripMenuItem.Name = "FindByIDToolStripMenuItem"
+        Me.FindByIDToolStripMenuItem.ShortcutKeys = CType((System.Windows.Forms.Keys.Control Or System.Windows.Forms.Keys.G), System.Windows.Forms.Keys)
+        Me.FindByIDToolStripMenuItem.Size = New System.Drawing.Size(169, 22)
+        Me.FindByIDToolStripMenuItem.Text = "Find by ID"
+        '
         'Main
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
@@ -337,4 +355,6 @@ Partial Class Main
     Friend WithEvents ComboAppliesTo As ComboBox
     Friend WithEvents PolicyIsPrefLabel As Label
     Friend WithEvents DeduplicatePoliciesToolStripMenuItem As ToolStripMenuItem
+    Friend WithEvents EditToolStripMenuItem As ToolStripMenuItem
+    Friend WithEvents FindByIDToolStripMenuItem As ToolStripMenuItem
 End Class
