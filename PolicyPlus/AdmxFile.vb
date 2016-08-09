@@ -102,6 +102,7 @@ Public Class AdmxFile
                         Dim category As New AdmxCategory
                         category.ID = categoryElement.Attributes("name").Value
                         category.DisplayCode = categoryElement.Attributes("displayName").Value
+                        category.ExplainCode = categoryElement.AttributeOrNull("explainText")
                         If categoryElement.HasChildNodes Then
                             Dim parentCatElement = categoryElement("parentCategory")
                             category.ParentID = parentCatElement.Attributes("ref").Value

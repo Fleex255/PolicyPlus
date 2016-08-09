@@ -47,6 +47,7 @@ Public Class AdmxBundle
         For Each rawCat In RawCategories
             Dim cat As New PolicyPlusCategory
             cat.DisplayName = ResolveString(rawCat.DisplayCode, rawCat.DefinedIn)
+            cat.DisplayExplanation = ResolveString(rawCat.ExplainCode, rawCat.DefinedIn)
             cat.UniqueID = QualifyName(rawCat.ID, rawCat.DefinedIn)
             cat.RawCategory = rawCat
             catIds.Add(cat.UniqueID, cat)
@@ -146,7 +147,7 @@ Public Class AdmxBundle
         End If
     End Function
     Public Function ResolveString(DisplayCode As String, Admx As AdmxFile) As String
-        If Not DisplayCode.StartsWith("$(string.") Then Return DisplayCode
+        If DisplayCode = "" OrElse Not DisplayCode.StartsWith("$(string.") Then Return DisplayCode
         Dim stringId = DisplayCode.Substring(9, DisplayCode.Length - 10)
         Dim dict = SourceFiles(Admx).StringTable
         If dict.ContainsKey(stringId) Then Return dict(stringId) Else Return DisplayCode

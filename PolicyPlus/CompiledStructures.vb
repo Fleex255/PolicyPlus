@@ -3,6 +3,7 @@
     Public Parent As PolicyPlusCategory
     Public Children As New List(Of PolicyPlusCategory)
     Public DisplayName As String
+    Public DisplayExplanation As String
     Public Policies As New List(Of PolicyPlusPolicy)
     Public RawCategory As AdmxCategory
 End Class

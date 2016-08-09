@@ -3,6 +3,7 @@
     Dim UserPolicySource, CompPolicySource As IPolicySource
     Dim CurrentCategory As PolicyPlusCategory
     Dim CurrentSetting As PolicyPlusPolicy
+    Dim HighlightCategory As PolicyPlusCategory
     Dim CategoryNodes As New Dictionary(Of PolicyPlusCategory, TreeNode)
     Dim ViewEmptyCategories As Boolean = False
     Dim ViewPolicyTypes As AdmxPolicySection = AdmxPolicySection.Both
@@ -31,7 +32,7 @@
         CategoriesTree.Sort()
         CurrentCategory = Nothing
         UpdateCategoryListing()
-        CurrentSetting = Nothing
+        ClearSelections()
         UpdatePolicyInfo()
     End Sub
     Sub UpdateCategoryListing()
@@ -60,18 +61,23 @@
         End If
     End Sub
     Sub UpdatePolicyInfo()
-        Dim hasCurrentSetting = (CurrentSetting IsNot Nothing)
+        Dim hasCurrentSetting = (CurrentSetting IsNot Nothing) Or (HighlightCategory IsNot Nothing)
         PolicyTitleLabel.Visible = hasCurrentSetting
         PolicySupportedLabel.Visible = hasCurrentSetting
-        If hasCurrentSetting Then
+        If CurrentSetting IsNot Nothing Then
             PolicyTitleLabel.Text = CurrentSetting.DisplayName
             If CurrentSetting.SupportedOn Is Nothing Then
                 PolicySupportedLabel.Text = ""
             Else
                 PolicySupportedLabel.Text = "Requirements:" & vbCrLf & CurrentSetting.SupportedOn.DisplayName
             End If
-            PolicyDescLabel.Text = CurrentSetting.DisplayExplanation.TrimStart(" "c).TrimStart(vbTab(0)).TrimStart(vbCrLf)
+            PolicyDescLabel.Text = CurrentSetting.DisplayExplanation.Trim()
             PolicyIsPrefLabel.Visible = IsPreference(CurrentSetting)
+        ElseIf HighlightCategory IsNot Nothing Then
+            PolicyTitleLabel.Text = HighlightCategory.DisplayName
+            PolicySupportedLabel.Text = "This category contains " & HighlightCategory.Policies.Count & " policies and " & HighlightCategory.Children.Count & " subcategories."
+            PolicyDescLabel.Text = HighlightCategory.DisplayExplanation.Trim()
+            PolicyIsPrefLabel.Visible = False
         Else
             PolicyDescLabel.Text = "Select a setting on the right to see its description."
             PolicyIsPrefLabel.Visible = False
@@ -163,20 +169,31 @@
         EditSetting.AdmxWorkspace = AdmxWorkspace
         If EditSetting.ShowDialog() = DialogResult.OK Then UpdateCategoryListing()
     End Sub
+    Sub ClearSelections()
+        CurrentSetting = Nothing
+        HighlightCategory = Nothing
+    End Sub
     Private Sub CategoriesTree_AfterSelect(sender As Object, e As TreeViewEventArgs) Handles CategoriesTree.AfterSelect
         CurrentCategory = e.Node.Tag
         UpdateCategoryListing()
-        CurrentSetting = Nothing
+        ClearSelections()
         UpdatePolicyInfo()
     End Sub
     Private Sub ResizePolicyNameColumn(sender As Object, e As EventArgs) Handles Me.SizeChanged, PoliciesList.SizeChanged
         If IsHandleCreated Then BeginInvoke(Sub() PoliciesList.Columns(0).Width = PoliciesList.ClientSize.Width - (PoliciesList.Columns(1).Width + PoliciesList.Columns(2).Width))
     End Sub
     Private Sub PoliciesList_SelectedIndexChanged(sender As Object, e As EventArgs) Handles PoliciesList.SelectedIndexChanged
-        If PoliciesList.SelectedItems.Count > 0 AndAlso TypeOf PoliciesList.SelectedItems(0).Tag Is PolicyPlusPolicy Then
-            CurrentSetting = PoliciesList.SelectedItems(0).Tag
+        If PoliciesList.SelectedItems.Count > 0 Then
+            Dim selObject = PoliciesList.SelectedItems(0).Tag
+            If TypeOf selObject Is PolicyPlusPolicy Then
+                CurrentSetting = selObject
+                HighlightCategory = Nothing
+            ElseIf TypeOf selObject Is PolicyPlusCategory Then
+                HighlightCategory = selObject
+                CurrentSetting = Nothing
+            End If
         Else
-            CurrentSetting = Nothing
+            ClearSelections()
         End If
         UpdatePolicyInfo()
     End Sub
@@ -229,7 +246,7 @@
         End If
     End Sub
     Private Sub DeduplicatePoliciesToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles DeduplicatePoliciesToolStripMenuItem.Click
-        CurrentSetting = Nothing
+        ClearSelections()
         Dim deduped = PolicyProcessing.DeduplicatePolicies(AdmxWorkspace)
         MsgBox("Deduplicated " & deduped & " policies.", MsgBoxStyle.Information)
         UpdateCategoryListing()

@@ -32,6 +32,7 @@ End Class
 Public Class AdmxCategory
     Public ID As String
     Public DisplayCode As String
+    Public ExplainCode As String
     Public ParentID As String
     Public DefinedIn As AdmxFile
 End Class
