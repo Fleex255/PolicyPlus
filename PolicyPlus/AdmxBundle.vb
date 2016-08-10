@@ -147,7 +147,8 @@ Public Class AdmxBundle
         End If
     End Function
     Public Function ResolveString(DisplayCode As String, Admx As AdmxFile) As String
-        If DisplayCode = "" OrElse Not DisplayCode.StartsWith("$(string.") Then Return DisplayCode
+        If DisplayCode = "" Then Return ""
+        If Not DisplayCode.StartsWith("$(string.") Then Return DisplayCode
         Dim stringId = DisplayCode.Substring(9, DisplayCode.Length - 10)
         Dim dict = SourceFiles(Admx).StringTable
         If dict.ContainsKey(stringId) Then Return dict(stringId) Else Return DisplayCode
