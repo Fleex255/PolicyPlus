@@ -167,6 +167,8 @@
         EditSetting.CurrentSetting = Policy
         EditSetting.CurrentSection = Section
         EditSetting.AdmxWorkspace = AdmxWorkspace
+        EditSetting.CompPolSource = CompPolicySource
+        EditSetting.UserPolSource = UserPolicySource
         If EditSetting.ShowDialog() = DialogResult.OK Then UpdateCategoryListing()
     End Sub
     Sub ClearSelections()

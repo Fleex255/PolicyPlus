@@ -128,7 +128,7 @@ Public Class PolFile
         Dim prefix = GetDictKey(Key, "")
         Dim valNames As New List(Of String)
         For Each k In Entries.Keys
-            If k.StartsWith(prefix) Then valNames.Add(k)
+            If k.StartsWith(prefix) Then valNames.Add(Split(k, "\\", 2)(1))
         Next
         Return valNames
     End Function

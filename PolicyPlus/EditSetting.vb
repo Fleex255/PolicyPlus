@@ -2,7 +2,9 @@
     Public CurrentSetting As PolicyPlusPolicy
     Public CurrentSection As AdmxPolicySection
     Public AdmxWorkspace As AdmxBundle
+    Public CompPolSource, UserPolSource As IPolicySource
     Dim ElementControls As Dictionary(Of String, Control)
+    Dim CurrentSource As IPolicySource
     Private Sub CancelButton_Click(sender As Object, e As EventArgs) Handles CancelButton.Click
         Close()
     End Sub
@@ -17,8 +19,8 @@
             SectionDropdown.Enabled = False
             CurrentSection = CurrentSetting.RawPolicy.Section
         End If
-        SectionDropdown.Text = IIf(CurrentSection = AdmxPolicySection.Machine, "Computer", "User")
         PreparePolicyElements()
+        SectionDropdown.Text = IIf(CurrentSection = AdmxPolicySection.Machine, "Computer", "User")
         PreparePolicyState()
     End Sub
     Sub PreparePolicyElements()
@@ -150,13 +152,47 @@
         End If
     End Sub
     Sub PreparePolicyState()
-
+        Select Case PolicyProcessing.GetPolicyState(CurrentSource, CurrentSetting)
+            Case PolicyState.Disabled
+                DisabledOption.Checked = True
+            Case PolicyState.Enabled
+                EnabledOption.Checked = True
+                Dim optionStates = PolicyProcessing.GetPolicyOptionStates(CurrentSource, CurrentSetting)
+                For Each kv In optionStates
+                    Dim uiControl As Control = ElementControls(kv.Key)
+                    If TypeOf kv.Value Is UInteger Then ' Numeric box
+                        If TypeOf uiControl Is TextBox Then
+                            CType(uiControl, TextBox).Text = kv.Value.ToString
+                        Else
+                            CType(uiControl, NumericUpDown).Value = kv.Value
+                        End If
+                    ElseIf TypeOf kv.Value Is String Then ' Text box or combo box
+                        If TypeOf uiControl Is ComboBox Then
+                            CType(uiControl, ComboBox).Text = kv.Value
+                        Else
+                            CType(uiControl, TextBox).Text = kv.Value
+                        End If
+                    ElseIf TypeOf kv.Value Is Integer Then ' Dropdown list
+                        CType(uiControl, ComboBox).SelectedIndex = kv.Value
+                    ElseIf TypeOf kv.Value Is Boolean Then ' Check box
+                        CType(uiControl, CheckBox).Checked = kv.Value
+                    Else ' List box (pop-out button)
+                        uiControl.Tag = kv.Value
+                    End If
+                Next
+            Case Else
+                NotConfiguredOption.Checked = True
+        End Select
     End Sub
     Private Sub StateRadiosChanged(sender As Object, e As EventArgs) Handles DisabledOption.CheckedChanged, EnabledOption.CheckedChanged, NotConfiguredOption.CheckedChanged
         Dim allowOptions = EnabledOption.Checked
         For Each kv In ElementControls
             kv.Value.Enabled = allowOptions
         Next
+    End Sub
+    Private Sub SectionDropdown_SelectedIndexChanged(sender As Object, e As EventArgs) Handles SectionDropdown.SelectedIndexChanged
+        CurrentSource = IIf(SectionDropdown.Text = "User", UserPolSource, CompPolSource)
+        PreparePolicyState()
     End Sub
     Private Class DropdownPresentationMap
         Public ID As Integer
