@@ -16,15 +16,23 @@
                                Next
                            End Sub
         If rawpol.RegistryValue <> "" Then
-            checkOneVal(rawpol.AffectedValues.OnValue, rawpol.RegistryKey, rawpol.RegistryValue, enabledEvidence)
-            checkOneVal(rawpol.AffectedValues.OffValue, rawpol.RegistryValue, rawpol.RegistryValue, disabledEvidence)
+            If rawpol.AffectedValues.OnValue Is Nothing Then
+                checkOneVal(New PolicyRegistryValue With {.NumberValue = 1UI, .RegistryType = PolicyRegistryValueType.Numeric}, rawpol.RegistryKey, rawpol.RegistryValue, enabledEvidence)
+            Else
+                checkOneVal(rawpol.AffectedValues.OnValue, rawpol.RegistryKey, rawpol.RegistryValue, enabledEvidence)
+            End If
+            If rawpol.AffectedValues.OffValue Is Nothing Then
+                checkOneVal(New PolicyRegistryValue With {.RegistryType = PolicyRegistryValueType.Delete}, rawpol.RegistryKey, rawpol.RegistryValue, disabledEvidence)
+            Else
+                checkOneVal(rawpol.AffectedValues.OffValue, rawpol.RegistryKey, rawpol.RegistryValue, disabledEvidence)
+            End If
         End If
         checkValList(rawpol.AffectedValues.OnValueList, rawpol.RegistryKey, enabledEvidence)
         checkValList(rawpol.AffectedValues.OffValueList, rawpol.RegistryKey, disabledEvidence)
         If rawpol.Elements IsNot Nothing Then
             Dim deletedElements As Integer = 0
             Dim presentElements As Integer = 0
-            For Each elem In rawpol.Elements
+            For Each elem In rawpol.Elements.Where(Function(e) e.ElementType <> "list")
                 Dim elemKey = IIf(elem.RegistryKey = "", rawpol.RegistryKey, elem.RegistryKey)
                 If PolicySource.WillDeleteValue(elemKey, elem.RegistryValue) Then
                     deletedElements += 1
@@ -98,7 +106,7 @@
             Dim elemKey = IIf(elem.RegistryKey = "", Policy.RawPolicy.RegistryKey, elem.RegistryKey)
             Select Case elem.ElementType
                 Case "decimal"
-                    state.Add(elem.ID, PolicySource.GetValue(elemKey, elem.RegistryValue))
+                    state.Add(elem.ID, CUInt(PolicySource.GetValue(elemKey, elem.RegistryValue)))
                 Case "boolean"
                     Dim booleanElem As BooleanPolicyElement = elem
                     state.Add(elem.ID, GetRegistryListState(PolicySource, booleanElem.AffectedRegistry, elemKey, elem.RegistryValue))
@@ -159,6 +167,157 @@
         End If
         Return False
     End Function
+    Public Shared Function GetReferencedRegistryValues(Policy As PolicyPlusPolicy) As List(Of RegistryKeyValuePair)
+        Return WalkPolicyRegistry(Nothing, Policy, False)
+    End Function
+    Public Shared Sub ForgetPolicy(PolicySource As IPolicySource, Policy As PolicyPlusPolicy)
+        WalkPolicyRegistry(PolicySource, Policy, True)
+    End Sub
+    Private Shared Function WalkPolicyRegistry(PolicySource As IPolicySource, Policy As PolicyPlusPolicy, Forget As Boolean) As List(Of RegistryKeyValuePair)
+        ' This function handles both GetReferencedRegistryValues and ForgetPolicy because they require searching through the same things
+        Dim entries As New List(Of RegistryKeyValuePair)
+        Dim addReg = Sub(Key As String, Value As String)
+                         Dim rkvp As New RegistryKeyValuePair With {.Key = Key, .Value = Value}
+                         If Not entries.Contains(rkvp) Then entries.Add(rkvp)
+                     End Sub
+        Dim rawpol = Policy.RawPolicy
+        If rawpol.RegistryValue <> "" Then addReg(rawpol.RegistryKey, rawpol.RegistryValue)
+        Dim addSingleList = Sub(SingleList As PolicyRegistrySingleList, OverrideKey As String)
+                                If SingleList Is Nothing Then Exit Sub
+                                Dim defaultKey = IIf(OverrideKey = "", rawpol.RegistryKey, OverrideKey)
+                                Dim listKey = IIf(SingleList.DefaultRegistryKey = "", defaultKey, SingleList.DefaultRegistryKey)
+                                For Each e In SingleList.AffectedValues
+                                    Dim entryKey = IIf(e.RegistryKey = "", listKey, e.RegistryKey)
+                                    addReg(entryKey, e.RegistryValue)
+                                Next
+                            End Sub
+        addSingleList(rawpol.AffectedValues.OnValueList, "")
+        addSingleList(rawpol.AffectedValues.OffValueList, "")
+        If rawpol.Elements IsNot Nothing Then
+            For Each elem In rawpol.Elements
+                Dim elemKey As String = IIf(elem.RegistryKey = "", rawpol.RegistryKey, elem.RegistryKey)
+                If elem.ElementType <> "list" Then addReg(elemKey, elem.RegistryValue)
+                Select Case elem.ElementType
+                    Case "boolean"
+                        Dim booleanElem As BooleanPolicyElement = elem
+                        addSingleList(booleanElem.AffectedRegistry.OnValueList, elemKey)
+                        addSingleList(booleanElem.AffectedRegistry.OffValueList, elemKey)
+                    Case "enum"
+                        Dim enumElem As EnumPolicyElement = elem
+                        For Each e In enumElem.Items
+                            addSingleList(e.ValueList, elemKey)
+                        Next
+                    Case "list"
+                        If Forget Then
+                            PolicySource.ClearKey(elemKey) ' Delete all the values
+                            PolicySource.ForgetKeyClearance(elemKey)
+                        End If
+                End Select
+            Next
+        End If
+        If Forget Then
+            For Each e In entries
+                PolicySource.ForgetValue(e.Key, e.Value)
+            Next
+        End If
+        Return entries
+    End Function
+    Public Shared Sub SetPolicyState(PolicySource As IPolicySource, Policy As PolicyPlusPolicy, State As PolicyState, Options As Dictionary(Of String, Object))
+        Dim setValue = Sub(Key As String, ValueName As String, Value As PolicyRegistryValue)
+                           If Value Is Nothing Then Exit Sub
+                           Select Case Value.RegistryType
+                               Case PolicyRegistryValueType.Delete
+                                   PolicySource.DeleteValue(Key, ValueName)
+                               Case PolicyRegistryValueType.Numeric
+                                   PolicySource.SetValue(Key, ValueName, Value.NumberValue, Microsoft.Win32.RegistryValueKind.DWord)
+                               Case PolicyRegistryValueType.Text
+                                   PolicySource.SetValue(Key, ValueName, Value.StringValue, Microsoft.Win32.RegistryValueKind.String)
+                           End Select
+                       End Sub
+        Dim setSingleList = Sub(SingleList As PolicyRegistrySingleList, DefaultKey As String)
+                                If SingleList Is Nothing Then Exit Sub
+                                Dim listKey As String = IIf(SingleList.DefaultRegistryKey = "", DefaultKey, SingleList.DefaultRegistryKey)
+                                For Each e In SingleList.AffectedValues
+                                    Dim itemKey As String = IIf(e.RegistryKey = "", listKey, e.RegistryKey)
+                                    setValue(itemKey, e.RegistryValue, e.Value)
+                                Next
+                            End Sub
+        Dim setList = Sub(List As PolicyRegistryList, DefaultKey As String, DefaultValue As String, IsOn As Boolean)
+                          If List Is Nothing Then Exit Sub
+                          If IsOn Then
+                              setValue(DefaultKey, DefaultValue, List.OnValue)
+                              setSingleList(List.OnValueList, DefaultKey)
+                          Else
+                              setValue(DefaultKey, DefaultValue, List.OffValue)
+                              setSingleList(List.OffValueList, DefaultKey)
+                          End If
+                      End Sub
+        Dim rawpol = Policy.RawPolicy
+        Select Case State
+            Case PolicyState.Enabled
+                If rawpol.AffectedValues.OnValue Is Nothing And rawpol.RegistryValue <> "" Then PolicySource.SetValue(rawpol.RegistryKey, rawpol.RegistryValue, 1UI, Microsoft.Win32.RegistryValueKind.DWord)
+                setList(rawpol.AffectedValues, rawpol.RegistryKey, rawpol.RegistryValue, True)
+                If rawpol.Elements IsNot Nothing Then
+                    For Each elem In rawpol.Elements
+                        Dim elemKey = IIf(elem.RegistryKey = "", rawpol.RegistryKey, elem.RegistryKey)
+                        Dim optionData = Options(elem.ID)
+                        Select Case elem.ElementType
+                            Case "decimal"
+                                Dim decimalElem As DecimalPolicyElement = elem
+                                If decimalElem.StoreAsText Then
+                                    PolicySource.SetValue(elemKey, elem.RegistryValue, CStr(optionData), Microsoft.Win32.RegistryValueKind.String)
+                                Else
+                                    PolicySource.SetValue(elemKey, elem.RegistryValue, CUInt(optionData), Microsoft.Win32.RegistryValueKind.DWord)
+                                End If
+                            Case "boolean"
+                                Dim booleanElem As BooleanPolicyElement = elem
+                                Dim checkState As Boolean = optionData
+                                If booleanElem.AffectedRegistry.OnValue Is Nothing And checkState Then
+                                    PolicySource.SetValue(elemKey, elem.RegistryValue, 1UI, Microsoft.Win32.RegistryValueKind.DWord)
+                                End If
+                                setList(booleanElem.AffectedRegistry, elemKey, elem.RegistryValue, checkState)
+                            Case "text"
+                                Dim textElem As TextPolicyElement = elem
+                                Dim regType = IIf(textElem.RegExpandSz, Microsoft.Win32.RegistryValueKind.ExpandString, Microsoft.Win32.RegistryValueKind.String)
+                                PolicySource.SetValue(elemKey, elem.RegistryValue, optionData, regType)
+                            Case "list"
+                                Dim listElem As ListPolicyElement = elem
+                                If Not listElem.NoPurgeOthers Then PolicySource.ClearKey(elemKey)
+                                If optionData Is Nothing Then Continue For
+                                Dim regType = IIf(listElem.RegExpandSz, Microsoft.Win32.RegistryValueKind.ExpandString, Microsoft.Win32.RegistryValueKind.String)
+                                If listElem.UserProvidesNames Then
+                                    Dim items As Dictionary(Of String, String) = optionData
+                                    For Each i In items
+                                        PolicySource.SetValue(elemKey, i.Key, i.Value, regType)
+                                    Next
+                                Else
+                                    Dim items As List(Of String) = optionData
+                                    Dim n As Integer = 1
+                                    Do While n <= items.Count
+                                        Dim valueName As String = IIf(listElem.HasPrefix, listElem.RegistryValue & (n - 1), items(n - 1))
+                                        PolicySource.SetValue(elemKey, valueName, items(n - 1), regType)
+                                        n += 1
+                                    Loop
+                                End If
+                            Case "enum"
+                                Dim enumElem As EnumPolicyElement = elem
+                                Dim selItem = enumElem.Items(optionData)
+                                setValue(elemKey, elem.RegistryValue, selItem.Value)
+                                setSingleList(selItem.ValueList, elemKey)
+                        End Select
+                    Next
+                End If
+            Case PolicyState.Disabled
+                If rawpol.AffectedValues.OffValue Is Nothing And rawpol.RegistryValue <> "" Then PolicySource.DeleteValue(rawpol.RegistryKey, rawpol.RegistryValue)
+                setList(rawpol.AffectedValues, rawpol.RegistryKey, rawpol.RegistryValue, False)
+                If rawpol.Elements IsNot Nothing Then
+                    For Each elem In rawpol.Elements.Where(Function(e) e.ElementType <> "list")
+                        Dim elemKey = IIf(elem.RegistryKey = "", rawpol.RegistryKey, elem.RegistryKey)
+                        PolicySource.DeleteValue(elemKey, elem.RegistryValue)
+                    Next
+                End If
+        End Select
+    End Sub
 End Class
 Public Enum PolicyState
     NotConfigured = 0
@@ -166,3 +325,18 @@ Public Enum PolicyState
     Enabled = 2
     Unknown = 3
 End Enum
+Public Class RegistryKeyValuePair
+    Implements IEquatable(Of RegistryKeyValuePair)
+    Public Key As String
+    Public Value As String
+    Public Function EqualsRKVP(other As RegistryKeyValuePair) As Boolean Implements IEquatable(Of RegistryKeyValuePair).Equals
+        Return other.Key.Equals(Key, StringComparison.InvariantCultureIgnoreCase) And other.Value.Equals(Value, StringComparison.InvariantCultureIgnoreCase)
+    End Function
+    Public Overrides Function Equals(obj As Object) As Boolean
+        If TypeOf obj IsNot RegistryKeyValuePair Then Return False
+        Return EqualsRKVP(obj)
+    End Function
+    Public Overrides Function GetHashCode() As Integer
+        Return Key.ToLowerInvariant.GetHashCode Xor Value.ToLowerInvariant.GetHashCode
+    End Function
+End Class

@@ -8,6 +8,8 @@ Public Interface IPolicySource
     Sub SetValue(Key As String, Value As String, Data As Object, DataType As RegistryValueKind)
     Sub ForgetValue(Key As String, Value As String) ' Stop keeping track of a value
     Sub DeleteValue(Key As String, Value As String) ' Mark a value as queued for deletion
+    Sub ClearKey(Key As String) ' Destroy all values in a key
+    Sub ForgetKeyClearance(Key As String) ' Unmark a key as cleared
 End Interface
 Public Class PolFile
     Implements IPolicySource
@@ -92,6 +94,8 @@ Public Class PolFile
     Public Sub ForgetValue(Key As String, Value As String) Implements IPolicySource.ForgetValue
         Dim dictKey = GetDictKey(Key, Value)
         If Entries.ContainsKey(dictKey) Then Entries.Remove(dictKey)
+        Dim deleterKey = GetDictKey(Key, "**del." & Value)
+        If Entries.ContainsKey(deleterKey) Then Entries.Remove(deleterKey)
     End Sub
     Public Sub SetValue(Key As String, Value As String, Data As Object, DataType As RegistryValueKind) Implements IPolicySource.SetValue
         Dim dictKey = GetDictKey(Key, Value)
@@ -148,6 +152,10 @@ Public Class PolFile
                 For Each entry In Split(kv.Value.AsString, ";")
                     Target.DeleteValue(parts(0), entry)
                 Next
+            ElseIf parts(1).StartsWith("**deletekeys") Then
+                For Each entry In Split(kv.Value.AsString, ";")
+                    Target.ClearKey(parts(0) & "\" & entry)
+                Next
             ElseIf parts(1) <> "" And Not parts(1).StartsWith("**") Then
                 Target.SetValue(casedParts(0), casedParts(1), kv.Value.Data, kv.Value.Kind)
                 If oldEntries.Contains(kv.Key) Then oldEntries.Remove(kv.Key) ' It's not forgotten
@@ -156,6 +164,19 @@ Public Class PolFile
         For Each e In oldEntries.Where(AddressOf RegistryPolicyProxy.IsPolicyKey) ' Remove the forgotten entries from the Registry
             Dim parts = Split(e, "\\", 2)
             Target.ForgetValue(parts(0), parts(1))
+        Next
+    End Sub
+    Public Sub ClearKey(Key As String) Implements IPolicySource.ClearKey
+        For Each value In GetValueNames(Key)
+            ForgetValue(Key, value)
+        Next
+        Dim ped = PolEntryData.FromString(" ")
+        Entries.Add(GetDictKey(Key, "**delvals."), ped)
+    End Sub
+    Public Sub ForgetKeyClearance(Key As String) Implements IPolicySource.ForgetKeyClearance
+        Dim keyDeleter = GetDictKey(Key, "**delvals")
+        For Each kv In Entries.Where(Function(e) e.Key.StartsWith(keyDeleter)).ToList ' "**delvals" and "**delvals." are both valid
+            Entries.Remove(kv.Key)
         Next
     End Sub
     Private Class PolEntryData
@@ -298,4 +319,12 @@ Public Class RegistryPolicyProxy
             KeyPath.StartsWith("software\microsoft\windows\currentversion\policies\", StringComparison.InvariantCultureIgnoreCase) Or
             KeyPath.StartsWith("system\currentcontrolset\policies\", StringComparison.InvariantCultureIgnoreCase)
     End Function
+    Public Sub ClearKey(Key As String) Implements IPolicySource.ClearKey
+        For Each value In GetValueNames(Key)
+            ForgetValue(Key, value)
+        Next
+    End Sub
+    Public Sub ForgetKeyClearance(Key As String) Implements IPolicySource.ForgetKeyClearance
+        ' Does nothing
+    End Sub
 End Class

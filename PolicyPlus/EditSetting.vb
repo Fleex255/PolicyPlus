@@ -22,6 +22,7 @@
         PreparePolicyElements()
         SectionDropdown.Text = IIf(CurrentSection = AdmxPolicySection.Machine, "Computer", "User")
         PreparePolicyState()
+        StateRadiosChanged(Nothing, Nothing)
     End Sub
     Sub PreparePolicyElements()
         For n = ExtraOptionsTable.RowCount - 1 To 0 Step -1 ' Go backwards because Dispose changes the indexes
@@ -141,7 +142,7 @@
                         Dim list As ListPolicyElement = elemDict(pres.ID)
                         Dim button As New Button
                         button.UseVisualStyleBackColor = True
-                        button.Tag = list
+                        button.Tag = New ListButtonInfo With {.Element = list, .Presentation = listPres}
                         button.Text = "Edit..."
                         AddHandler button.Click, Sub()
                                                      ' TODO: Show a grid view
@@ -173,16 +174,51 @@
                             CType(uiControl, TextBox).Text = kv.Value
                         End If
                     ElseIf TypeOf kv.Value Is Integer Then ' Dropdown list
-                        CType(uiControl, ComboBox).SelectedIndex = kv.Value
+                        Dim combobox As ComboBox = uiControl
+                        combobox.SelectedItem = combobox.Items.OfType(Of DropdownPresentationMap).First(Function(i) i.ID = kv.Value)
                     ElseIf TypeOf kv.Value Is Boolean Then ' Check box
                         CType(uiControl, CheckBox).Checked = kv.Value
                     Else ' List box (pop-out button)
-                        uiControl.Tag = kv.Value
+                        CType(uiControl.Tag, ListButtonInfo).Data = kv.Value
                     End If
                 Next
             Case Else
                 NotConfiguredOption.Checked = True
         End Select
+    End Sub
+    Sub ApplyToPolicySource()
+        PolicyProcessing.ForgetPolicy(CurrentSource, CurrentSetting)
+        If EnabledOption.Checked Then
+            Dim options As New Dictionary(Of String, Object)
+            If CurrentSetting.RawPolicy.Elements IsNot Nothing Then
+                For Each elem In CurrentSetting.RawPolicy.Elements
+                    Dim uiControl As Control = ElementControls(elem.ID)
+                    Select Case elem.ElementType
+                        Case "decimal"
+                            If TypeOf uiControl Is TextBox Then
+                                options.Add(elem.ID, CUInt(CType(uiControl, TextBox).Text))
+                            Else
+                                options.Add(elem.ID, CUInt(CType(uiControl, NumericUpDown).Value))
+                            End If
+                        Case "text"
+                            If TypeOf uiControl Is ComboBox Then
+                                options.Add(elem.ID, CType(uiControl, ComboBox).Text)
+                            Else
+                                options.Add(elem.ID, CType(uiControl, TextBox).Text)
+                            End If
+                        Case "boolean"
+                            options.Add(elem.ID, CType(uiControl, CheckBox).Checked)
+                        Case "enum"
+                            options.Add(elem.ID, CType(CType(uiControl, ComboBox).SelectedItem, DropdownPresentationMap).ID)
+                        Case "list"
+                            options.Add(elem.ID, CType(uiControl.Tag, ListButtonInfo).Data)
+                    End Select
+                Next
+            End If
+            PolicyProcessing.SetPolicyState(CurrentSource, CurrentSetting, PolicyState.Enabled, options)
+        ElseIf DisabledOption.Checked Then
+            PolicyProcessing.SetPolicyState(CurrentSource, CurrentSetting, PolicyState.Disabled, Nothing)
+        End If
     End Sub
     Private Sub StateRadiosChanged(sender As Object, e As EventArgs) Handles DisabledOption.CheckedChanged, EnabledOption.CheckedChanged, NotConfiguredOption.CheckedChanged
         Dim allowOptions = EnabledOption.Checked
@@ -194,11 +230,23 @@
         CurrentSource = IIf(SectionDropdown.Text = "User", UserPolSource, CompPolSource)
         PreparePolicyState()
     End Sub
+    Private Sub OkButton_Click(sender As Object, e As EventArgs) Handles OkButton.Click
+        ApplyToPolicySource()
+        DialogResult = DialogResult.OK
+    End Sub
+    Private Sub ApplyButton_Click(sender As Object, e As EventArgs) Handles ApplyButton.Click
+        ApplyToPolicySource()
+    End Sub
     Private Class DropdownPresentationMap
         Public ID As Integer
         Public DisplayName As String
         Public Overrides Function ToString() As String
             Return DisplayName
         End Function
+    End Class
+    Private Class ListButtonInfo
+        Public Element As ListPolicyElement
+        Public Presentation As ListPresentationElement
+        Public Data As Object
     End Class
 End Class
