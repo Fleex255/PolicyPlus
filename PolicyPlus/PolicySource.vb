@@ -197,8 +197,8 @@ Public Class PolFile
             Dim data((Text.Length * 2) + 1) As Byte
             For x = 0 To Text.Length - 1
                 Dim charCode = AscW(Text(x))
-                data(x) = charCode And &HFF
-                data(x + 1) = charCode >> 8
+                data(x * 2) = charCode And &HFF
+                data((x * 2) + 1) = charCode >> 8
             Next
             ped.Data = data
             Return ped

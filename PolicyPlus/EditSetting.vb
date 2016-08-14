@@ -142,10 +142,9 @@
                         Dim list As ListPolicyElement = elemDict(pres.ID)
                         Dim button As New Button
                         button.UseVisualStyleBackColor = True
-                        button.Tag = New ListButtonInfo With {.Element = list, .Presentation = listPres}
                         button.Text = "Edit..."
                         AddHandler button.Click, Sub()
-                                                     ' TODO: Show a grid view
+                                                     If ListEditor.PresentDialog(listPres.Label, button.Tag, list.UserProvidesNames) = DialogResult.OK Then button.Tag = ListEditor.FinalData
                                                  End Sub
                         addControl(pres.ID, button, listPres.Label)
                 End Select
@@ -179,7 +178,7 @@
                     ElseIf TypeOf kv.Value Is Boolean Then ' Check box
                         CType(uiControl, CheckBox).Checked = kv.Value
                     Else ' List box (pop-out button)
-                        CType(uiControl.Tag, ListButtonInfo).Data = kv.Value
+                        uiControl.Tag = kv.Value
                     End If
                 Next
             Case Else
@@ -211,7 +210,7 @@
                         Case "enum"
                             options.Add(elem.ID, CType(CType(uiControl, ComboBox).SelectedItem, DropdownPresentationMap).ID)
                         Case "list"
-                            options.Add(elem.ID, CType(uiControl.Tag, ListButtonInfo).Data)
+                            options.Add(elem.ID, uiControl.Tag)
                     End Select
                 Next
             End If
@@ -243,10 +242,5 @@
         Public Overrides Function ToString() As String
             Return DisplayName
         End Function
-    End Class
-    Private Class ListButtonInfo
-        Public Element As ListPolicyElement
-        Public Presentation As ListPresentationElement
-        Public Data As Object
     End Class
 End Class

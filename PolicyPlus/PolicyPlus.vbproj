@@ -92,6 +92,12 @@
     <Compile Include="FindById.vb">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="ListEditor.Designer.vb">
+      <DependentUpon>ListEditor.vb</DependentUpon>
+    </Compile>
+    <Compile Include="ListEditor.vb">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Main.vb">
       <SubType>Form</SubType>
     </Compile>
@@ -132,6 +138,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="FindById.resx">
       <DependentUpon>FindById.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ListEditor.resx">
+      <DependentUpon>ListEditor.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Main.resx">
       <DependentUpon>Main.vb</DependentUpon>

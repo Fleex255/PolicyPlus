@@ -126,6 +126,7 @@
                             Dim n As Integer = 1
                             Do While PolicySource.ContainsValue(elemKey, elem.RegistryValue & n)
                                 entries.Add(PolicySource.GetValue(elemKey, elem.RegistryValue & n))
+                                n += 1
                             Loop
                         Else
                             For Each value In PolicySource.GetValueNames(elem.RegistryKey)
@@ -294,7 +295,7 @@
                                     Dim items As List(Of String) = optionData
                                     Dim n As Integer = 1
                                     Do While n <= items.Count
-                                        Dim valueName As String = IIf(listElem.HasPrefix, listElem.RegistryValue & (n - 1), items(n - 1))
+                                        Dim valueName As String = IIf(listElem.HasPrefix, listElem.RegistryValue & n, items(n - 1))
                                         PolicySource.SetValue(elemKey, valueName, items(n - 1), regType)
                                         n += 1
                                     Loop
