@@ -126,6 +126,25 @@
     <Compile Include="OpenAdmxFolder.vb">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="OpenPol.Designer.vb">
+      <DependentUpon>OpenPol.vb</DependentUpon>
+    </Compile>
+    <Compile Include="OpenPol.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="OpenUserGpo.Designer.vb">
+      <DependentUpon>OpenUserGpo.vb</DependentUpon>
+    </Compile>
+    <Compile Include="OpenUserGpo.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="OpenUserRegistry.Designer.vb">
+      <DependentUpon>OpenUserRegistry.vb</DependentUpon>
+    </Compile>
+    <Compile Include="OpenUserRegistry.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="PInvoke.vb" />
     <Compile Include="PolicyProcessing.vb" />
     <Compile Include="PolicySource.vb" />
     <Compile Include="PolicyStructures.vb" />
@@ -153,6 +172,15 @@
     </EmbeddedResource>
     <EmbeddedResource Include="OpenAdmxFolder.resx">
       <DependentUpon>OpenAdmxFolder.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="OpenPol.resx">
+      <DependentUpon>OpenPol.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="OpenUserGpo.resx">
+      <DependentUpon>OpenUserGpo.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="OpenUserRegistry.resx">
+      <DependentUpon>OpenUserRegistry.vb</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>

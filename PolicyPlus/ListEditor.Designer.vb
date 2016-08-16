@@ -57,6 +57,7 @@ Partial Class ListEditor
         '
         'ElementNameLabel
         '
+        Me.ElementNameLabel.AutoEllipsis = True
         Me.ElementNameLabel.AutoSize = True
         Me.ElementNameLabel.Location = New System.Drawing.Point(12, 9)
         Me.ElementNameLabel.MaximumSize = New System.Drawing.Size(400, 0)

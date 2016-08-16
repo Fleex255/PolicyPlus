@@ -273,7 +273,11 @@
             End If
         End If
     End Sub
-    Declare Function ShowScrollBar Lib "user32.dll" (Handle As IntPtr, Scrollbar As Integer, Show As Boolean) As Boolean
+    Private Sub OpenPolicyResourcesToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles OpenPolicyResourcesToolStripMenuItem.Click
+        If OpenPol.ShowDialog = DialogResult.OK Then
+            ' Load stuff
+        End If
+    End Sub
     Private Sub SettingInfoPanel_ClientSizeChanged(sender As Object, e As EventArgs) Handles SettingInfoPanel.ClientSizeChanged, SettingInfoPanel.SizeChanged
         SettingInfoPanel.AutoScrollMinSize = SettingInfoPanel.Size
         PolicyTitleLabel.MaximumSize = New Size(PolicyInfoTable.Width, 0)
@@ -284,6 +288,6 @@
         PolicyInfoTable.Width = PolicyInfoTable.MaximumSize.Width
         If PolicyInfoTable.ColumnCount > 0 Then PolicyInfoTable.ColumnStyles(0).Width = PolicyInfoTable.ClientSize.Width ' Only once everything is initialized
         PolicyInfoTable.PerformLayout() ' Force the table to take up its full desired size
-        ShowScrollBar(SettingInfoPanel.Handle, 0, False) ' 0 means horizontal
+        PInvoke.ShowScrollBar(SettingInfoPanel.Handle, 0, False) ' 0 means horizontal
     End Sub
 End Class
