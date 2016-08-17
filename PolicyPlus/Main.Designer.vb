@@ -26,14 +26,16 @@ Partial Class Main
         Dim ChSettingEnabled As System.Windows.Forms.ColumnHeader
         Dim ChSettingCommented As System.Windows.Forms.ColumnHeader
         Dim ToolStripSeparator1 As System.Windows.Forms.ToolStripSeparator
-        Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(Main))
         Dim ToolStripSeparator2 As System.Windows.Forms.ToolStripSeparator
         Dim ToolStripSeparator3 As System.Windows.Forms.ToolStripSeparator
+        Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(Main))
         Me.MainMenu = New System.Windows.Forms.MenuStrip()
         Me.FileToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.OpenADMXFolderToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.OpenADMXFileToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.CloseADMXWorkspaceToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.OpenPolicyResourcesToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.SavePoliciesToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.ExitToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.EditToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.FindByIDToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
@@ -52,8 +54,8 @@ Partial Class Main
         Me.PolicySupportedLabel = New System.Windows.Forms.Label()
         Me.PolicyDescLabel = New System.Windows.Forms.Label()
         Me.PolicyIsPrefLabel = New System.Windows.Forms.Label()
-        Me.OpenPolicyResourcesToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.SavePoliciesToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.HelpToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.AboutToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         ChSettingEnabled = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
         ChSettingCommented = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
         ToolStripSeparator1 = New System.Windows.Forms.ToolStripSeparator()
@@ -85,9 +87,19 @@ Partial Class Main
         ToolStripSeparator1.Name = "ToolStripSeparator1"
         ToolStripSeparator1.Size = New System.Drawing.Size(177, 6)
         '
+        'ToolStripSeparator2
+        '
+        ToolStripSeparator2.Name = "ToolStripSeparator2"
+        ToolStripSeparator2.Size = New System.Drawing.Size(198, 6)
+        '
+        'ToolStripSeparator3
+        '
+        ToolStripSeparator3.Name = "ToolStripSeparator3"
+        ToolStripSeparator3.Size = New System.Drawing.Size(198, 6)
+        '
         'MainMenu
         '
-        Me.MainMenu.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.FileToolStripMenuItem, Me.EditToolStripMenuItem, Me.ViewToolStripMenuItem})
+        Me.MainMenu.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.FileToolStripMenuItem, Me.EditToolStripMenuItem, Me.ViewToolStripMenuItem, Me.HelpToolStripMenuItem})
         Me.MainMenu.Location = New System.Drawing.Point(0, 0)
         Me.MainMenu.Name = "MainMenu"
         Me.MainMenu.Size = New System.Drawing.Size(706, 24)
@@ -118,6 +130,20 @@ Partial Class Main
         Me.CloseADMXWorkspaceToolStripMenuItem.Name = "CloseADMXWorkspaceToolStripMenuItem"
         Me.CloseADMXWorkspaceToolStripMenuItem.Size = New System.Drawing.Size(201, 22)
         Me.CloseADMXWorkspaceToolStripMenuItem.Text = "Close ADMX Workspace"
+        '
+        'OpenPolicyResourcesToolStripMenuItem
+        '
+        Me.OpenPolicyResourcesToolStripMenuItem.Name = "OpenPolicyResourcesToolStripMenuItem"
+        Me.OpenPolicyResourcesToolStripMenuItem.ShortcutKeys = CType((System.Windows.Forms.Keys.Control Or System.Windows.Forms.Keys.O), System.Windows.Forms.Keys)
+        Me.OpenPolicyResourcesToolStripMenuItem.Size = New System.Drawing.Size(237, 22)
+        Me.OpenPolicyResourcesToolStripMenuItem.Text = "Open Policy Resources"
+        '
+        'SavePoliciesToolStripMenuItem
+        '
+        Me.SavePoliciesToolStripMenuItem.Name = "SavePoliciesToolStripMenuItem"
+        Me.SavePoliciesToolStripMenuItem.ShortcutKeys = CType((System.Windows.Forms.Keys.Control Or System.Windows.Forms.Keys.S), System.Windows.Forms.Keys)
+        Me.SavePoliciesToolStripMenuItem.Size = New System.Drawing.Size(237, 22)
+        Me.SavePoliciesToolStripMenuItem.Text = "Save Policies"
         '
         'ExitToolStripMenuItem
         '
@@ -314,27 +340,18 @@ Partial Class Main
         Me.PolicyIsPrefLabel.Text = "Because it is not stored in a Policies section of the Registry, this policy is a " &
     "preference and will not be automatically undone if the setting is removed."
         '
-        'ToolStripSeparator2
+        'HelpToolStripMenuItem
         '
-        ToolStripSeparator2.Name = "ToolStripSeparator2"
-        ToolStripSeparator2.Size = New System.Drawing.Size(198, 6)
+        Me.HelpToolStripMenuItem.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.AboutToolStripMenuItem})
+        Me.HelpToolStripMenuItem.Name = "HelpToolStripMenuItem"
+        Me.HelpToolStripMenuItem.Size = New System.Drawing.Size(44, 20)
+        Me.HelpToolStripMenuItem.Text = "Help"
         '
-        'OpenPolicyResourcesToolStripMenuItem
+        'AboutToolStripMenuItem
         '
-        Me.OpenPolicyResourcesToolStripMenuItem.Name = "OpenPolicyResourcesToolStripMenuItem"
-        Me.OpenPolicyResourcesToolStripMenuItem.Size = New System.Drawing.Size(201, 22)
-        Me.OpenPolicyResourcesToolStripMenuItem.Text = "Open Policy Resources"
-        '
-        'ToolStripSeparator3
-        '
-        ToolStripSeparator3.Name = "ToolStripSeparator3"
-        ToolStripSeparator3.Size = New System.Drawing.Size(198, 6)
-        '
-        'SavePoliciesToolStripMenuItem
-        '
-        Me.SavePoliciesToolStripMenuItem.Name = "SavePoliciesToolStripMenuItem"
-        Me.SavePoliciesToolStripMenuItem.Size = New System.Drawing.Size(201, 22)
-        Me.SavePoliciesToolStripMenuItem.Text = "Save Policies"
+        Me.AboutToolStripMenuItem.Name = "AboutToolStripMenuItem"
+        Me.AboutToolStripMenuItem.Size = New System.Drawing.Size(152, 22)
+        Me.AboutToolStripMenuItem.Text = "About"
         '
         'Main
         '
@@ -387,4 +404,6 @@ Partial Class Main
     Friend WithEvents FindByIDToolStripMenuItem As ToolStripMenuItem
     Friend WithEvents OpenPolicyResourcesToolStripMenuItem As ToolStripMenuItem
     Friend WithEvents SavePoliciesToolStripMenuItem As ToolStripMenuItem
+    Friend WithEvents HelpToolStripMenuItem As ToolStripMenuItem
+    Friend WithEvents AboutToolStripMenuItem As ToolStripMenuItem
 End Class

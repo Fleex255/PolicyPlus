@@ -157,7 +157,7 @@ Public Class PolFile
                     Target.ClearKey(parts(0) & "\" & entry)
                 Next
             ElseIf parts(1) <> "" And Not parts(1).StartsWith("**") Then
-                Target.SetValue(casedParts(0), casedParts(1), kv.Value.Data, kv.Value.Kind)
+                Target.SetValue(casedParts(0), casedParts(1), kv.Value.AsArbitrary(), kv.Value.Kind)
                 If oldEntries.Contains(kv.Key) Then oldEntries.Remove(kv.Key) ' It's not forgotten
             End If
         Next
@@ -282,7 +282,7 @@ Public Class RegistryPolicyProxy
     Public Sub DeleteValue(Key As String, Value As String) Implements IPolicySource.DeleteValue
         Using regKey = RootKey.OpenSubKey(Key, True)
             If regKey Is Nothing Then Exit Sub
-            regKey.DeleteValue(Value)
+            regKey.DeleteValue(Value, False)
         End Using
     End Sub
     Public Sub ForgetValue(Key As String, Value As String) Implements IPolicySource.ForgetValue

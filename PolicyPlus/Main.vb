@@ -1,6 +1,7 @@
 ﻿Public Class Main
     Dim AdmxWorkspace As New AdmxBundle
     Dim UserPolicySource, CompPolicySource As IPolicySource
+    Dim UserPolicyLoader, CompPolicyLoader As PolicyLoader
     Dim CurrentCategory As PolicyPlusCategory
     Dim CurrentSetting As PolicyPlusPolicy
     Dim HighlightCategory As PolicyPlusCategory
@@ -9,8 +10,7 @@
     Dim ViewPolicyTypes As AdmxPolicySection = AdmxPolicySection.Both
     Private Sub Main_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         AdmxWorkspace.LoadFolder(Environment.ExpandEnvironmentVariables("%windir%\PolicyDefinitions"), Globalization.CultureInfo.CurrentCulture.Name)
-        UserPolicySource = PolFile.Load(Environment.ExpandEnvironmentVariables("%windir%\System32\GroupPolicy\User\Registry.pol"))
-        CompPolicySource = PolFile.Load(Environment.ExpandEnvironmentVariables("%windir%\System32\GroupPolicy\Machine\Registry.pol"))
+        OpenPolicyLoaders(New PolicyLoader(PolicyLoaderSource.LocalGpo, "", True), New PolicyLoader(PolicyLoaderSource.LocalGpo, "", False), True)
         ComboAppliesTo.Text = ComboAppliesTo.Items(0)
         PopulateAdmxUi()
     End Sub
@@ -67,7 +67,7 @@
         If CurrentSetting IsNot Nothing Then
             PolicyTitleLabel.Text = CurrentSetting.DisplayName
             If CurrentSetting.SupportedOn Is Nothing Then
-                PolicySupportedLabel.Text = ""
+                PolicySupportedLabel.Text = "(no requirements information)"
             Else
                 PolicySupportedLabel.Text = "Requirements:" & vbCrLf & CurrentSetting.SupportedOn.DisplayName
             End If
@@ -164,16 +164,54 @@
         Return Policy.RawPolicy.RegistryKey <> "" And Not RegistryPolicyProxy.IsPolicyKey(Policy.RawPolicy.RegistryKey)
     End Function
     Sub ShowSettingEditor(Policy As PolicyPlusPolicy, Section As AdmxPolicySection)
-        EditSetting.CurrentSetting = Policy
-        EditSetting.CurrentSection = Section
-        EditSetting.AdmxWorkspace = AdmxWorkspace
-        EditSetting.CompPolSource = CompPolicySource
-        EditSetting.UserPolSource = UserPolicySource
-        If EditSetting.ShowDialog() = DialogResult.OK Then UpdateCategoryListing()
+        If EditSetting.PresentDialog(Policy, Section, AdmxWorkspace, CompPolicySource, UserPolicySource, CompPolicyLoader, UserPolicyLoader) = DialogResult.OK Then UpdateCategoryListing()
     End Sub
     Sub ClearSelections()
         CurrentSetting = Nothing
         HighlightCategory = Nothing
+    End Sub
+    Sub OpenPolicyLoaders(User As PolicyLoader, Computer As PolicyLoader, Quiet As Boolean)
+        If CompPolicyLoader IsNot Nothing Or UserPolicyLoader IsNot Nothing Then ClosePolicySources()
+        UserPolicyLoader = User
+        UserPolicySource = User.OpenSource
+        CompPolicyLoader = Computer
+        CompPolicySource = Computer.OpenSource
+        Dim allOk As Boolean = True
+        Dim policyStatus = Function(Loader As PolicyLoader)
+                               Select Case Loader.GetWritability
+                                   Case PolicySourceWritability.Writable
+                                       Return "is fully writable"
+                                   Case PolicySourceWritability.NoCommit
+                                       allOk = False
+                                       Return "cannot be saved"
+                                   Case Else ' No writing
+                                       allOk = False
+                                       Return "cannot be modified"
+                               End Select
+                           End Function
+        Dim userStatus = policyStatus(User)
+        Dim compStatus = policyStatus(Computer)
+        If allOk Then
+            If Not Quiet Then
+                MsgBox("Both the user and computer policy sources are loaded and writable.", MsgBoxStyle.Information)
+            End If
+        Else
+            Dim msgText = "Not all policy sources are fully writable." & vbCrLf & vbCrLf &
+                "The user source " & userStatus & "." & vbCrLf & vbCrLf & "The computer source " & compStatus & "."
+            MsgBox(msgText, MsgBoxStyle.Exclamation)
+        End If
+    End Sub
+    Sub ClosePolicySources()
+        Dim allOk As Boolean = True
+        If UserPolicyLoader IsNot Nothing Then
+            If Not UserPolicyLoader.Close() Then allOk = False
+        End If
+        If CompPolicyLoader IsNot Nothing Then
+            If Not CompPolicyLoader.Close() Then allOk = False
+        End If
+        If Not allOk Then
+            MsgBox("Cleanup did not complete fully because the loaded resources are open in other programs.", MsgBoxStyle.Exclamation)
+        End If
     End Sub
     Private Sub CategoriesTree_AfterSelect(sender As Object, e As TreeViewEventArgs) Handles CategoriesTree.AfterSelect
         CurrentCategory = e.Node.Tag
@@ -275,8 +313,23 @@
     End Sub
     Private Sub OpenPolicyResourcesToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles OpenPolicyResourcesToolStripMenuItem.Click
         If OpenPol.ShowDialog = DialogResult.OK Then
-            ' Load stuff
+            OpenPolicyLoaders(OpenPol.SelectedUser, OpenPol.SelectedComputer, False)
+            UpdateCategoryListing()
         End If
+    End Sub
+    Private Sub SavePoliciesToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles SavePoliciesToolStripMenuItem.Click
+        Try
+            Dim compStatus = "not writable"
+            Dim userStatus = "not writable"
+            If CompPolicyLoader.GetWritability = PolicySourceWritability.Writable Then compStatus = CompPolicyLoader.Save
+            If UserPolicyLoader.GetWritability = PolicySourceWritability.Writable Then userStatus = UserPolicyLoader.Save
+            MsgBox("Success." & vbCrLf & vbCrLf & "User policies: " & userStatus & "." & vbCrLf & vbCrLf & "Computer policies: " & compStatus & ".", MsgBoxStyle.Information)
+        Catch ex As Exception
+            MsgBox("Saving failed!" & vbCrLf & vbCrLf & ex.Message, MsgBoxStyle.Exclamation)
+        End Try
+    End Sub
+    Private Sub AboutToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles AboutToolStripMenuItem.Click
+        MsgBox("Policy Plus by Ben Nordick. Available on GitHub: Fleex255/PolicyPlus. Still in early development (no version number).", MsgBoxStyle.Information)
     End Sub
     Private Sub SettingInfoPanel_ClientSizeChanged(sender As Object, e As EventArgs) Handles SettingInfoPanel.ClientSizeChanged, SettingInfoPanel.SizeChanged
         SettingInfoPanel.AutoScrollMinSize = SettingInfoPanel.Size
@@ -289,5 +342,8 @@
         If PolicyInfoTable.ColumnCount > 0 Then PolicyInfoTable.ColumnStyles(0).Width = PolicyInfoTable.ClientSize.Width ' Only once everything is initialized
         PolicyInfoTable.PerformLayout() ' Force the table to take up its full desired size
         PInvoke.ShowScrollBar(SettingInfoPanel.Handle, 0, False) ' 0 means horizontal
+    End Sub
+    Private Sub Main_Closed(sender As Object, e As EventArgs) Handles Me.Closed
+        ClosePolicySources()
     End Sub
 End Class

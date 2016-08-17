@@ -1,4 +1,5 @@
 ﻿Public Class OpenPol
+    Public SelectedUser, SelectedComputer As PolicyLoader
     Sub BrowseForPol(DestTextbox As TextBox)
         Using sfd As New SaveFileDialog
             sfd.OverwritePrompt = False
@@ -38,6 +39,31 @@
     End Sub
     Private Sub UserBrowseRegistryButton_Click(sender As Object, e As EventArgs) Handles UserBrowseHiveButton.Click
         If OpenUserRegistry.ShowDialog = DialogResult.OK Then UserHivePathTextbox.Text = OpenUserRegistry.SelectedFilePath
+    End Sub
+    Private Sub OkButton_Click(sender As Object, e As EventArgs) Handles OkButton.Click
+        If CompLocalOption.Checked Then
+            SelectedComputer = New PolicyLoader(PolicyLoaderSource.LocalGpo, "", False)
+        ElseIf CompRegistryOption.Checked Then
+            SelectedComputer = New PolicyLoader(PolicyLoaderSource.LocalRegistry, "", False)
+        ElseIf CompFileOption.Checked Then
+            SelectedComputer = New PolicyLoader(PolicyLoaderSource.PolFile, CompPolFilenameTextbox.Text, False)
+        Else
+            SelectedComputer = New PolicyLoader(PolicyLoaderSource.Null, "", False)
+        End If
+        If UserLocalOption.Checked Then
+            SelectedUser = New PolicyLoader(PolicyLoaderSource.LocalGpo, "", True)
+        ElseIf UserRegistryOption.Checked Then
+            SelectedUser = New PolicyLoader(PolicyLoaderSource.LocalRegistry, "", True)
+        ElseIf UserFileOption.Checked Then
+            SelectedUser = New PolicyLoader(PolicyLoaderSource.PolFile, UserPolFilenameTextbox.Text, True)
+        ElseIf UserPerUserGpoOption.Checked Then
+            SelectedUser = New PolicyLoader(PolicyLoaderSource.SidGpo, UserGpoSidTextbox.Text, True)
+        ElseIf UserPerUserRegOption.Checked Then
+            SelectedUser = New PolicyLoader(PolicyLoaderSource.NtUserDat, UserHivePathTextbox.Text, True)
+        Else
+            SelectedUser = New PolicyLoader(PolicyLoaderSource.Null, "", True)
+        End If
+        DialogResult = DialogResult.OK
     End Sub
     Private Sub UserBrowseGpoButton_Click(sender As Object, e As EventArgs) Handles UserBrowseGpoButton.Click
         If OpenUserGpo.ShowDialog = DialogResult.OK Then UserGpoSidTextbox.Text = OpenUserGpo.SelectedSid

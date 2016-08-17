@@ -3,6 +3,7 @@
     Private Sub OpenUserRegistry_Shown(sender As Object, e As EventArgs) Handles Me.Shown
         SubfoldersListview.Columns(1).Width = SubfoldersListview.ClientSize.Width - SubfoldersListview.Columns(0).Width - SystemInformation.VerticalScrollBarWidth
         SubfoldersListview.Items.Clear()
+        Dim canMountHives As Boolean = New Security.Principal.WindowsPrincipal(Security.Principal.WindowsIdentity.GetCurrent).IsInRole(Security.Principal.WindowsBuiltInRole.Administrator)
         For Each folder In IO.Directory.EnumerateDirectories("C:\Users")
             Dim dirInfo As New IO.DirectoryInfo(folder)
             If (dirInfo.Attributes And IO.FileAttributes.ReparsePoint) > 0 Then Continue For
@@ -10,14 +11,14 @@
             Dim access As String = ""
             Try
                 Using fNtuser As New IO.FileStream(ntuserPath, IO.FileMode.Open, IO.FileAccess.ReadWrite)
-                    access = "Yes"
+                    access = IIf(canMountHives, "Yes", "No (unprivileged)")
                 End Using
             Catch ex As UnauthorizedAccessException
                 access = "No"
             Catch ex As IO.FileNotFoundException
                 access = ""
             Catch ex As Exception
-                access = "In use"
+                access = "No (in use)"
             End Try
             If access <> "" Then
                 Dim lvi = SubfoldersListview.Items.Add(IO.Path.GetFileName(folder))

@@ -63,7 +63,7 @@
             Case PolicyRegistryValueType.Numeric
                 If Not Source.ContainsValue(Key, ValueName) Then Return False
                 Dim sourceVal = Source.GetValue(Key, ValueName)
-                If TypeOf sourceVal IsNot UInteger Then Return False
+                If TypeOf sourceVal IsNot UInteger And TypeOf sourceVal IsNot Integer Then Return False
                 Return sourceVal = Value.NumberValue
             Case PolicyRegistryValueType.Text
                 If Not Source.ContainsValue(Key, ValueName) Then Return False

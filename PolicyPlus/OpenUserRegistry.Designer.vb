@@ -43,12 +43,12 @@ Partial Class OpenUserRegistry
         'ChUsername
         '
         Me.ChUsername.Text = "Folder Name"
-        Me.ChUsername.Width = 212
+        Me.ChUsername.Width = 196
         '
         'ChAccess
         '
         Me.ChAccess.Text = "Accessible"
-        Me.ChAccess.Width = 73
+        Me.ChAccess.Width = 95
         '
         'OkButton
         '

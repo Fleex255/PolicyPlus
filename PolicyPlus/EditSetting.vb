@@ -1,16 +1,19 @@
 ﻿Public Class EditSetting
-    Public CurrentSetting As PolicyPlusPolicy
-    Public CurrentSection As AdmxPolicySection
-    Public AdmxWorkspace As AdmxBundle
-    Public CompPolSource, UserPolSource As IPolicySource
+    Dim CurrentSetting As PolicyPlusPolicy
+    Dim CurrentSection As AdmxPolicySection
+    Dim AdmxWorkspace As AdmxBundle
+    Dim CompPolSource, UserPolSource As IPolicySource
+    Dim CompPolLoader, UserPolLoader As PolicyLoader
     Dim ElementControls As Dictionary(Of String, Control)
     Dim CurrentSource As IPolicySource
+    Dim CurrentLoader As PolicyLoader
+    Dim ChangesMade As Boolean ' To either side
     Private Sub CancelButton_Click(sender As Object, e As EventArgs) Handles CancelButton.Click
-        Close()
+        If ChangesMade Then DialogResult = DialogResult.OK Else DialogResult = DialogResult.Cancel
     End Sub
     Private Sub EditSetting_Shown(sender As Object, e As EventArgs) Handles Me.Shown
         SettingNameLabel.Text = CurrentSetting.DisplayName
-        SupportedTextbox.Text = CurrentSetting.SupportedOn.DisplayName
+        If CurrentSetting.SupportedOn Is Nothing Then SupportedTextbox.Text = "" Else SupportedTextbox.Text = CurrentSetting.SupportedOn.DisplayName
         HelpTextbox.Text = CurrentSetting.DisplayExplanation
         If CurrentSetting.RawPolicy.Section = AdmxPolicySection.Both Then
             SectionDropdown.Enabled = True
@@ -21,6 +24,7 @@
         End If
         PreparePolicyElements()
         SectionDropdown.Text = IIf(CurrentSection = AdmxPolicySection.Machine, "Computer", "User")
+        SectionDropdown_SelectedIndexChanged(Nothing, Nothing) ' Force an update of the current source
         PreparePolicyState()
         StateRadiosChanged(Nothing, Nothing)
     End Sub
@@ -184,6 +188,9 @@
             Case Else
                 NotConfiguredOption.Checked = True
         End Select
+        Dim canWrite = (CurrentLoader.GetWritability <> PolicySourceWritability.NoWriting)
+        ApplyButton.Enabled = canWrite
+        OkButton.Enabled = canWrite
     End Sub
     Sub ApplyToPolicySource()
         PolicyProcessing.ForgetPolicy(CurrentSource, CurrentSetting)
@@ -219,6 +226,17 @@
             PolicyProcessing.SetPolicyState(CurrentSource, CurrentSetting, PolicyState.Disabled, Nothing)
         End If
     End Sub
+    Public Function PresentDialog(Policy As PolicyPlusPolicy, Section As AdmxPolicySection, Workspace As AdmxBundle, CompPolSource As IPolicySource, UserPolSource As IPolicySource, CompPolLoader As PolicyLoader, UserPolLoader As PolicyLoader) As DialogResult
+        CurrentSetting = Policy
+        CurrentSection = Section
+        AdmxWorkspace = Workspace
+        Me.CompPolSource = CompPolSource
+        Me.UserPolSource = UserPolSource
+        Me.CompPolLoader = CompPolLoader
+        Me.UserPolLoader = UserPolLoader
+        ChangesMade = False
+        Return ShowDialog()
+    End Function
     Private Sub StateRadiosChanged(sender As Object, e As EventArgs) Handles DisabledOption.CheckedChanged, EnabledOption.CheckedChanged, NotConfiguredOption.CheckedChanged
         Dim allowOptions = EnabledOption.Checked
         For Each kv In ElementControls
@@ -226,7 +244,9 @@
         Next
     End Sub
     Private Sub SectionDropdown_SelectedIndexChanged(sender As Object, e As EventArgs) Handles SectionDropdown.SelectedIndexChanged
-        CurrentSource = IIf(SectionDropdown.Text = "User", UserPolSource, CompPolSource)
+        Dim isUser = (SectionDropdown.Text = "User")
+        CurrentSource = IIf(isUser, UserPolSource, CompPolSource)
+        CurrentLoader = IIf(isUser, UserPolLoader, CompPolLoader)
         PreparePolicyState()
     End Sub
     Private Sub OkButton_Click(sender As Object, e As EventArgs) Handles OkButton.Click
@@ -235,6 +255,7 @@
     End Sub
     Private Sub ApplyButton_Click(sender As Object, e As EventArgs) Handles ApplyButton.Click
         ApplyToPolicySource()
+        ChangesMade = True
     End Sub
     Private Class DropdownPresentationMap
         Public ID As Integer
