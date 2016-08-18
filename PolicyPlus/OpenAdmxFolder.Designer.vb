@@ -29,6 +29,7 @@ Partial Class OpenAdmxFolder
         Me.TextFolder = New System.Windows.Forms.TextBox()
         Me.ButtonOK = New System.Windows.Forms.Button()
         Me.ButtonBrowse = New System.Windows.Forms.Button()
+        Me.ClearWorkspaceCheckbox = New System.Windows.Forms.CheckBox()
         LabelFromWhere = New System.Windows.Forms.Label()
         Me.SuspendLayout()
         '
@@ -99,11 +100,24 @@ Partial Class OpenAdmxFolder
         Me.ButtonBrowse.Text = "Browse"
         Me.ButtonBrowse.UseVisualStyleBackColor = True
         '
+        'ClearWorkspaceCheckbox
+        '
+        Me.ClearWorkspaceCheckbox.AutoSize = True
+        Me.ClearWorkspaceCheckbox.Checked = True
+        Me.ClearWorkspaceCheckbox.CheckState = System.Windows.Forms.CheckState.Checked
+        Me.ClearWorkspaceCheckbox.Location = New System.Drawing.Point(15, 100)
+        Me.ClearWorkspaceCheckbox.Name = "ClearWorkspaceCheckbox"
+        Me.ClearWorkspaceCheckbox.Size = New System.Drawing.Size(239, 17)
+        Me.ClearWorkspaceCheckbox.TabIndex = 7
+        Me.ClearWorkspaceCheckbox.Text = "Clear the workspace before adding this folder"
+        Me.ClearWorkspaceCheckbox.UseVisualStyleBackColor = True
+        '
         'OpenAdmxFolder
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.ClientSize = New System.Drawing.Size(441, 131)
+        Me.Controls.Add(Me.ClearWorkspaceCheckbox)
         Me.Controls.Add(Me.ButtonBrowse)
         Me.Controls.Add(Me.ButtonOK)
         Me.Controls.Add(Me.TextFolder)
@@ -130,4 +144,5 @@ Partial Class OpenAdmxFolder
     Friend WithEvents TextFolder As TextBox
     Friend WithEvents ButtonOK As Button
     Friend WithEvents ButtonBrowse As Button
+    Friend WithEvents ClearWorkspaceCheckbox As CheckBox
 End Class

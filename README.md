@@ -24,8 +24,10 @@ a reboot or logon/logoff cycle is required for most policy changes to take effec
 While the UI allows the creation and editing of per-user GPOs, their settings are ignored on these limited editions. Edit per-user Registry hives instead.
 
 ## Status
+Policy Plus is usable on all editions. It can load and save all policy sources successfully. Many more features are still to come, though.
+
 These features will hopefully be implemented very soon:
 
-* Policy setting comments
 * Search-by-text
 * Object inspection
+* POL import/export

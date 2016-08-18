@@ -10,7 +10,11 @@
     Dim ViewEmptyCategories As Boolean = False
     Dim ViewPolicyTypes As AdmxPolicySection = AdmxPolicySection.Both
     Private Sub Main_Load(sender As Object, e As EventArgs) Handles MyBase.Load
-        AdmxWorkspace.LoadFolder(Environment.ExpandEnvironmentVariables("%windir%\PolicyDefinitions"), Globalization.CultureInfo.CurrentCulture.Name)
+        Try
+            AdmxWorkspace.LoadFolder(Environment.ExpandEnvironmentVariables("%windir%\PolicyDefinitions"), Globalization.CultureInfo.CurrentCulture.Name)
+        Catch ex As Exception
+            MsgBox("Policy definitions could not be loaded from the default folder. " & ex.Message, MsgBoxStyle.Exclamation)
+        End Try
         OpenPolicyLoaders(New PolicyLoader(PolicyLoaderSource.LocalGpo, "", True), New PolicyLoader(PolicyLoaderSource.LocalGpo, "", False), True)
         ComboAppliesTo.Text = ComboAppliesTo.Items(0)
         PopulateAdmxUi()
@@ -55,6 +59,7 @@
                 listItem.Tag = policy
                 listItem.ImageIndex = GetImageIndexForSetting(policy)
                 listItem.SubItems.Add(GetPolicyState(policy))
+                listItem.SubItems.Add(GetPolicyCommentText(policy))
             Next
             If CategoriesTree.SelectedNode Is Nothing OrElse CategoriesTree.SelectedNode.Tag IsNot CurrentCategory Then ' Update the tree view
                 CategoriesTree.SelectedNode = CategoryNodes(CurrentCategory)
@@ -161,6 +166,31 @@
                 Return "Unknown"
         End Select
     End Function
+    Function GetPolicyCommentText(Policy As PolicyPlusPolicy) As String
+        If ViewPolicyTypes = AdmxPolicySection.Both Then
+            Dim userComment = GetPolicyComment(Policy, AdmxPolicySection.User)
+            Dim compComment = GetPolicyComment(Policy, AdmxPolicySection.Machine)
+            If userComment = "" And compComment = "" Then
+                Return ""
+            ElseIf userComment <> "" And compComment <> "" Then
+                Return "(multiple)"
+            ElseIf userComment <> "" Then
+                Return userComment
+            Else
+                Return compComment
+            End If
+        Else
+            Return GetPolicyComment(Policy, ViewPolicyTypes)
+        End If
+    End Function
+    Function GetPolicyComment(Policy As PolicyPlusPolicy, Section As AdmxPolicySection) As String
+        Dim commentSource As Dictionary(Of String, String) = IIf(Section = AdmxPolicySection.Machine, CompComments, UserComments)
+        If commentSource Is Nothing Then
+            Return ""
+        Else
+            If commentSource.ContainsKey(Policy.UniqueID) Then Return commentSource(Policy.UniqueID) Else Return ""
+        End If
+    End Function
     Function IsPreference(Policy As PolicyPlusPolicy) As Boolean
         Return Policy.RawPolicy.RegistryKey <> "" And Not RegistryPolicyProxy.IsPolicyKey(Policy.RawPolicy.RegistryKey)
     End Function
@@ -262,7 +292,12 @@
     End Sub
     Private Sub OpenADMXFolderToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles OpenADMXFolderToolStripMenuItem.Click
         If OpenAdmxFolder.ShowDialog = DialogResult.OK Then
-            AdmxWorkspace.LoadFolder(OpenAdmxFolder.SelectedFolder, Globalization.CultureInfo.CurrentCulture.Name)
+            Try
+                If OpenAdmxFolder.ClearWorkspace Then AdmxWorkspace = New AdmxBundle
+                AdmxWorkspace.LoadFolder(OpenAdmxFolder.SelectedFolder, Globalization.CultureInfo.CurrentCulture.Name)
+            Catch ex As Exception
+                MsgBox("The folder could not be fully added to the workspace. " & ex.Message, MsgBoxStyle.Exclamation)
+            End Try
             PopulateAdmxUi()
         End If
     End Sub

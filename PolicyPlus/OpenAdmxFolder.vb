@@ -2,6 +2,7 @@
 Public Class OpenAdmxFolder
     Dim SysvolPolicyDefinitionsPath As String = ""
     Public SelectedFolder As String
+    Public ClearWorkspace As Boolean
     Private Sub Options_CheckedChanged(sender As Object, e As EventArgs) Handles OptCustomFolder.CheckedChanged, OptSysvol.CheckedChanged, OptLocalFolder.CheckedChanged
         Dim customSelected = OptCustomFolder.Checked
         TextFolder.Enabled = customSelected
@@ -32,6 +33,7 @@ Public Class OpenAdmxFolder
             SelectedFolder = TextFolder.Text
         End If
         If IO.Directory.Exists(SelectedFolder) Then
+            ClearWorkspace = ClearWorkspaceCheckbox.Checked
             DialogResult = DialogResult.OK
         Else
             MsgBox("The folder you specified does not exist.", MsgBoxStyle.Exclamation)
