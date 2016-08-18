@@ -2,6 +2,7 @@
     Dim AdmxWorkspace As New AdmxBundle
     Dim UserPolicySource, CompPolicySource As IPolicySource
     Dim UserPolicyLoader, CompPolicyLoader As PolicyLoader
+    Dim UserComments, CompComments As Dictionary(Of String, String)
     Dim CurrentCategory As PolicyPlusCategory
     Dim CurrentSetting As PolicyPlusPolicy
     Dim HighlightCategory As PolicyPlusCategory
@@ -164,7 +165,7 @@
         Return Policy.RawPolicy.RegistryKey <> "" And Not RegistryPolicyProxy.IsPolicyKey(Policy.RawPolicy.RegistryKey)
     End Function
     Sub ShowSettingEditor(Policy As PolicyPlusPolicy, Section As AdmxPolicySection)
-        If EditSetting.PresentDialog(Policy, Section, AdmxWorkspace, CompPolicySource, UserPolicySource, CompPolicyLoader, UserPolicyLoader) = DialogResult.OK Then UpdateCategoryListing()
+        If EditSetting.PresentDialog(Policy, Section, AdmxWorkspace, CompPolicySource, UserPolicySource, CompPolicyLoader, UserPolicyLoader, CompComments, UserComments) = DialogResult.OK Then UpdateCategoryListing()
     End Sub
     Sub ClearSelections()
         CurrentSetting = Nothing
@@ -177,7 +178,7 @@
         CompPolicyLoader = Computer
         CompPolicySource = Computer.OpenSource
         Dim allOk As Boolean = True
-        Dim policyStatus = Function(Loader As PolicyLoader)
+        Dim policyStatus = Function(Loader As PolicyLoader) As String
                                Select Case Loader.GetWritability
                                    Case PolicySourceWritability.Writable
                                        Return "is fully writable"
@@ -189,8 +190,27 @@
                                        Return "cannot be modified"
                                End Select
                            End Function
+        Dim loadComments = Function(Loader As PolicyLoader) As Dictionary(Of String, String)
+                               Dim cmtxPath = Loader.GetCmtxPath
+                               If cmtxPath = "" Then
+                                   Return Nothing
+                               Else
+                                   Try
+                                       IO.Directory.CreateDirectory(IO.Path.GetDirectoryName(cmtxPath))
+                                       If IO.File.Exists(cmtxPath) Then
+                                           Return CmtxFile.Load(cmtxPath).ToCommentTable
+                                       Else
+                                           Return New Dictionary(Of String, String)
+                                       End If
+                                   Catch ex As Exception
+                                       Return Nothing
+                                   End Try
+                               End If
+                           End Function
         Dim userStatus = policyStatus(User)
         Dim compStatus = policyStatus(Computer)
+        UserComments = loadComments(User)
+        CompComments = loadComments(Computer)
         If allOk Then
             If Not Quiet Then
                 MsgBox("Both the user and computer policy sources are loaded and writable.", MsgBoxStyle.Information)
@@ -318,6 +338,15 @@
         End If
     End Sub
     Private Sub SavePoliciesToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles SavePoliciesToolStripMenuItem.Click
+        Dim saveComments = Sub(Comments As Dictionary(Of String, String), Loader As PolicyLoader)
+                               Try
+                                   If Comments IsNot Nothing Then CmtxFile.FromCommentTable(Comments).Save(Loader.GetCmtxPath)
+                               Catch ex As Exception
+                                   ' Doesn't matter, it's just comments
+                               End Try
+                           End Sub
+        saveComments(UserComments, UserPolicyLoader)
+        saveComments(CompComments, CompPolicyLoader)
         Try
             Dim compStatus = "not writable"
             Dim userStatus = "not writable"

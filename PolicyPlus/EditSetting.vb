@@ -4,9 +4,12 @@
     Dim AdmxWorkspace As AdmxBundle
     Dim CompPolSource, UserPolSource As IPolicySource
     Dim CompPolLoader, UserPolLoader As PolicyLoader
+    Dim CompComments, UserComments As Dictionary(Of String, String)
+    ' Above: passed in; below: internal state
     Dim ElementControls As Dictionary(Of String, Control)
     Dim CurrentSource As IPolicySource
     Dim CurrentLoader As PolicyLoader
+    Dim CurrentComments As Dictionary(Of String, String)
     Dim ChangesMade As Boolean ' To either side
     Private Sub CancelButton_Click(sender As Object, e As EventArgs) Handles CancelButton.Click
         If ChangesMade Then DialogResult = DialogResult.OK Else DialogResult = DialogResult.Cancel
@@ -132,7 +135,7 @@
                             Dim maxWidth = combobox.Width
                             For Each entry In enumElem.Items
                                 Dim map = New DropdownPresentationMap With {.ID = itemId, .DisplayName = AdmxWorkspace.ResolveString(entry.DisplayCode, CurrentSetting.RawPolicy.DefinedIn)}
-                                Dim width = g.MeasureString(map.DisplayName, combobox.Font).Width * 1.2
+                                Dim width = g.MeasureString(map.DisplayName, combobox.Font).Width + 25 ' A little extra margin
                                 If width > maxWidth Then maxWidth = width
                                 combobox.Items.Add(map)
                                 If itemId = dropdownPres.DefaultItemID.GetValueOrDefault(-1) Then combobox.SelectedItem = map
@@ -191,6 +194,16 @@
         Dim canWrite = (CurrentLoader.GetWritability <> PolicySourceWritability.NoWriting)
         ApplyButton.Enabled = canWrite
         OkButton.Enabled = canWrite
+        If CurrentComments Is Nothing Then
+            CommentTextbox.Enabled = False
+            CommentTextbox.Text = "Comments unavailable for this policy source"
+        ElseIf CurrentComments.ContainsKey(CurrentSetting.UniqueID) Then
+            CommentTextbox.Enabled = True
+            CommentTextbox.Text = CurrentComments(CurrentSetting.UniqueID)
+        Else
+            CommentTextbox.Enabled = True
+            CommentTextbox.Text = ""
+        End If
     End Sub
     Sub ApplyToPolicySource()
         PolicyProcessing.ForgetPolicy(CurrentSource, CurrentSetting)
@@ -225,8 +238,15 @@
         ElseIf DisabledOption.Checked Then
             PolicyProcessing.SetPolicyState(CurrentSource, CurrentSetting, PolicyState.Disabled, Nothing)
         End If
+        If CurrentComments IsNot Nothing Then
+            If CommentTextbox.Text = "" Then
+                If CurrentComments.ContainsKey(CurrentSetting.UniqueID) Then CurrentComments.Remove(CurrentSetting.UniqueID)
+            Else
+                If CurrentComments.ContainsKey(CurrentSetting.UniqueID) Then CurrentComments(CurrentSetting.UniqueID) = CommentTextbox.Text Else CurrentComments.Add(CurrentSetting.UniqueID, CommentTextbox.Text)
+            End If
+        End If
     End Sub
-    Public Function PresentDialog(Policy As PolicyPlusPolicy, Section As AdmxPolicySection, Workspace As AdmxBundle, CompPolSource As IPolicySource, UserPolSource As IPolicySource, CompPolLoader As PolicyLoader, UserPolLoader As PolicyLoader) As DialogResult
+    Public Function PresentDialog(Policy As PolicyPlusPolicy, Section As AdmxPolicySection, Workspace As AdmxBundle, CompPolSource As IPolicySource, UserPolSource As IPolicySource, CompPolLoader As PolicyLoader, UserPolLoader As PolicyLoader, CompComments As Dictionary(Of String, String), UserComments As Dictionary(Of String, String)) As DialogResult
         CurrentSetting = Policy
         CurrentSection = Section
         AdmxWorkspace = Workspace
@@ -234,6 +254,8 @@
         Me.UserPolSource = UserPolSource
         Me.CompPolLoader = CompPolLoader
         Me.UserPolLoader = UserPolLoader
+        Me.CompComments = CompComments
+        Me.UserComments = UserComments
         ChangesMade = False
         Return ShowDialog()
     End Function
@@ -247,6 +269,7 @@
         Dim isUser = (SectionDropdown.Text = "User")
         CurrentSource = IIf(isUser, UserPolSource, CompPolSource)
         CurrentLoader = IIf(isUser, UserPolLoader, CompPolLoader)
+        CurrentComments = IIf(isUser, UserComments, CompComments)
         PreparePolicyState()
     End Sub
     Private Sub OkButton_Click(sender As Object, e As EventArgs) Handles OkButton.Click
