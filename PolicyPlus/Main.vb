@@ -410,4 +410,7 @@
     Private Sub Main_Closed(sender As Object, e As EventArgs) Handles Me.Closed
         ClosePolicySources()
     End Sub
+    Private Sub PoliciesList_KeyUp(sender As Object, e As KeyEventArgs) Handles PoliciesList.KeyUp
+        If e.KeyCode = Keys.Enter And PoliciesList.SelectedItems.Count > 0 Then PoliciesList_DoubleClick(sender, e)
+    End Sub
 End Class

@@ -45,4 +45,7 @@ Public Class OpenAdmxFolder
             TextFolder.Text = fbd.SelectedPath
         End Using
     End Sub
+    Private Sub OpenAdmxFolder_KeyUp(sender As Object, e As KeyEventArgs) Handles Me.KeyUp
+        If e.KeyCode = Keys.Escape Then DialogResult = DialogResult.Cancel
+    End Sub
 End Class

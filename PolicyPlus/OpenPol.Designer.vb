@@ -139,7 +139,7 @@ Partial Class OpenPol
         Me.UserGroup.Location = New System.Drawing.Point(242, 12)
         Me.UserGroup.Name = "UserGroup"
         Me.UserGroup.Size = New System.Drawing.Size(224, 157)
-        Me.UserGroup.TabIndex = 0
+        Me.UserGroup.TabIndex = 1
         Me.UserGroup.TabStop = False
         Me.UserGroup.Text = "User"
         '
@@ -149,7 +149,7 @@ Partial Class OpenPol
         Me.UserPerUserRegOption.Location = New System.Drawing.Point(6, 111)
         Me.UserPerUserRegOption.Name = "UserPerUserRegOption"
         Me.UserPerUserRegOption.Size = New System.Drawing.Size(70, 17)
-        Me.UserPerUserRegOption.TabIndex = 6
+        Me.UserPerUserRegOption.TabIndex = 14
         Me.UserPerUserRegOption.TabStop = True
         Me.UserPerUserRegOption.Text = "User hive"
         Me.UserPerUserRegOption.UseVisualStyleBackColor = True
@@ -160,7 +160,7 @@ Partial Class OpenPol
         Me.UserPerUserGpoOption.Location = New System.Drawing.Point(6, 88)
         Me.UserPerUserGpoOption.Name = "UserPerUserGpoOption"
         Me.UserPerUserGpoOption.Size = New System.Drawing.Size(73, 17)
-        Me.UserPerUserGpoOption.TabIndex = 6
+        Me.UserPerUserGpoOption.TabIndex = 11
         Me.UserPerUserGpoOption.TabStop = True
         Me.UserPerUserGpoOption.Text = "User GPO"
         Me.UserPerUserGpoOption.UseVisualStyleBackColor = True
@@ -170,7 +170,7 @@ Partial Class OpenPol
         Me.UserBrowseHiveButton.Location = New System.Drawing.Point(180, 108)
         Me.UserBrowseHiveButton.Name = "UserBrowseHiveButton"
         Me.UserBrowseHiveButton.Size = New System.Drawing.Size(38, 23)
-        Me.UserBrowseHiveButton.TabIndex = 4
+        Me.UserBrowseHiveButton.TabIndex = 16
         Me.UserBrowseHiveButton.Text = "..."
         Me.UserBrowseHiveButton.UseVisualStyleBackColor = True
         '
@@ -180,7 +180,7 @@ Partial Class OpenPol
         Me.UserNullOption.Location = New System.Drawing.Point(6, 134)
         Me.UserNullOption.Name = "UserNullOption"
         Me.UserNullOption.Size = New System.Drawing.Size(119, 17)
-        Me.UserNullOption.TabIndex = 5
+        Me.UserNullOption.TabIndex = 17
         Me.UserNullOption.TabStop = True
         Me.UserNullOption.Text = "Scratch space (null)"
         Me.UserNullOption.UseVisualStyleBackColor = True
@@ -190,7 +190,7 @@ Partial Class OpenPol
         Me.UserBrowseGpoButton.Location = New System.Drawing.Point(180, 85)
         Me.UserBrowseGpoButton.Name = "UserBrowseGpoButton"
         Me.UserBrowseGpoButton.Size = New System.Drawing.Size(38, 23)
-        Me.UserBrowseGpoButton.TabIndex = 4
+        Me.UserBrowseGpoButton.TabIndex = 13
         Me.UserBrowseGpoButton.Text = "..."
         Me.UserBrowseGpoButton.UseVisualStyleBackColor = True
         '
@@ -199,14 +199,14 @@ Partial Class OpenPol
         Me.UserHivePathTextbox.Location = New System.Drawing.Point(85, 110)
         Me.UserHivePathTextbox.Name = "UserHivePathTextbox"
         Me.UserHivePathTextbox.Size = New System.Drawing.Size(89, 20)
-        Me.UserHivePathTextbox.TabIndex = 3
+        Me.UserHivePathTextbox.TabIndex = 15
         '
         'UserFileBrowseButton
         '
         Me.UserFileBrowseButton.Location = New System.Drawing.Point(180, 62)
         Me.UserFileBrowseButton.Name = "UserFileBrowseButton"
         Me.UserFileBrowseButton.Size = New System.Drawing.Size(38, 23)
-        Me.UserFileBrowseButton.TabIndex = 4
+        Me.UserFileBrowseButton.TabIndex = 10
         Me.UserFileBrowseButton.Text = "..."
         Me.UserFileBrowseButton.UseVisualStyleBackColor = True
         '
@@ -215,14 +215,14 @@ Partial Class OpenPol
         Me.UserGpoSidTextbox.Location = New System.Drawing.Point(85, 87)
         Me.UserGpoSidTextbox.Name = "UserGpoSidTextbox"
         Me.UserGpoSidTextbox.Size = New System.Drawing.Size(89, 20)
-        Me.UserGpoSidTextbox.TabIndex = 3
+        Me.UserGpoSidTextbox.TabIndex = 12
         '
         'UserPolFilenameTextbox
         '
         Me.UserPolFilenameTextbox.Location = New System.Drawing.Point(74, 64)
         Me.UserPolFilenameTextbox.Name = "UserPolFilenameTextbox"
         Me.UserPolFilenameTextbox.Size = New System.Drawing.Size(100, 20)
-        Me.UserPolFilenameTextbox.TabIndex = 3
+        Me.UserPolFilenameTextbox.TabIndex = 9
         '
         'UserFileOption
         '
@@ -230,7 +230,7 @@ Partial Class OpenPol
         Me.UserFileOption.Location = New System.Drawing.Point(6, 65)
         Me.UserFileOption.Name = "UserFileOption"
         Me.UserFileOption.Size = New System.Drawing.Size(62, 17)
-        Me.UserFileOption.TabIndex = 2
+        Me.UserFileOption.TabIndex = 8
         Me.UserFileOption.TabStop = True
         Me.UserFileOption.Text = "POL file"
         Me.UserFileOption.UseVisualStyleBackColor = True
@@ -241,7 +241,7 @@ Partial Class OpenPol
         Me.UserRegistryOption.Location = New System.Drawing.Point(6, 42)
         Me.UserRegistryOption.Name = "UserRegistryOption"
         Me.UserRegistryOption.Size = New System.Drawing.Size(100, 17)
-        Me.UserRegistryOption.TabIndex = 1
+        Me.UserRegistryOption.TabIndex = 7
         Me.UserRegistryOption.TabStop = True
         Me.UserRegistryOption.Text = "Current Registry"
         Me.UserRegistryOption.UseVisualStyleBackColor = True
@@ -252,7 +252,7 @@ Partial Class OpenPol
         Me.UserLocalOption.Location = New System.Drawing.Point(6, 19)
         Me.UserLocalOption.Name = "UserLocalOption"
         Me.UserLocalOption.Size = New System.Drawing.Size(77, 17)
-        Me.UserLocalOption.TabIndex = 0
+        Me.UserLocalOption.TabIndex = 6
         Me.UserLocalOption.TabStop = True
         Me.UserLocalOption.Text = "Local GPO"
         Me.UserLocalOption.UseVisualStyleBackColor = True
@@ -262,12 +262,13 @@ Partial Class OpenPol
         Me.OkButton.Location = New System.Drawing.Point(391, 175)
         Me.OkButton.Name = "OkButton"
         Me.OkButton.Size = New System.Drawing.Size(75, 23)
-        Me.OkButton.TabIndex = 1
+        Me.OkButton.TabIndex = 18
         Me.OkButton.Text = "OK"
         Me.OkButton.UseVisualStyleBackColor = True
         '
         'OpenPol
         '
+        Me.AcceptButton = Me.OkButton
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.ClientSize = New System.Drawing.Size(478, 210)
@@ -275,6 +276,7 @@ Partial Class OpenPol
         Me.Controls.Add(Me.UserGroup)
         Me.Controls.Add(Me.ComputerGroup)
         Me.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle
+        Me.KeyPreview = True
         Me.MaximizeBox = False
         Me.MinimizeBox = False
         Me.Name = "OpenPol"

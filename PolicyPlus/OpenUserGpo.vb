@@ -28,4 +28,7 @@ Public Class OpenUserGpo
         SidTextbox.Text = ""
         UsernameTextbox.Text = ""
     End Sub
+    Private Sub OpenUserGpo_KeyUp(sender As Object, e As KeyEventArgs) Handles Me.KeyUp
+        If e.KeyCode = Keys.Escape Then DialogResult = DialogResult.Cancel
+    End Sub
 End Class

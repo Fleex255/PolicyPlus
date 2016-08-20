@@ -61,12 +61,14 @@ Partial Class OpenUserRegistry
         '
         'OpenUserRegistry
         '
+        Me.AcceptButton = Me.OkButton
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.ClientSize = New System.Drawing.Size(338, 164)
         Me.Controls.Add(Me.OkButton)
         Me.Controls.Add(Me.SubfoldersListview)
         Me.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle
+        Me.KeyPreview = True
         Me.MaximizeBox = False
         Me.MinimizeBox = False
         Me.Name = "OpenUserRegistry"

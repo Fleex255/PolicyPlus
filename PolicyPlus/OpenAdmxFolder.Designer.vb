@@ -87,7 +87,7 @@ Partial Class OpenAdmxFolder
         Me.ButtonOK.Location = New System.Drawing.Point(354, 96)
         Me.ButtonOK.Name = "ButtonOK"
         Me.ButtonOK.Size = New System.Drawing.Size(75, 23)
-        Me.ButtonOK.TabIndex = 5
+        Me.ButtonOK.TabIndex = 7
         Me.ButtonOK.Text = "OK"
         Me.ButtonOK.UseVisualStyleBackColor = True
         '
@@ -96,7 +96,7 @@ Partial Class OpenAdmxFolder
         Me.ButtonBrowse.Location = New System.Drawing.Point(369, 68)
         Me.ButtonBrowse.Name = "ButtonBrowse"
         Me.ButtonBrowse.Size = New System.Drawing.Size(60, 23)
-        Me.ButtonBrowse.TabIndex = 6
+        Me.ButtonBrowse.TabIndex = 5
         Me.ButtonBrowse.Text = "Browse"
         Me.ButtonBrowse.UseVisualStyleBackColor = True
         '
@@ -108,12 +108,13 @@ Partial Class OpenAdmxFolder
         Me.ClearWorkspaceCheckbox.Location = New System.Drawing.Point(15, 100)
         Me.ClearWorkspaceCheckbox.Name = "ClearWorkspaceCheckbox"
         Me.ClearWorkspaceCheckbox.Size = New System.Drawing.Size(239, 17)
-        Me.ClearWorkspaceCheckbox.TabIndex = 7
+        Me.ClearWorkspaceCheckbox.TabIndex = 6
         Me.ClearWorkspaceCheckbox.Text = "Clear the workspace before adding this folder"
         Me.ClearWorkspaceCheckbox.UseVisualStyleBackColor = True
         '
         'OpenAdmxFolder
         '
+        Me.AcceptButton = Me.ButtonOK
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.ClientSize = New System.Drawing.Size(441, 131)
@@ -126,6 +127,7 @@ Partial Class OpenAdmxFolder
         Me.Controls.Add(Me.OptLocalFolder)
         Me.Controls.Add(LabelFromWhere)
         Me.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog
+        Me.KeyPreview = True
         Me.MaximizeBox = False
         Me.MinimizeBox = False
         Me.Name = "OpenAdmxFolder"

@@ -26,7 +26,7 @@ Partial Class ListEditor
         Me.NameColumn = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.ValueColumn = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.ElementNameLabel = New System.Windows.Forms.Label()
-        Me.CancelButton = New System.Windows.Forms.Button()
+        Me.CloseButton = New System.Windows.Forms.Button()
         Me.OkButton = New System.Windows.Forms.Button()
         CType(Me.EntriesDatagrid, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
@@ -66,16 +66,16 @@ Partial Class ListEditor
         Me.ElementNameLabel.TabIndex = 1
         Me.ElementNameLabel.Text = "List element name"
         '
-        'CancelButton
+        'CloseButton
         '
-        Me.CancelButton.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.CancelButton.DialogResult = System.Windows.Forms.DialogResult.Cancel
-        Me.CancelButton.Location = New System.Drawing.Point(341, 201)
-        Me.CancelButton.Name = "CancelButton"
-        Me.CancelButton.Size = New System.Drawing.Size(75, 23)
-        Me.CancelButton.TabIndex = 2
-        Me.CancelButton.Text = "Cancel"
-        Me.CancelButton.UseVisualStyleBackColor = True
+        Me.CloseButton.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.CloseButton.DialogResult = System.Windows.Forms.DialogResult.Cancel
+        Me.CloseButton.Location = New System.Drawing.Point(341, 201)
+        Me.CloseButton.Name = "CloseButton"
+        Me.CloseButton.Size = New System.Drawing.Size(75, 23)
+        Me.CloseButton.TabIndex = 2
+        Me.CloseButton.Text = "Cancel"
+        Me.CloseButton.UseVisualStyleBackColor = True
         '
         'OkButton
         '
@@ -83,7 +83,7 @@ Partial Class ListEditor
         Me.OkButton.Location = New System.Drawing.Point(260, 201)
         Me.OkButton.Name = "OkButton"
         Me.OkButton.Size = New System.Drawing.Size(75, 23)
-        Me.OkButton.TabIndex = 2
+        Me.OkButton.TabIndex = 1
         Me.OkButton.Text = "OK"
         Me.OkButton.UseVisualStyleBackColor = True
         '
@@ -91,9 +91,10 @@ Partial Class ListEditor
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
+        Me.CancelButton = Me.CloseButton
         Me.ClientSize = New System.Drawing.Size(428, 236)
         Me.Controls.Add(Me.OkButton)
-        Me.Controls.Add(Me.CancelButton)
+        Me.Controls.Add(Me.CloseButton)
         Me.Controls.Add(Me.ElementNameLabel)
         Me.Controls.Add(Me.EntriesDatagrid)
         Me.MaximizeBox = False
@@ -114,6 +115,6 @@ Partial Class ListEditor
     Friend WithEvents NameColumn As DataGridViewTextBoxColumn
     Friend WithEvents ValueColumn As DataGridViewTextBoxColumn
     Friend WithEvents ElementNameLabel As Label
-    Friend WithEvents CancelButton As Button
+    Friend WithEvents CloseButton As Button
     Friend WithEvents OkButton As Button
 End Class

@@ -42,6 +42,8 @@ Partial Class Main
         Me.ViewToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.EmptyCategoriesToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.DeduplicatePoliciesToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.HelpToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.AboutToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.SplitContainer = New System.Windows.Forms.SplitContainer()
         Me.ComboAppliesTo = New System.Windows.Forms.ComboBox()
         Me.CategoriesTree = New System.Windows.Forms.TreeView()
@@ -54,8 +56,6 @@ Partial Class Main
         Me.PolicySupportedLabel = New System.Windows.Forms.Label()
         Me.PolicyDescLabel = New System.Windows.Forms.Label()
         Me.PolicyIsPrefLabel = New System.Windows.Forms.Label()
-        Me.HelpToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.AboutToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         ChSettingEnabled = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
         ChSettingCommented = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
         ToolStripSeparator1 = New System.Windows.Forms.ToolStripSeparator()
@@ -90,12 +90,12 @@ Partial Class Main
         'ToolStripSeparator2
         '
         ToolStripSeparator2.Name = "ToolStripSeparator2"
-        ToolStripSeparator2.Size = New System.Drawing.Size(198, 6)
+        ToolStripSeparator2.Size = New System.Drawing.Size(234, 6)
         '
         'ToolStripSeparator3
         '
         ToolStripSeparator3.Name = "ToolStripSeparator3"
-        ToolStripSeparator3.Size = New System.Drawing.Size(198, 6)
+        ToolStripSeparator3.Size = New System.Drawing.Size(234, 6)
         '
         'MainMenu
         '
@@ -116,19 +116,19 @@ Partial Class Main
         'OpenADMXFolderToolStripMenuItem
         '
         Me.OpenADMXFolderToolStripMenuItem.Name = "OpenADMXFolderToolStripMenuItem"
-        Me.OpenADMXFolderToolStripMenuItem.Size = New System.Drawing.Size(201, 22)
+        Me.OpenADMXFolderToolStripMenuItem.Size = New System.Drawing.Size(237, 22)
         Me.OpenADMXFolderToolStripMenuItem.Text = "Open ADMX Folder"
         '
         'OpenADMXFileToolStripMenuItem
         '
         Me.OpenADMXFileToolStripMenuItem.Name = "OpenADMXFileToolStripMenuItem"
-        Me.OpenADMXFileToolStripMenuItem.Size = New System.Drawing.Size(201, 22)
+        Me.OpenADMXFileToolStripMenuItem.Size = New System.Drawing.Size(237, 22)
         Me.OpenADMXFileToolStripMenuItem.Text = "Open ADMX File"
         '
         'CloseADMXWorkspaceToolStripMenuItem
         '
         Me.CloseADMXWorkspaceToolStripMenuItem.Name = "CloseADMXWorkspaceToolStripMenuItem"
-        Me.CloseADMXWorkspaceToolStripMenuItem.Size = New System.Drawing.Size(201, 22)
+        Me.CloseADMXWorkspaceToolStripMenuItem.Size = New System.Drawing.Size(237, 22)
         Me.CloseADMXWorkspaceToolStripMenuItem.Text = "Close ADMX Workspace"
         '
         'OpenPolicyResourcesToolStripMenuItem
@@ -148,7 +148,7 @@ Partial Class Main
         'ExitToolStripMenuItem
         '
         Me.ExitToolStripMenuItem.Name = "ExitToolStripMenuItem"
-        Me.ExitToolStripMenuItem.Size = New System.Drawing.Size(201, 22)
+        Me.ExitToolStripMenuItem.Size = New System.Drawing.Size(237, 22)
         Me.ExitToolStripMenuItem.Text = "Exit"
         '
         'EditToolStripMenuItem
@@ -184,6 +184,19 @@ Partial Class Main
         Me.DeduplicatePoliciesToolStripMenuItem.Size = New System.Drawing.Size(180, 22)
         Me.DeduplicatePoliciesToolStripMenuItem.Text = "Deduplicate Policies"
         '
+        'HelpToolStripMenuItem
+        '
+        Me.HelpToolStripMenuItem.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.AboutToolStripMenuItem})
+        Me.HelpToolStripMenuItem.Name = "HelpToolStripMenuItem"
+        Me.HelpToolStripMenuItem.Size = New System.Drawing.Size(44, 20)
+        Me.HelpToolStripMenuItem.Text = "Help"
+        '
+        'AboutToolStripMenuItem
+        '
+        Me.AboutToolStripMenuItem.Name = "AboutToolStripMenuItem"
+        Me.AboutToolStripMenuItem.Size = New System.Drawing.Size(107, 22)
+        Me.AboutToolStripMenuItem.Text = "About"
+        '
         'SplitContainer
         '
         Me.SplitContainer.Dock = System.Windows.Forms.DockStyle.Fill
@@ -203,6 +216,7 @@ Partial Class Main
         Me.SplitContainer.Size = New System.Drawing.Size(706, 350)
         Me.SplitContainer.SplitterDistance = 190
         Me.SplitContainer.TabIndex = 1
+        Me.SplitContainer.TabStop = False
         '
         'ComboAppliesTo
         '
@@ -228,7 +242,7 @@ Partial Class Main
         Me.CategoriesTree.Name = "CategoriesTree"
         Me.CategoriesTree.SelectedImageIndex = 0
         Me.CategoriesTree.Size = New System.Drawing.Size(190, 331)
-        Me.CategoriesTree.TabIndex = 0
+        Me.CategoriesTree.TabIndex = 2
         '
         'PolicyIcons
         '
@@ -258,7 +272,7 @@ Partial Class Main
         Me.PoliciesList.Name = "PoliciesList"
         Me.PoliciesList.Size = New System.Drawing.Size(322, 350)
         Me.PoliciesList.SmallImageList = Me.PolicyIcons
-        Me.PoliciesList.TabIndex = 1
+        Me.PoliciesList.TabIndex = 3
         Me.PoliciesList.UseCompatibleStateImageBehavior = False
         Me.PoliciesList.View = System.Windows.Forms.View.Details
         '
@@ -339,19 +353,6 @@ Partial Class Main
         Me.PolicyIsPrefLabel.TabIndex = 3
         Me.PolicyIsPrefLabel.Text = "Because it is not stored in a Policies section of the Registry, this policy is a " &
     "preference and will not be automatically undone if the setting is removed."
-        '
-        'HelpToolStripMenuItem
-        '
-        Me.HelpToolStripMenuItem.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.AboutToolStripMenuItem})
-        Me.HelpToolStripMenuItem.Name = "HelpToolStripMenuItem"
-        Me.HelpToolStripMenuItem.Size = New System.Drawing.Size(44, 20)
-        Me.HelpToolStripMenuItem.Text = "Help"
-        '
-        'AboutToolStripMenuItem
-        '
-        Me.AboutToolStripMenuItem.Name = "AboutToolStripMenuItem"
-        Me.AboutToolStripMenuItem.Size = New System.Drawing.Size(152, 22)
-        Me.AboutToolStripMenuItem.Text = "About"
         '
         'Main
         '

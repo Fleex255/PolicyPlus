@@ -41,6 +41,15 @@ Partial Class OpenUserGpo
         Label1.TabIndex = 0
         Label1.Text = "Look up username"
         '
+        'Label2
+        '
+        Label2.AutoSize = True
+        Label2.Location = New System.Drawing.Point(12, 41)
+        Label2.Name = "Label2"
+        Label2.Size = New System.Drawing.Size(25, 13)
+        Label2.TabIndex = 3
+        Label2.Text = "SID"
+        '
         'UsernameTextbox
         '
         Me.UsernameTextbox.Location = New System.Drawing.Point(113, 12)
@@ -57,33 +66,25 @@ Partial Class OpenUserGpo
         Me.SearchButton.Text = "Search"
         Me.SearchButton.UseVisualStyleBackColor = True
         '
-        'Label2
-        '
-        Label2.AutoSize = True
-        Label2.Location = New System.Drawing.Point(12, 41)
-        Label2.Name = "Label2"
-        Label2.Size = New System.Drawing.Size(25, 13)
-        Label2.TabIndex = 3
-        Label2.Text = "SID"
-        '
         'SidTextbox
         '
         Me.SidTextbox.Location = New System.Drawing.Point(43, 38)
         Me.SidTextbox.Name = "SidTextbox"
         Me.SidTextbox.Size = New System.Drawing.Size(286, 20)
-        Me.SidTextbox.TabIndex = 4
+        Me.SidTextbox.TabIndex = 3
         '
         'OkButton
         '
         Me.OkButton.Location = New System.Drawing.Point(254, 64)
         Me.OkButton.Name = "OkButton"
         Me.OkButton.Size = New System.Drawing.Size(75, 23)
-        Me.OkButton.TabIndex = 5
+        Me.OkButton.TabIndex = 4
         Me.OkButton.Text = "OK"
         Me.OkButton.UseVisualStyleBackColor = True
         '
         'OpenUserGpo
         '
+        Me.AcceptButton = Me.OkButton
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.ClientSize = New System.Drawing.Size(341, 99)
@@ -94,6 +95,7 @@ Partial Class OpenUserGpo
         Me.Controls.Add(Me.UsernameTextbox)
         Me.Controls.Add(Label1)
         Me.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle
+        Me.KeyPreview = True
         Me.MaximizeBox = False
         Me.MinimizeBox = False
         Me.Name = "OpenUserGpo"

@@ -33,7 +33,7 @@ Partial Class EditSetting
         Me.DisabledOption = New System.Windows.Forms.RadioButton()
         Me.ExtraOptionsPanel = New System.Windows.Forms.Panel()
         Me.ExtraOptionsTable = New System.Windows.Forms.TableLayoutPanel()
-        Me.CancelButton = New System.Windows.Forms.Button()
+        Me.CloseButton = New System.Windows.Forms.Button()
         Me.OkButton = New System.Windows.Forms.Button()
         Me.HelpTextbox = New System.Windows.Forms.TextBox()
         Me.SectionDropdown = New System.Windows.Forms.ComboBox()
@@ -87,7 +87,7 @@ Partial Class EditSetting
         Me.CommentTextbox.Multiline = True
         Me.CommentTextbox.Name = "CommentTextbox"
         Me.CommentTextbox.Size = New System.Drawing.Size(309, 69)
-        Me.CommentTextbox.TabIndex = 1
+        Me.CommentTextbox.TabIndex = 100
         '
         'SupportedTextbox
         '
@@ -96,7 +96,7 @@ Partial Class EditSetting
         Me.SupportedTextbox.Name = "SupportedTextbox"
         Me.SupportedTextbox.ReadOnly = True
         Me.SupportedTextbox.Size = New System.Drawing.Size(309, 44)
-        Me.SupportedTextbox.TabIndex = 3
+        Me.SupportedTextbox.TabIndex = 101
         '
         'NotConfiguredOption
         '
@@ -104,7 +104,7 @@ Partial Class EditSetting
         Me.NotConfiguredOption.Location = New System.Drawing.Point(12, 52)
         Me.NotConfiguredOption.Name = "NotConfiguredOption"
         Me.NotConfiguredOption.Size = New System.Drawing.Size(96, 17)
-        Me.NotConfiguredOption.TabIndex = 5
+        Me.NotConfiguredOption.TabIndex = 1
         Me.NotConfiguredOption.TabStop = True
         Me.NotConfiguredOption.Text = "Not Configured"
         Me.NotConfiguredOption.UseVisualStyleBackColor = True
@@ -115,7 +115,7 @@ Partial Class EditSetting
         Me.EnabledOption.Location = New System.Drawing.Point(12, 75)
         Me.EnabledOption.Name = "EnabledOption"
         Me.EnabledOption.Size = New System.Drawing.Size(64, 17)
-        Me.EnabledOption.TabIndex = 6
+        Me.EnabledOption.TabIndex = 2
         Me.EnabledOption.TabStop = True
         Me.EnabledOption.Text = "Enabled"
         Me.EnabledOption.UseVisualStyleBackColor = True
@@ -126,7 +126,7 @@ Partial Class EditSetting
         Me.DisabledOption.Location = New System.Drawing.Point(12, 98)
         Me.DisabledOption.Name = "DisabledOption"
         Me.DisabledOption.Size = New System.Drawing.Size(66, 17)
-        Me.DisabledOption.TabIndex = 7
+        Me.DisabledOption.TabIndex = 3
         Me.DisabledOption.TabStop = True
         Me.DisabledOption.Text = "Disabled"
         Me.DisabledOption.UseVisualStyleBackColor = True
@@ -158,21 +158,22 @@ Partial Class EditSetting
         Me.ExtraOptionsTable.Size = New System.Drawing.Size(297, 20)
         Me.ExtraOptionsTable.TabIndex = 0
         '
-        'CancelButton
+        'CloseButton
         '
-        Me.CancelButton.Location = New System.Drawing.Point(470, 400)
-        Me.CancelButton.Name = "CancelButton"
-        Me.CancelButton.Size = New System.Drawing.Size(75, 23)
-        Me.CancelButton.TabIndex = 9
-        Me.CancelButton.Text = "Cancel"
-        Me.CancelButton.UseVisualStyleBackColor = True
+        Me.CloseButton.DialogResult = System.Windows.Forms.DialogResult.Cancel
+        Me.CloseButton.Location = New System.Drawing.Point(470, 400)
+        Me.CloseButton.Name = "CloseButton"
+        Me.CloseButton.Size = New System.Drawing.Size(75, 23)
+        Me.CloseButton.TabIndex = 104
+        Me.CloseButton.Text = "Cancel"
+        Me.CloseButton.UseVisualStyleBackColor = True
         '
         'OkButton
         '
         Me.OkButton.Location = New System.Drawing.Point(389, 400)
         Me.OkButton.Name = "OkButton"
         Me.OkButton.Size = New System.Drawing.Size(75, 23)
-        Me.OkButton.TabIndex = 9
+        Me.OkButton.TabIndex = 103
         Me.OkButton.Text = "OK"
         Me.OkButton.UseVisualStyleBackColor = True
         '
@@ -184,7 +185,7 @@ Partial Class EditSetting
         Me.HelpTextbox.ReadOnly = True
         Me.HelpTextbox.ScrollBars = System.Windows.Forms.ScrollBars.Both
         Me.HelpTextbox.Size = New System.Drawing.Size(309, 244)
-        Me.HelpTextbox.TabIndex = 10
+        Me.HelpTextbox.TabIndex = 102
         '
         'SectionDropdown
         '
@@ -194,28 +195,30 @@ Partial Class EditSetting
         Me.SectionDropdown.Location = New System.Drawing.Point(72, 25)
         Me.SectionDropdown.Name = "SectionDropdown"
         Me.SectionDropdown.Size = New System.Drawing.Size(112, 21)
-        Me.SectionDropdown.TabIndex = 11
+        Me.SectionDropdown.TabIndex = 4
         '
         'ApplyButton
         '
         Me.ApplyButton.Location = New System.Drawing.Point(551, 400)
         Me.ApplyButton.Name = "ApplyButton"
         Me.ApplyButton.Size = New System.Drawing.Size(75, 23)
-        Me.ApplyButton.TabIndex = 13
+        Me.ApplyButton.TabIndex = 105
         Me.ApplyButton.Text = "Apply"
         Me.ApplyButton.UseVisualStyleBackColor = True
         '
         'EditSetting
         '
+        Me.AcceptButton = Me.OkButton
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
+        Me.CancelButton = Me.CloseButton
         Me.ClientSize = New System.Drawing.Size(638, 435)
         Me.Controls.Add(Me.ApplyButton)
         Me.Controls.Add(SectionLabel)
         Me.Controls.Add(Me.SectionDropdown)
         Me.Controls.Add(Me.HelpTextbox)
         Me.Controls.Add(Me.OkButton)
-        Me.Controls.Add(Me.CancelButton)
+        Me.Controls.Add(Me.CloseButton)
         Me.Controls.Add(Me.ExtraOptionsPanel)
         Me.Controls.Add(Me.DisabledOption)
         Me.Controls.Add(Me.EnabledOption)
@@ -248,7 +251,7 @@ Partial Class EditSetting
     Friend WithEvents DisabledOption As RadioButton
     Friend WithEvents ExtraOptionsPanel As Panel
     Friend WithEvents ExtraOptionsTable As TableLayoutPanel
-    Friend WithEvents CancelButton As Button
+    Friend WithEvents CloseButton As Button
     Friend WithEvents OkButton As Button
     Friend WithEvents HelpTextbox As TextBox
     Friend WithEvents SectionDropdown As ComboBox

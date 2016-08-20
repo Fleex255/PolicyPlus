@@ -11,7 +11,7 @@
     Dim CurrentLoader As PolicyLoader
     Dim CurrentComments As Dictionary(Of String, String)
     Dim ChangesMade As Boolean ' To either side
-    Private Sub CancelButton_Click(sender As Object, e As EventArgs) Handles CancelButton.Click
+    Private Sub CancelButton_Click(sender As Object, e As EventArgs) Handles CloseButton.Click
         If ChangesMade Then DialogResult = DialogResult.OK Else DialogResult = DialogResult.Cancel
     End Sub
     Private Sub EditSetting_Shown(sender As Object, e As EventArgs) Handles Me.Shown
@@ -38,6 +38,7 @@
         Next
         ExtraOptionsTable.Controls.Clear()
         ExtraOptionsTable.RowCount = 0
+        Dim curTabIndex = 10
         Dim addControl = Sub(ID As String, Control As Control, Label As String)
                              ExtraOptionsTable.RowStyles.Add(New RowStyle(SizeType.AutoSize))
                              If Label = "" Then ' Just a single control
@@ -54,7 +55,14 @@
                                  flowPanel.Controls.Add(labelControl)
                                  flowPanel.Controls.Add(Control)
                              End If
-                             If ID <> "" Then ElementControls.Add(ID, Control)
+                             If ID <> "" Then
+                                 ElementControls.Add(ID, Control)
+                                 Control.TabStop = True
+                                 Control.TabIndex = curTabIndex
+                                 curTabIndex += 1
+                             Else
+                                 Control.TabStop = False
+                             End If
                          End Sub
         ExtraOptionsTable.RowStyles.Clear()
         ElementControls = New Dictionary(Of String, Control)
@@ -260,6 +268,7 @@
         Return ShowDialog()
     End Function
     Private Sub StateRadiosChanged(sender As Object, e As EventArgs) Handles DisabledOption.CheckedChanged, EnabledOption.CheckedChanged, NotConfiguredOption.CheckedChanged
+        If ElementControls Is Nothing Then Exit Sub ' A change to the tab order causes a spurious CheckedChanged
         Dim allowOptions = EnabledOption.Checked
         For Each kv In ElementControls
             kv.Value.Enabled = allowOptions

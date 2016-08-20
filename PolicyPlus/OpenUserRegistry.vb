@@ -31,4 +31,7 @@
         SelectedFilePath = IO.Path.Combine("C:\Users", SubfoldersListview.SelectedItems(0).Text, "ntuser.dat")
         DialogResult = DialogResult.OK
     End Sub
+    Private Sub OpenUserRegistry_KeyUp(sender As Object, e As KeyEventArgs) Handles Me.KeyUp
+        If e.KeyCode = Keys.Escape Then DialogResult = DialogResult.Cancel
+    End Sub
 End Class
