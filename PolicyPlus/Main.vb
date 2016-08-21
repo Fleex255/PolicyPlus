@@ -449,6 +449,9 @@
             End If
         Loop
     End Sub
+    Private Sub ByRegistryToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles ByRegistryToolStripMenuItem.Click
+        If FindByRegistry.ShowDialog = DialogResult.OK Then ShowSearchDialog(FindByRegistry.Searcher)
+    End Sub
     Private Sub SettingInfoPanel_ClientSizeChanged(sender As Object, e As EventArgs) Handles SettingInfoPanel.ClientSizeChanged, SettingInfoPanel.SizeChanged
         SettingInfoPanel.AutoScrollMinSize = SettingInfoPanel.Size
         PolicyTitleLabel.MaximumSize = New Size(PolicyInfoTable.Width, 0)

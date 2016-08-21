@@ -371,7 +371,8 @@ Partial Class Main
         'ByRegistryToolStripMenuItem
         '
         Me.ByRegistryToolStripMenuItem.Name = "ByRegistryToolStripMenuItem"
-        Me.ByRegistryToolStripMenuItem.Size = New System.Drawing.Size(152, 22)
+        Me.ByRegistryToolStripMenuItem.ShortcutKeys = CType((System.Windows.Forms.Keys.Control Or System.Windows.Forms.Keys.R), System.Windows.Forms.Keys)
+        Me.ByRegistryToolStripMenuItem.Size = New System.Drawing.Size(200, 22)
         Me.ByRegistryToolStripMenuItem.Text = "By Registry"
         '
         'ToolStripSeparator4

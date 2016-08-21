@@ -36,7 +36,7 @@ Public Class FindResults
         ResultsListview.Items.Clear()
     End Sub
     Public Function NextPolicy() As PolicyPlusPolicy
-        If LastSelectedIndex = ResultsListview.Items.Count - 1 Or Not HasSearched Then Return Nothing
+        If LastSelectedIndex >= ResultsListview.Items.Count - 1 Or Not HasSearched Then Return Nothing
         LastSelectedIndex += 1
         Return ResultsListview.Items(LastSelectedIndex).Tag
     End Function

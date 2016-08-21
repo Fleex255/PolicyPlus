@@ -96,6 +96,12 @@
     <Compile Include="FindById.vb">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="FindByRegistry.Designer.vb">
+      <DependentUpon>FindByRegistry.vb</DependentUpon>
+    </Compile>
+    <Compile Include="FindByRegistry.vb">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="FindByText.Designer.vb">
       <DependentUpon>FindByText.vb</DependentUpon>
     </Compile>
@@ -174,6 +180,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="FindById.resx">
       <DependentUpon>FindById.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FindByRegistry.resx">
+      <DependentUpon>FindByRegistry.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="FindByText.resx">
       <DependentUpon>FindByText.vb</DependentUpon>
