@@ -263,6 +263,39 @@
             MsgBox("Cleanup did not complete fully because the loaded resources are open in other programs.", MsgBoxStyle.Exclamation)
         End If
     End Sub
+    Sub ShowSearchDialog(Searcher As Func(Of PolicyPlusPolicy, Boolean))
+        Dim result As DialogResult
+        If Searcher Is Nothing Then
+            result = FindResults.PresentDialog()
+        Else
+            result = FindResults.PresentDialogStartSearch(AdmxWorkspace, Searcher)
+        End If
+        If result = DialogResult.OK Then
+            Dim selPol = FindResults.SelectedPolicy
+            ShowSettingEditor(selPol, ViewPolicyTypes)
+            FocusPolicy(selPol)
+        End If
+    End Sub
+    Sub ClearAdmxWorkspace()
+        ' Clear out all the per-workspace bookkeeping
+        AdmxWorkspace = New AdmxBundle
+        FindResults.ClearSearch()
+    End Sub
+    Sub FocusPolicy(Policy As PolicyPlusPolicy)
+        ' Try to automatically select a policy in the list view
+        If CategoryNodes.ContainsKey(Policy.Category) Then
+            CurrentCategory = Policy.Category
+            UpdateCategoryListing()
+            For Each entry As ListViewItem In PoliciesList.Items
+                If entry.Tag Is Policy Then
+                    entry.Selected = True
+                    entry.Focused = True
+                    entry.EnsureVisible()
+                    Exit For
+                End If
+            Next
+        End If
+    End Sub
     Private Sub CategoriesTree_AfterSelect(sender As Object, e As TreeViewEventArgs) Handles CategoriesTree.AfterSelect
         CurrentCategory = e.Node.Tag
         UpdateCategoryListing()
@@ -293,7 +326,7 @@
     Private Sub OpenADMXFolderToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles OpenADMXFolderToolStripMenuItem.Click
         If OpenAdmxFolder.ShowDialog = DialogResult.OK Then
             Try
-                If OpenAdmxFolder.ClearWorkspace Then AdmxWorkspace = New AdmxBundle
+                If OpenAdmxFolder.ClearWorkspace Then ClearAdmxWorkspace()
                 AdmxWorkspace.LoadFolder(OpenAdmxFolder.SelectedFolder, Globalization.CultureInfo.CurrentCulture.Name)
             Catch ex As Exception
                 MsgBox("The folder could not be fully added to the workspace. " & ex.Message, MsgBoxStyle.Exclamation)
@@ -311,7 +344,7 @@
         End Using
     End Sub
     Private Sub CloseADMXWorkspaceToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles CloseADMXWorkspaceToolStripMenuItem.Click
-        AdmxWorkspace = New AdmxBundle
+        ClearAdmxWorkspace()
         PopulateAdmxUi()
     End Sub
     Private Sub EmptyCategoriesToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles EmptyCategoriesToolStripMenuItem.Click
@@ -347,7 +380,7 @@
         UpdateCategoryListing()
         UpdatePolicyInfo()
     End Sub
-    Private Sub FindByIDToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles FindByIDToolStripMenuItem.Click
+    Private Sub FindByIDToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles ByIDToolStripMenuItem.Click
         FindById.AdmxWorkspace = AdmxWorkspace
         If FindById.ShowDialog() = DialogResult.OK Then
             Dim selCat = FindById.SelectedCategory
@@ -361,6 +394,7 @@
                 End If
             ElseIf selPol IsNot Nothing Then
                 ShowSettingEditor(selPol, Math.Min(ViewPolicyTypes, FindById.SelectedSection))
+                FocusPolicy(selPol)
             Else
                 MsgBox("That object could not be found.", MsgBoxStyle.Exclamation)
             End If
@@ -394,6 +428,26 @@
     End Sub
     Private Sub AboutToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles AboutToolStripMenuItem.Click
         MsgBox("Policy Plus by Ben Nordick. Available on GitHub: Fleex255/PolicyPlus. Still in early development (no version number).", MsgBoxStyle.Information)
+    End Sub
+    Private Sub ByTextToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles ByTextToolStripMenuItem.Click
+        If FindByText.PresentDialog(UserComments, CompComments) = DialogResult.OK Then
+            ShowSearchDialog(FindByText.Searcher)
+        End If
+    End Sub
+    Private Sub SearchResultsToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles SearchResultsToolStripMenuItem.Click
+        ShowSearchDialog(Nothing)
+    End Sub
+    Private Sub FindNextToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles FindNextToolStripMenuItem.Click
+        Do
+            Dim nextPol = FindResults.NextPolicy
+            If nextPol Is Nothing Then
+                MsgBox("There are no more results that match the filter.", MsgBoxStyle.Information)
+                Exit Do
+            ElseIf ShouldShowPolicy(nextPol) Then
+                FocusPolicy(nextPol)
+                Exit Do
+            End If
+        Loop
     End Sub
     Private Sub SettingInfoPanel_ClientSizeChanged(sender As Object, e As EventArgs) Handles SettingInfoPanel.ClientSizeChanged, SettingInfoPanel.SizeChanged
         SettingInfoPanel.AutoScrollMinSize = SettingInfoPanel.Size

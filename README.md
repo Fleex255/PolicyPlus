@@ -28,6 +28,6 @@ Policy Plus is usable on all editions. It can load and save all policy sources s
 
 These features will hopefully be implemented very soon:
 
-* Search-by-text
+* Search by Registry
 * Object inspection
 * POL import/export
