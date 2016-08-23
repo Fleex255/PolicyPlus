@@ -43,12 +43,15 @@ Partial Class OpenPol
         Me.UserRegistryOption = New System.Windows.Forms.RadioButton()
         Me.UserLocalOption = New System.Windows.Forms.RadioButton()
         Me.OkButton = New System.Windows.Forms.Button()
+        Me.CompRegTextbox = New System.Windows.Forms.TextBox()
+        Me.UserRegTextbox = New System.Windows.Forms.TextBox()
         Me.ComputerGroup.SuspendLayout()
         Me.UserGroup.SuspendLayout()
         Me.SuspendLayout()
         '
         'ComputerGroup
         '
+        Me.ComputerGroup.Controls.Add(Me.CompRegTextbox)
         Me.ComputerGroup.Controls.Add(Me.CompNullOption)
         Me.ComputerGroup.Controls.Add(Me.CompFileBrowseButton)
         Me.ComputerGroup.Controls.Add(Me.CompPolFilenameTextbox)
@@ -68,7 +71,7 @@ Partial Class OpenPol
         Me.CompNullOption.Location = New System.Drawing.Point(6, 88)
         Me.CompNullOption.Name = "CompNullOption"
         Me.CompNullOption.Size = New System.Drawing.Size(119, 17)
-        Me.CompNullOption.TabIndex = 5
+        Me.CompNullOption.TabIndex = 6
         Me.CompNullOption.TabStop = True
         Me.CompNullOption.Text = "Scratch space (null)"
         Me.CompNullOption.UseVisualStyleBackColor = True
@@ -78,7 +81,7 @@ Partial Class OpenPol
         Me.CompFileBrowseButton.Location = New System.Drawing.Point(180, 62)
         Me.CompFileBrowseButton.Name = "CompFileBrowseButton"
         Me.CompFileBrowseButton.Size = New System.Drawing.Size(38, 23)
-        Me.CompFileBrowseButton.TabIndex = 4
+        Me.CompFileBrowseButton.TabIndex = 5
         Me.CompFileBrowseButton.Text = "..."
         Me.CompFileBrowseButton.UseVisualStyleBackColor = True
         '
@@ -87,7 +90,7 @@ Partial Class OpenPol
         Me.CompPolFilenameTextbox.Location = New System.Drawing.Point(74, 64)
         Me.CompPolFilenameTextbox.Name = "CompPolFilenameTextbox"
         Me.CompPolFilenameTextbox.Size = New System.Drawing.Size(100, 20)
-        Me.CompPolFilenameTextbox.TabIndex = 3
+        Me.CompPolFilenameTextbox.TabIndex = 4
         '
         'CompFileOption
         '
@@ -95,7 +98,7 @@ Partial Class OpenPol
         Me.CompFileOption.Location = New System.Drawing.Point(6, 65)
         Me.CompFileOption.Name = "CompFileOption"
         Me.CompFileOption.Size = New System.Drawing.Size(62, 17)
-        Me.CompFileOption.TabIndex = 2
+        Me.CompFileOption.TabIndex = 3
         Me.CompFileOption.TabStop = True
         Me.CompFileOption.Text = "POL file"
         Me.CompFileOption.UseVisualStyleBackColor = True
@@ -124,6 +127,7 @@ Partial Class OpenPol
         '
         'UserGroup
         '
+        Me.UserGroup.Controls.Add(Me.UserRegTextbox)
         Me.UserGroup.Controls.Add(Me.UserPerUserRegOption)
         Me.UserGroup.Controls.Add(Me.UserPerUserGpoOption)
         Me.UserGroup.Controls.Add(Me.UserBrowseHiveButton)
@@ -149,7 +153,7 @@ Partial Class OpenPol
         Me.UserPerUserRegOption.Location = New System.Drawing.Point(6, 111)
         Me.UserPerUserRegOption.Name = "UserPerUserRegOption"
         Me.UserPerUserRegOption.Size = New System.Drawing.Size(70, 17)
-        Me.UserPerUserRegOption.TabIndex = 14
+        Me.UserPerUserRegOption.TabIndex = 9
         Me.UserPerUserRegOption.TabStop = True
         Me.UserPerUserRegOption.Text = "User hive"
         Me.UserPerUserRegOption.UseVisualStyleBackColor = True
@@ -160,7 +164,7 @@ Partial Class OpenPol
         Me.UserPerUserGpoOption.Location = New System.Drawing.Point(6, 88)
         Me.UserPerUserGpoOption.Name = "UserPerUserGpoOption"
         Me.UserPerUserGpoOption.Size = New System.Drawing.Size(73, 17)
-        Me.UserPerUserGpoOption.TabIndex = 11
+        Me.UserPerUserGpoOption.TabIndex = 6
         Me.UserPerUserGpoOption.TabStop = True
         Me.UserPerUserGpoOption.Text = "User GPO"
         Me.UserPerUserGpoOption.UseVisualStyleBackColor = True
@@ -170,7 +174,7 @@ Partial Class OpenPol
         Me.UserBrowseHiveButton.Location = New System.Drawing.Point(180, 108)
         Me.UserBrowseHiveButton.Name = "UserBrowseHiveButton"
         Me.UserBrowseHiveButton.Size = New System.Drawing.Size(38, 23)
-        Me.UserBrowseHiveButton.TabIndex = 16
+        Me.UserBrowseHiveButton.TabIndex = 11
         Me.UserBrowseHiveButton.Text = "..."
         Me.UserBrowseHiveButton.UseVisualStyleBackColor = True
         '
@@ -180,7 +184,7 @@ Partial Class OpenPol
         Me.UserNullOption.Location = New System.Drawing.Point(6, 134)
         Me.UserNullOption.Name = "UserNullOption"
         Me.UserNullOption.Size = New System.Drawing.Size(119, 17)
-        Me.UserNullOption.TabIndex = 17
+        Me.UserNullOption.TabIndex = 12
         Me.UserNullOption.TabStop = True
         Me.UserNullOption.Text = "Scratch space (null)"
         Me.UserNullOption.UseVisualStyleBackColor = True
@@ -190,7 +194,7 @@ Partial Class OpenPol
         Me.UserBrowseGpoButton.Location = New System.Drawing.Point(180, 85)
         Me.UserBrowseGpoButton.Name = "UserBrowseGpoButton"
         Me.UserBrowseGpoButton.Size = New System.Drawing.Size(38, 23)
-        Me.UserBrowseGpoButton.TabIndex = 13
+        Me.UserBrowseGpoButton.TabIndex = 8
         Me.UserBrowseGpoButton.Text = "..."
         Me.UserBrowseGpoButton.UseVisualStyleBackColor = True
         '
@@ -199,14 +203,14 @@ Partial Class OpenPol
         Me.UserHivePathTextbox.Location = New System.Drawing.Point(85, 110)
         Me.UserHivePathTextbox.Name = "UserHivePathTextbox"
         Me.UserHivePathTextbox.Size = New System.Drawing.Size(89, 20)
-        Me.UserHivePathTextbox.TabIndex = 15
+        Me.UserHivePathTextbox.TabIndex = 10
         '
         'UserFileBrowseButton
         '
         Me.UserFileBrowseButton.Location = New System.Drawing.Point(180, 62)
         Me.UserFileBrowseButton.Name = "UserFileBrowseButton"
         Me.UserFileBrowseButton.Size = New System.Drawing.Size(38, 23)
-        Me.UserFileBrowseButton.TabIndex = 10
+        Me.UserFileBrowseButton.TabIndex = 5
         Me.UserFileBrowseButton.Text = "..."
         Me.UserFileBrowseButton.UseVisualStyleBackColor = True
         '
@@ -215,14 +219,14 @@ Partial Class OpenPol
         Me.UserGpoSidTextbox.Location = New System.Drawing.Point(85, 87)
         Me.UserGpoSidTextbox.Name = "UserGpoSidTextbox"
         Me.UserGpoSidTextbox.Size = New System.Drawing.Size(89, 20)
-        Me.UserGpoSidTextbox.TabIndex = 12
+        Me.UserGpoSidTextbox.TabIndex = 7
         '
         'UserPolFilenameTextbox
         '
         Me.UserPolFilenameTextbox.Location = New System.Drawing.Point(74, 64)
         Me.UserPolFilenameTextbox.Name = "UserPolFilenameTextbox"
         Me.UserPolFilenameTextbox.Size = New System.Drawing.Size(100, 20)
-        Me.UserPolFilenameTextbox.TabIndex = 9
+        Me.UserPolFilenameTextbox.TabIndex = 4
         '
         'UserFileOption
         '
@@ -230,7 +234,7 @@ Partial Class OpenPol
         Me.UserFileOption.Location = New System.Drawing.Point(6, 65)
         Me.UserFileOption.Name = "UserFileOption"
         Me.UserFileOption.Size = New System.Drawing.Size(62, 17)
-        Me.UserFileOption.TabIndex = 8
+        Me.UserFileOption.TabIndex = 3
         Me.UserFileOption.TabStop = True
         Me.UserFileOption.Text = "POL file"
         Me.UserFileOption.UseVisualStyleBackColor = True
@@ -240,10 +244,10 @@ Partial Class OpenPol
         Me.UserRegistryOption.AutoSize = True
         Me.UserRegistryOption.Location = New System.Drawing.Point(6, 42)
         Me.UserRegistryOption.Name = "UserRegistryOption"
-        Me.UserRegistryOption.Size = New System.Drawing.Size(100, 17)
-        Me.UserRegistryOption.TabIndex = 7
+        Me.UserRegistryOption.Size = New System.Drawing.Size(92, 17)
+        Me.UserRegistryOption.TabIndex = 1
         Me.UserRegistryOption.TabStop = True
-        Me.UserRegistryOption.Text = "Current Registry"
+        Me.UserRegistryOption.Text = "Local Registry"
         Me.UserRegistryOption.UseVisualStyleBackColor = True
         '
         'UserLocalOption
@@ -252,7 +256,7 @@ Partial Class OpenPol
         Me.UserLocalOption.Location = New System.Drawing.Point(6, 19)
         Me.UserLocalOption.Name = "UserLocalOption"
         Me.UserLocalOption.Size = New System.Drawing.Size(77, 17)
-        Me.UserLocalOption.TabIndex = 6
+        Me.UserLocalOption.TabIndex = 0
         Me.UserLocalOption.TabStop = True
         Me.UserLocalOption.Text = "Local GPO"
         Me.UserLocalOption.UseVisualStyleBackColor = True
@@ -265,6 +269,22 @@ Partial Class OpenPol
         Me.OkButton.TabIndex = 18
         Me.OkButton.Text = "OK"
         Me.OkButton.UseVisualStyleBackColor = True
+        '
+        'CompRegTextbox
+        '
+        Me.CompRegTextbox.Location = New System.Drawing.Point(104, 41)
+        Me.CompRegTextbox.Name = "CompRegTextbox"
+        Me.CompRegTextbox.Size = New System.Drawing.Size(114, 20)
+        Me.CompRegTextbox.TabIndex = 2
+        Me.CompRegTextbox.Text = "HKLM"
+        '
+        'UserRegTextbox
+        '
+        Me.UserRegTextbox.Location = New System.Drawing.Point(104, 41)
+        Me.UserRegTextbox.Name = "UserRegTextbox"
+        Me.UserRegTextbox.Size = New System.Drawing.Size(114, 20)
+        Me.UserRegTextbox.TabIndex = 2
+        Me.UserRegTextbox.Text = "HKCU"
         '
         'OpenPol
         '
@@ -313,4 +333,6 @@ Partial Class OpenPol
     Friend WithEvents UserRegistryOption As RadioButton
     Friend WithEvents UserLocalOption As RadioButton
     Friend WithEvents OkButton As Button
+    Friend WithEvents CompRegTextbox As TextBox
+    Friend WithEvents UserRegTextbox As TextBox
 End Class

@@ -16,7 +16,23 @@ Public Class PolicyLoader
                 MainSourcePath = Environment.ExpandEnvironmentVariables("%SYSTEMROOT%\System32\GroupPolicy\" & IIf(IsUser, "User", "Machine") & "\Registry.pol")
                 GptIniPath = Environment.ExpandEnvironmentVariables("%SYSTEMROOT%\System32\GroupPolicy\gpt.ini")
             Case PolicyLoaderSource.LocalRegistry
-                MainSourceRegKey = RegistryKey.OpenBaseKey(IIf(IsUser, RegistryHive.CurrentUser, RegistryHive.LocalMachine), RegistryView.Default)
+                Dim pathParts = Split(Argument, "\", 2)
+                Dim baseName = pathParts(0).ToLowerInvariant
+                Dim baseKey As RegistryKey
+                If baseName = "hkcu" Or baseName = "hkey_current_user" Then
+                    baseKey = RegistryKey.OpenBaseKey(RegistryHive.CurrentUser, RegistryView.Default)
+                ElseIf baseName = "hku" Or baseName = "hkey_users" Then
+                    baseKey = RegistryKey.OpenBaseKey(RegistryHive.Users, RegistryView.Default)
+                ElseIf baseName = "hklm" Or baseName = "hkey_local_machine" Then
+                    baseKey = RegistryKey.OpenBaseKey(RegistryHive.LocalMachine, RegistryView.Default)
+                Else
+                    Throw New Exception("The root key is not valid.")
+                End If
+                If pathParts.Length = 2 Then
+                    MainSourceRegKey = baseKey.CreateSubKey(pathParts(1))
+                Else
+                    MainSourceRegKey = baseKey
+                End If
             Case PolicyLoaderSource.PolFile
                 MainSourcePath = Argument
             Case PolicyLoaderSource.SidGpo
