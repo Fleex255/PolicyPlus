@@ -46,46 +46,6 @@ Partial Class DetailSupport
         ProductsLabel = New System.Windows.Forms.Label()
         Me.SuspendLayout()
         '
-        'NameTextbox
-        '
-        Me.NameTextbox.Location = New System.Drawing.Point(86, 12)
-        Me.NameTextbox.Name = "NameTextbox"
-        Me.NameTextbox.ReadOnly = True
-        Me.NameTextbox.Size = New System.Drawing.Size(268, 20)
-        Me.NameTextbox.TabIndex = 0
-        '
-        'IdTextbox
-        '
-        Me.IdTextbox.Location = New System.Drawing.Point(86, 38)
-        Me.IdTextbox.Name = "IdTextbox"
-        Me.IdTextbox.ReadOnly = True
-        Me.IdTextbox.Size = New System.Drawing.Size(268, 20)
-        Me.IdTextbox.TabIndex = 1
-        '
-        'DefinedTextbox
-        '
-        Me.DefinedTextbox.Location = New System.Drawing.Point(86, 64)
-        Me.DefinedTextbox.Name = "DefinedTextbox"
-        Me.DefinedTextbox.ReadOnly = True
-        Me.DefinedTextbox.Size = New System.Drawing.Size(268, 20)
-        Me.DefinedTextbox.TabIndex = 2
-        '
-        'DisplayCodeTextbox
-        '
-        Me.DisplayCodeTextbox.Location = New System.Drawing.Point(86, 90)
-        Me.DisplayCodeTextbox.Name = "DisplayCodeTextbox"
-        Me.DisplayCodeTextbox.ReadOnly = True
-        Me.DisplayCodeTextbox.Size = New System.Drawing.Size(268, 20)
-        Me.DisplayCodeTextbox.TabIndex = 3
-        '
-        'LogicTextbox
-        '
-        Me.LogicTextbox.Location = New System.Drawing.Point(86, 116)
-        Me.LogicTextbox.Name = "LogicTextbox"
-        Me.LogicTextbox.ReadOnly = True
-        Me.LogicTextbox.Size = New System.Drawing.Size(268, 20)
-        Me.LogicTextbox.TabIndex = 4
-        '
         'NameLabel
         '
         NameLabel.AutoSize = True
@@ -140,6 +100,46 @@ Partial Class DetailSupport
         ProductsLabel.TabIndex = 11
         ProductsLabel.Text = "Products"
         '
+        'NameTextbox
+        '
+        Me.NameTextbox.Location = New System.Drawing.Point(86, 12)
+        Me.NameTextbox.Name = "NameTextbox"
+        Me.NameTextbox.ReadOnly = True
+        Me.NameTextbox.Size = New System.Drawing.Size(268, 20)
+        Me.NameTextbox.TabIndex = 0
+        '
+        'IdTextbox
+        '
+        Me.IdTextbox.Location = New System.Drawing.Point(86, 38)
+        Me.IdTextbox.Name = "IdTextbox"
+        Me.IdTextbox.ReadOnly = True
+        Me.IdTextbox.Size = New System.Drawing.Size(268, 20)
+        Me.IdTextbox.TabIndex = 1
+        '
+        'DefinedTextbox
+        '
+        Me.DefinedTextbox.Location = New System.Drawing.Point(86, 64)
+        Me.DefinedTextbox.Name = "DefinedTextbox"
+        Me.DefinedTextbox.ReadOnly = True
+        Me.DefinedTextbox.Size = New System.Drawing.Size(268, 20)
+        Me.DefinedTextbox.TabIndex = 2
+        '
+        'DisplayCodeTextbox
+        '
+        Me.DisplayCodeTextbox.Location = New System.Drawing.Point(86, 90)
+        Me.DisplayCodeTextbox.Name = "DisplayCodeTextbox"
+        Me.DisplayCodeTextbox.ReadOnly = True
+        Me.DisplayCodeTextbox.Size = New System.Drawing.Size(268, 20)
+        Me.DisplayCodeTextbox.TabIndex = 3
+        '
+        'LogicTextbox
+        '
+        Me.LogicTextbox.Location = New System.Drawing.Point(86, 116)
+        Me.LogicTextbox.Name = "LogicTextbox"
+        Me.LogicTextbox.ReadOnly = True
+        Me.LogicTextbox.Size = New System.Drawing.Size(268, 20)
+        Me.LogicTextbox.TabIndex = 4
+        '
         'EntriesListview
         '
         Me.EntriesListview.Columns.AddRange(New System.Windows.Forms.ColumnHeader() {Me.ChName, Me.ChMinVer, Me.ChMaxVer})
@@ -148,6 +148,7 @@ Partial Class DetailSupport
         Me.EntriesListview.Location = New System.Drawing.Point(86, 142)
         Me.EntriesListview.MultiSelect = False
         Me.EntriesListview.Name = "EntriesListview"
+        Me.EntriesListview.ShowItemToolTips = True
         Me.EntriesListview.Size = New System.Drawing.Size(268, 87)
         Me.EntriesListview.TabIndex = 12
         Me.EntriesListview.UseCompatibleStateImageBehavior = False
