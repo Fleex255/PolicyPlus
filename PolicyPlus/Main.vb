@@ -1,4 +1,5 @@
-﻿Public Class Main
+﻿Imports System.ComponentModel
+Public Class Main
     Dim AdmxWorkspace As New AdmxBundle
     Dim UserPolicySource, CompPolicySource As IPolicySource
     Dim UserPolicyLoader, CompPolicyLoader As PolicyLoader
@@ -469,5 +470,44 @@
     End Sub
     Private Sub PoliciesList_KeyUp(sender As Object, e As KeyEventArgs) Handles PoliciesList.KeyUp
         If e.KeyCode = Keys.Enter And PoliciesList.SelectedItems.Count > 0 Then PoliciesList_DoubleClick(sender, e)
+    End Sub
+    Private Sub PolicyObjectContext_Opening(sender As Object, e As CancelEventArgs) Handles PolicyObjectContext.Opening
+        Dim showingForCategory As Boolean
+        If PolicyObjectContext.SourceControl Is CategoriesTree Then
+            showingForCategory = True
+            PolicyObjectContext.Tag = CategoriesTree.SelectedNode.Tag
+        ElseIf PoliciesList.SelectedItems.Count > 0 Then ' Shown from the main view
+            Dim selEntryTag = PoliciesList.SelectedItems(0).Tag
+            showingForCategory = (TypeOf selEntryTag Is PolicyPlusCategory)
+            PolicyObjectContext.Tag = selEntryTag
+        Else
+            e.Cancel = True
+            Exit Sub
+        End If
+        For Each item In PolicyObjectContext.Items.OfType(Of ToolStripMenuItem)
+            Dim ok As Boolean = True
+            If item.Tag = "P" And showingForCategory Then ok = False
+            If item.Tag = "C" And Not showingForCategory Then ok = False
+            item.Visible = ok
+        Next
+    End Sub
+    Private Sub PolicyObjectContext_ItemClicked(sender As Object, e As ToolStripItemClickedEventArgs) Handles PolicyObjectContext.ItemClicked
+        Dim polObject = PolicyObjectContext.Tag ' The current policy object is in the Tag field
+        If e.ClickedItem Is CmeCatOpen Then
+            CurrentCategory = polObject
+            UpdateCategoryListing()
+        ElseIf e.ClickedItem Is CmePolEdit Then
+            ShowSettingEditor(polObject, ViewPolicyTypes)
+        ElseIf e.ClickedItem Is CmeAllDetails Then
+            If TypeOf polObject Is PolicyPlusCategory Then
+                DetailCategory.PresentDialog(polObject)
+            Else
+                DetailPolicy.PresentDialog(polObject)
+            End If
+        End If
+    End Sub
+    Private Sub CategoriesTree_NodeMouseClick(sender As Object, e As TreeNodeMouseClickEventArgs) Handles CategoriesTree.NodeMouseClick
+        ' Right-clicking doesn't actually select the node by default
+        If e.Button = MouseButtons.Right Then CategoriesTree.SelectedNode = e.Node
     End Sub
 End Class

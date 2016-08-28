@@ -84,6 +84,30 @@
     <Compile Include="AdmxStructures.vb" />
     <Compile Include="CmtxFile.vb" />
     <Compile Include="CompiledStructures.vb" />
+    <Compile Include="DetailCategory.Designer.vb">
+      <DependentUpon>DetailCategory.vb</DependentUpon>
+    </Compile>
+    <Compile Include="DetailCategory.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="DetailPolicy.Designer.vb">
+      <DependentUpon>DetailPolicy.vb</DependentUpon>
+    </Compile>
+    <Compile Include="DetailPolicy.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="DetailProduct.Designer.vb">
+      <DependentUpon>DetailProduct.vb</DependentUpon>
+    </Compile>
+    <Compile Include="DetailProduct.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="DetailSupport.Designer.vb">
+      <DependentUpon>DetailSupport.vb</DependentUpon>
+    </Compile>
+    <Compile Include="DetailSupport.vb">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="EditSetting.Designer.vb">
       <DependentUpon>EditSetting.vb</DependentUpon>
     </Compile>
@@ -175,6 +199,18 @@
     <Compile Include="XmlExtensions.vb" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="DetailCategory.resx">
+      <DependentUpon>DetailCategory.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="DetailPolicy.resx">
+      <DependentUpon>DetailPolicy.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="DetailProduct.resx">
+      <DependentUpon>DetailProduct.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="DetailSupport.resx">
+      <DependentUpon>DetailSupport.vb</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="EditSetting.resx">
       <DependentUpon>EditSetting.vb</DependentUpon>
     </EmbeddedResource>

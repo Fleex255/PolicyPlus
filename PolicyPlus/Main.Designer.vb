@@ -28,8 +28,8 @@ Partial Class Main
         Dim ToolStripSeparator1 As System.Windows.Forms.ToolStripSeparator
         Dim ToolStripSeparator2 As System.Windows.Forms.ToolStripSeparator
         Dim ToolStripSeparator3 As System.Windows.Forms.ToolStripSeparator
-        Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(Main))
         Dim ToolStripSeparator4 As System.Windows.Forms.ToolStripSeparator
+        Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(Main))
         Me.MainMenu = New System.Windows.Forms.MenuStrip()
         Me.FileToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.OpenADMXFolderToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
@@ -38,11 +38,15 @@ Partial Class Main
         Me.OpenPolicyResourcesToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.SavePoliciesToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.ExitToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.FindToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.ByIDToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.ViewToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.EmptyCategoriesToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.DeduplicatePoliciesToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.FindToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.ByIDToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.ByTextToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.ByRegistryToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.SearchResultsToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.FindNextToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.HelpToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.AboutToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.SplitContainer = New System.Windows.Forms.SplitContainer()
@@ -57,10 +61,10 @@ Partial Class Main
         Me.PolicySupportedLabel = New System.Windows.Forms.Label()
         Me.PolicyDescLabel = New System.Windows.Forms.Label()
         Me.PolicyIsPrefLabel = New System.Windows.Forms.Label()
-        Me.ByTextToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.ByRegistryToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.SearchResultsToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.FindNextToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.PolicyObjectContext = New System.Windows.Forms.ContextMenuStrip(Me.components)
+        Me.CmeCatOpen = New System.Windows.Forms.ToolStripMenuItem()
+        Me.CmePolEdit = New System.Windows.Forms.ToolStripMenuItem()
+        Me.CmeAllDetails = New System.Windows.Forms.ToolStripMenuItem()
         ChSettingEnabled = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
         ChSettingCommented = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
         ToolStripSeparator1 = New System.Windows.Forms.ToolStripSeparator()
@@ -74,6 +78,7 @@ Partial Class Main
         Me.SplitContainer.SuspendLayout()
         Me.SettingInfoPanel.SuspendLayout()
         Me.PolicyInfoTable.SuspendLayout()
+        Me.PolicyObjectContext.SuspendLayout()
         Me.SuspendLayout()
         '
         'ChSettingEnabled
@@ -102,6 +107,11 @@ Partial Class Main
         '
         ToolStripSeparator3.Name = "ToolStripSeparator3"
         ToolStripSeparator3.Size = New System.Drawing.Size(234, 6)
+        '
+        'ToolStripSeparator4
+        '
+        ToolStripSeparator4.Name = "ToolStripSeparator4"
+        ToolStripSeparator4.Size = New System.Drawing.Size(197, 6)
         '
         'MainMenu
         '
@@ -157,20 +167,6 @@ Partial Class Main
         Me.ExitToolStripMenuItem.Size = New System.Drawing.Size(237, 22)
         Me.ExitToolStripMenuItem.Text = "Exit"
         '
-        'FindToolStripMenuItem
-        '
-        Me.FindToolStripMenuItem.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.ByIDToolStripMenuItem, Me.ByTextToolStripMenuItem, Me.ByRegistryToolStripMenuItem, ToolStripSeparator4, Me.SearchResultsToolStripMenuItem, Me.FindNextToolStripMenuItem})
-        Me.FindToolStripMenuItem.Name = "FindToolStripMenuItem"
-        Me.FindToolStripMenuItem.Size = New System.Drawing.Size(42, 20)
-        Me.FindToolStripMenuItem.Text = "Find"
-        '
-        'ByIDToolStripMenuItem
-        '
-        Me.ByIDToolStripMenuItem.Name = "ByIDToolStripMenuItem"
-        Me.ByIDToolStripMenuItem.ShortcutKeys = CType((System.Windows.Forms.Keys.Control Or System.Windows.Forms.Keys.G), System.Windows.Forms.Keys)
-        Me.ByIDToolStripMenuItem.Size = New System.Drawing.Size(152, 22)
-        Me.ByIDToolStripMenuItem.Text = "By ID"
-        '
         'ViewToolStripMenuItem
         '
         Me.ViewToolStripMenuItem.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.EmptyCategoriesToolStripMenuItem, ToolStripSeparator1, Me.DeduplicatePoliciesToolStripMenuItem})
@@ -189,6 +185,48 @@ Partial Class Main
         Me.DeduplicatePoliciesToolStripMenuItem.Name = "DeduplicatePoliciesToolStripMenuItem"
         Me.DeduplicatePoliciesToolStripMenuItem.Size = New System.Drawing.Size(180, 22)
         Me.DeduplicatePoliciesToolStripMenuItem.Text = "Deduplicate Policies"
+        '
+        'FindToolStripMenuItem
+        '
+        Me.FindToolStripMenuItem.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.ByIDToolStripMenuItem, Me.ByTextToolStripMenuItem, Me.ByRegistryToolStripMenuItem, ToolStripSeparator4, Me.SearchResultsToolStripMenuItem, Me.FindNextToolStripMenuItem})
+        Me.FindToolStripMenuItem.Name = "FindToolStripMenuItem"
+        Me.FindToolStripMenuItem.Size = New System.Drawing.Size(42, 20)
+        Me.FindToolStripMenuItem.Text = "Find"
+        '
+        'ByIDToolStripMenuItem
+        '
+        Me.ByIDToolStripMenuItem.Name = "ByIDToolStripMenuItem"
+        Me.ByIDToolStripMenuItem.ShortcutKeys = CType((System.Windows.Forms.Keys.Control Or System.Windows.Forms.Keys.G), System.Windows.Forms.Keys)
+        Me.ByIDToolStripMenuItem.Size = New System.Drawing.Size(200, 22)
+        Me.ByIDToolStripMenuItem.Text = "By ID"
+        '
+        'ByTextToolStripMenuItem
+        '
+        Me.ByTextToolStripMenuItem.Name = "ByTextToolStripMenuItem"
+        Me.ByTextToolStripMenuItem.ShortcutKeys = CType((System.Windows.Forms.Keys.Control Or System.Windows.Forms.Keys.F), System.Windows.Forms.Keys)
+        Me.ByTextToolStripMenuItem.Size = New System.Drawing.Size(200, 22)
+        Me.ByTextToolStripMenuItem.Text = "By Text"
+        '
+        'ByRegistryToolStripMenuItem
+        '
+        Me.ByRegistryToolStripMenuItem.Name = "ByRegistryToolStripMenuItem"
+        Me.ByRegistryToolStripMenuItem.ShortcutKeys = CType((System.Windows.Forms.Keys.Control Or System.Windows.Forms.Keys.R), System.Windows.Forms.Keys)
+        Me.ByRegistryToolStripMenuItem.Size = New System.Drawing.Size(200, 22)
+        Me.ByRegistryToolStripMenuItem.Text = "By Registry"
+        '
+        'SearchResultsToolStripMenuItem
+        '
+        Me.SearchResultsToolStripMenuItem.Name = "SearchResultsToolStripMenuItem"
+        Me.SearchResultsToolStripMenuItem.ShortcutKeys = CType((System.Windows.Forms.Keys.Shift Or System.Windows.Forms.Keys.F3), System.Windows.Forms.Keys)
+        Me.SearchResultsToolStripMenuItem.Size = New System.Drawing.Size(200, 22)
+        Me.SearchResultsToolStripMenuItem.Text = "Search Results"
+        '
+        'FindNextToolStripMenuItem
+        '
+        Me.FindNextToolStripMenuItem.Name = "FindNextToolStripMenuItem"
+        Me.FindNextToolStripMenuItem.ShortcutKeys = System.Windows.Forms.Keys.F3
+        Me.FindNextToolStripMenuItem.Size = New System.Drawing.Size(200, 22)
+        Me.FindNextToolStripMenuItem.Text = "Find Next"
         '
         'HelpToolStripMenuItem
         '
@@ -241,6 +279,7 @@ Partial Class Main
             Or System.Windows.Forms.AnchorStyles.Left) _
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.CategoriesTree.BorderStyle = System.Windows.Forms.BorderStyle.None
+        Me.CategoriesTree.ContextMenuStrip = Me.PolicyObjectContext
         Me.CategoriesTree.HideSelection = False
         Me.CategoriesTree.ImageIndex = 0
         Me.CategoriesTree.ImageList = Me.PolicyIcons
@@ -272,6 +311,7 @@ Partial Class Main
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.PoliciesList.BorderStyle = System.Windows.Forms.BorderStyle.None
         Me.PoliciesList.Columns.AddRange(New System.Windows.Forms.ColumnHeader() {Me.ChSettingName, ChSettingEnabled, ChSettingCommented})
+        Me.PoliciesList.ContextMenuStrip = Me.PolicyObjectContext
         Me.PoliciesList.FullRowSelect = True
         Me.PoliciesList.HideSelection = False
         Me.PoliciesList.Location = New System.Drawing.Point(190, 0)
@@ -361,38 +401,33 @@ Partial Class Main
         Me.PolicyIsPrefLabel.Text = "Because it is not stored in a Policies section of the Registry, this policy is a " &
     "preference and will not be automatically undone if the setting is removed."
         '
-        'ByTextToolStripMenuItem
+        'PolicyObjectContext
         '
-        Me.ByTextToolStripMenuItem.Name = "ByTextToolStripMenuItem"
-        Me.ByTextToolStripMenuItem.ShortcutKeys = CType((System.Windows.Forms.Keys.Control Or System.Windows.Forms.Keys.F), System.Windows.Forms.Keys)
-        Me.ByTextToolStripMenuItem.Size = New System.Drawing.Size(152, 22)
-        Me.ByTextToolStripMenuItem.Text = "By Text"
+        Me.PolicyObjectContext.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.CmeCatOpen, Me.CmePolEdit, Me.CmeAllDetails})
+        Me.PolicyObjectContext.Name = "PolicyObjectContext"
+        Me.PolicyObjectContext.Size = New System.Drawing.Size(110, 70)
         '
-        'ByRegistryToolStripMenuItem
+        'CmeCatOpen
         '
-        Me.ByRegistryToolStripMenuItem.Name = "ByRegistryToolStripMenuItem"
-        Me.ByRegistryToolStripMenuItem.ShortcutKeys = CType((System.Windows.Forms.Keys.Control Or System.Windows.Forms.Keys.R), System.Windows.Forms.Keys)
-        Me.ByRegistryToolStripMenuItem.Size = New System.Drawing.Size(200, 22)
-        Me.ByRegistryToolStripMenuItem.Text = "By Registry"
+        Me.CmeCatOpen.Font = New System.Drawing.Font("Segoe UI", 9.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.CmeCatOpen.Name = "CmeCatOpen"
+        Me.CmeCatOpen.Size = New System.Drawing.Size(109, 22)
+        Me.CmeCatOpen.Tag = "C"
+        Me.CmeCatOpen.Text = "Open"
         '
-        'ToolStripSeparator4
+        'CmePolEdit
         '
-        ToolStripSeparator4.Name = "ToolStripSeparator4"
-        ToolStripSeparator4.Size = New System.Drawing.Size(149, 6)
+        Me.CmePolEdit.Font = New System.Drawing.Font("Segoe UI", 9.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.CmePolEdit.Name = "CmePolEdit"
+        Me.CmePolEdit.Size = New System.Drawing.Size(109, 22)
+        Me.CmePolEdit.Tag = "P"
+        Me.CmePolEdit.Text = "Edit"
         '
-        'SearchResultsToolStripMenuItem
+        'CmeAllDetails
         '
-        Me.SearchResultsToolStripMenuItem.Name = "SearchResultsToolStripMenuItem"
-        Me.SearchResultsToolStripMenuItem.ShortcutKeys = CType((System.Windows.Forms.Keys.Shift Or System.Windows.Forms.Keys.F3), System.Windows.Forms.Keys)
-        Me.SearchResultsToolStripMenuItem.Size = New System.Drawing.Size(200, 22)
-        Me.SearchResultsToolStripMenuItem.Text = "Search Results"
-        '
-        'FindNextToolStripMenuItem
-        '
-        Me.FindNextToolStripMenuItem.Name = "FindNextToolStripMenuItem"
-        Me.FindNextToolStripMenuItem.ShortcutKeys = System.Windows.Forms.Keys.F3
-        Me.FindNextToolStripMenuItem.Size = New System.Drawing.Size(200, 22)
-        Me.FindNextToolStripMenuItem.Text = "Find Next"
+        Me.CmeAllDetails.Name = "CmeAllDetails"
+        Me.CmeAllDetails.Size = New System.Drawing.Size(109, 22)
+        Me.CmeAllDetails.Text = "Details"
         '
         'Main
         '
@@ -415,6 +450,7 @@ Partial Class Main
         Me.SettingInfoPanel.PerformLayout()
         Me.PolicyInfoTable.ResumeLayout(False)
         Me.PolicyInfoTable.PerformLayout()
+        Me.PolicyObjectContext.ResumeLayout(False)
         Me.ResumeLayout(False)
         Me.PerformLayout()
 
@@ -451,4 +487,8 @@ Partial Class Main
     Friend WithEvents ByRegistryToolStripMenuItem As ToolStripMenuItem
     Friend WithEvents SearchResultsToolStripMenuItem As ToolStripMenuItem
     Friend WithEvents FindNextToolStripMenuItem As ToolStripMenuItem
+    Friend WithEvents PolicyObjectContext As ContextMenuStrip
+    Friend WithEvents CmeCatOpen As ToolStripMenuItem
+    Friend WithEvents CmePolEdit As ToolStripMenuItem
+    Friend WithEvents CmeAllDetails As ToolStripMenuItem
 End Class
