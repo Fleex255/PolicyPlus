@@ -52,6 +52,10 @@ Partial Class Main
         Me.SplitContainer = New System.Windows.Forms.SplitContainer()
         Me.ComboAppliesTo = New System.Windows.Forms.ComboBox()
         Me.CategoriesTree = New System.Windows.Forms.TreeView()
+        Me.PolicyObjectContext = New System.Windows.Forms.ContextMenuStrip(Me.components)
+        Me.CmeCatOpen = New System.Windows.Forms.ToolStripMenuItem()
+        Me.CmePolEdit = New System.Windows.Forms.ToolStripMenuItem()
+        Me.CmeAllDetails = New System.Windows.Forms.ToolStripMenuItem()
         Me.PolicyIcons = New System.Windows.Forms.ImageList(Me.components)
         Me.PoliciesList = New System.Windows.Forms.ListView()
         Me.ChSettingName = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
@@ -61,10 +65,6 @@ Partial Class Main
         Me.PolicySupportedLabel = New System.Windows.Forms.Label()
         Me.PolicyDescLabel = New System.Windows.Forms.Label()
         Me.PolicyIsPrefLabel = New System.Windows.Forms.Label()
-        Me.PolicyObjectContext = New System.Windows.Forms.ContextMenuStrip(Me.components)
-        Me.CmeCatOpen = New System.Windows.Forms.ToolStripMenuItem()
-        Me.CmePolEdit = New System.Windows.Forms.ToolStripMenuItem()
-        Me.CmeAllDetails = New System.Windows.Forms.ToolStripMenuItem()
         ChSettingEnabled = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
         ChSettingCommented = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
         ToolStripSeparator1 = New System.Windows.Forms.ToolStripSeparator()
@@ -76,9 +76,9 @@ Partial Class Main
         Me.SplitContainer.Panel1.SuspendLayout()
         Me.SplitContainer.Panel2.SuspendLayout()
         Me.SplitContainer.SuspendLayout()
+        Me.PolicyObjectContext.SuspendLayout()
         Me.SettingInfoPanel.SuspendLayout()
         Me.PolicyInfoTable.SuspendLayout()
-        Me.PolicyObjectContext.SuspendLayout()
         Me.SuspendLayout()
         '
         'ChSettingEnabled
@@ -289,6 +289,34 @@ Partial Class Main
         Me.CategoriesTree.Size = New System.Drawing.Size(190, 331)
         Me.CategoriesTree.TabIndex = 2
         '
+        'PolicyObjectContext
+        '
+        Me.PolicyObjectContext.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.CmeCatOpen, Me.CmePolEdit, Me.CmeAllDetails})
+        Me.PolicyObjectContext.Name = "PolicyObjectContext"
+        Me.PolicyObjectContext.Size = New System.Drawing.Size(110, 70)
+        '
+        'CmeCatOpen
+        '
+        Me.CmeCatOpen.Font = New System.Drawing.Font("Segoe UI", 9.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.CmeCatOpen.Name = "CmeCatOpen"
+        Me.CmeCatOpen.Size = New System.Drawing.Size(109, 22)
+        Me.CmeCatOpen.Tag = "C"
+        Me.CmeCatOpen.Text = "Open"
+        '
+        'CmePolEdit
+        '
+        Me.CmePolEdit.Font = New System.Drawing.Font("Segoe UI", 9.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.CmePolEdit.Name = "CmePolEdit"
+        Me.CmePolEdit.Size = New System.Drawing.Size(109, 22)
+        Me.CmePolEdit.Tag = "P"
+        Me.CmePolEdit.Text = "Edit"
+        '
+        'CmeAllDetails
+        '
+        Me.CmeAllDetails.Name = "CmeAllDetails"
+        Me.CmeAllDetails.Size = New System.Drawing.Size(109, 22)
+        Me.CmeAllDetails.Text = "Details"
+        '
         'PolicyIcons
         '
         Me.PolicyIcons.ImageStream = CType(resources.GetObject("PolicyIcons.ImageStream"), System.Windows.Forms.ImageListStreamer)
@@ -303,6 +331,8 @@ Partial Class Main
         Me.PolicyIcons.Images.SetKeyName(7, "page_white_error.png")
         Me.PolicyIcons.Images.SetKeyName(8, "delete.png")
         Me.PolicyIcons.Images.SetKeyName(9, "arrow_right.png")
+        Me.PolicyIcons.Images.SetKeyName(10, "package.png")
+        Me.PolicyIcons.Images.SetKeyName(11, "computer.png")
         '
         'PoliciesList
         '
@@ -401,34 +431,6 @@ Partial Class Main
         Me.PolicyIsPrefLabel.Text = "Because it is not stored in a Policies section of the Registry, this policy is a " &
     "preference and will not be automatically undone if the setting is removed."
         '
-        'PolicyObjectContext
-        '
-        Me.PolicyObjectContext.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.CmeCatOpen, Me.CmePolEdit, Me.CmeAllDetails})
-        Me.PolicyObjectContext.Name = "PolicyObjectContext"
-        Me.PolicyObjectContext.Size = New System.Drawing.Size(110, 70)
-        '
-        'CmeCatOpen
-        '
-        Me.CmeCatOpen.Font = New System.Drawing.Font("Segoe UI", 9.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.CmeCatOpen.Name = "CmeCatOpen"
-        Me.CmeCatOpen.Size = New System.Drawing.Size(109, 22)
-        Me.CmeCatOpen.Tag = "C"
-        Me.CmeCatOpen.Text = "Open"
-        '
-        'CmePolEdit
-        '
-        Me.CmePolEdit.Font = New System.Drawing.Font("Segoe UI", 9.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.CmePolEdit.Name = "CmePolEdit"
-        Me.CmePolEdit.Size = New System.Drawing.Size(109, 22)
-        Me.CmePolEdit.Tag = "P"
-        Me.CmePolEdit.Text = "Edit"
-        '
-        'CmeAllDetails
-        '
-        Me.CmeAllDetails.Name = "CmeAllDetails"
-        Me.CmeAllDetails.Size = New System.Drawing.Size(109, 22)
-        Me.CmeAllDetails.Text = "Details"
-        '
         'Main
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
@@ -446,11 +448,11 @@ Partial Class Main
         Me.SplitContainer.Panel2.ResumeLayout(False)
         CType(Me.SplitContainer, System.ComponentModel.ISupportInitialize).EndInit()
         Me.SplitContainer.ResumeLayout(False)
+        Me.PolicyObjectContext.ResumeLayout(False)
         Me.SettingInfoPanel.ResumeLayout(False)
         Me.SettingInfoPanel.PerformLayout()
         Me.PolicyInfoTable.ResumeLayout(False)
         Me.PolicyInfoTable.PerformLayout()
-        Me.PolicyObjectContext.ResumeLayout(False)
         Me.ResumeLayout(False)
         Me.PerformLayout()
 

@@ -102,8 +102,9 @@ Public Class AdmxBundle
         Next
         For Each sup In supIds.Values
             For Each supEntry In sup.Elements
-                Dim productId = ResolveRef(supEntry.RawSupportEntry.ProductID, sup.RawSupport.DefinedIn)
-                supEntry.Product = findProductById(productId)
+                Dim targetId = ResolveRef(supEntry.RawSupportEntry.ProductID, sup.RawSupport.DefinedIn) ' Support or product
+                supEntry.Product = findProductById(targetId)
+                If supEntry.Product Is Nothing Then supEntry.SupportDefinition = findSupById(targetId)
             Next
         Next
         For Each pol In polIds.Values

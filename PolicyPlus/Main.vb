@@ -386,6 +386,8 @@ Public Class Main
         If FindById.ShowDialog() = DialogResult.OK Then
             Dim selCat = FindById.SelectedCategory
             Dim selPol = FindById.SelectedPolicy
+            Dim selPro = FindById.SelectedProduct
+            Dim selSup = FindById.SelectedSupport
             If selCat IsNot Nothing Then
                 If CategoryNodes.ContainsKey(selCat) Then
                     CurrentCategory = selCat
@@ -396,6 +398,10 @@ Public Class Main
             ElseIf selPol IsNot Nothing Then
                 ShowSettingEditor(selPol, Math.Min(ViewPolicyTypes, FindById.SelectedSection))
                 FocusPolicy(selPol)
+            ElseIf selPro IsNot Nothing Then
+                DetailProduct.PresentDialog(selPro)
+            ElseIf selSup IsNot Nothing Then
+                DetailSupport.PresentDialog(selSup)
             Else
                 MsgBox("That object could not be found.", MsgBoxStyle.Exclamation)
             End If

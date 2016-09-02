@@ -22,6 +22,7 @@ Public Class PolicyPlusSupport
 End Class
 Public Class PolicyPlusSupportEntry
     Public Product As PolicyPlusProduct
+    Public SupportDefinition As PolicyPlusSupport ' Only used if this entry actually points to another support definition
     Public RawSupportEntry As AdmxSupportEntry
 End Class
 Public Class PolicyPlusPolicy
