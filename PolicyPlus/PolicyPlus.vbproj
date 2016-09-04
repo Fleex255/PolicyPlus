@@ -138,6 +138,12 @@
     <Compile Include="FindResults.vb">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="InspectPolicyElements.Designer.vb">
+      <DependentUpon>InspectPolicyElements.vb</DependentUpon>
+    </Compile>
+    <Compile Include="InspectPolicyElements.vb">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="ListEditor.Designer.vb">
       <DependentUpon>ListEditor.vb</DependentUpon>
     </Compile>
@@ -225,6 +231,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="FindResults.resx">
       <DependentUpon>FindResults.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="InspectPolicyElements.resx">
+      <DependentUpon>InspectPolicyElements.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="ListEditor.resx">
       <DependentUpon>ListEditor.vb</DependentUpon>

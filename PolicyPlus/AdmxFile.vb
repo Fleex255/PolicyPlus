@@ -123,7 +123,7 @@ Public Class AdmxFile
                                                   Exit For
                                               ElseIf subElement.LocalName = "string" Then
                                                   regItem.RegistryType = PolicyRegistryValueType.Text
-                                                  regItem.StringValue = subElement.Value
+                                                  regItem.StringValue = subElement.InnerText
                                                   Exit For
                                               End If
                                           Next

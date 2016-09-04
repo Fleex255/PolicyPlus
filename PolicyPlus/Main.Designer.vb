@@ -65,6 +65,7 @@ Partial Class Main
         Me.PolicySupportedLabel = New System.Windows.Forms.Label()
         Me.PolicyDescLabel = New System.Windows.Forms.Label()
         Me.PolicyIsPrefLabel = New System.Windows.Forms.Label()
+        Me.CmePolInspectElements = New System.Windows.Forms.ToolStripMenuItem()
         ChSettingEnabled = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
         ChSettingCommented = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
         ToolStripSeparator1 = New System.Windows.Forms.ToolStripSeparator()
@@ -286,20 +287,21 @@ Partial Class Main
         Me.CategoriesTree.Location = New System.Drawing.Point(0, 19)
         Me.CategoriesTree.Name = "CategoriesTree"
         Me.CategoriesTree.SelectedImageIndex = 0
+        Me.CategoriesTree.ShowNodeToolTips = True
         Me.CategoriesTree.Size = New System.Drawing.Size(190, 331)
         Me.CategoriesTree.TabIndex = 2
         '
         'PolicyObjectContext
         '
-        Me.PolicyObjectContext.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.CmeCatOpen, Me.CmePolEdit, Me.CmeAllDetails})
+        Me.PolicyObjectContext.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.CmeCatOpen, Me.CmePolEdit, Me.CmeAllDetails, Me.CmePolInspectElements})
         Me.PolicyObjectContext.Name = "PolicyObjectContext"
-        Me.PolicyObjectContext.Size = New System.Drawing.Size(110, 70)
+        Me.PolicyObjectContext.Size = New System.Drawing.Size(170, 92)
         '
         'CmeCatOpen
         '
         Me.CmeCatOpen.Font = New System.Drawing.Font("Segoe UI", 9.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.CmeCatOpen.Name = "CmeCatOpen"
-        Me.CmeCatOpen.Size = New System.Drawing.Size(109, 22)
+        Me.CmeCatOpen.Size = New System.Drawing.Size(169, 22)
         Me.CmeCatOpen.Tag = "C"
         Me.CmeCatOpen.Text = "Open"
         '
@@ -307,14 +309,14 @@ Partial Class Main
         '
         Me.CmePolEdit.Font = New System.Drawing.Font("Segoe UI", 9.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.CmePolEdit.Name = "CmePolEdit"
-        Me.CmePolEdit.Size = New System.Drawing.Size(109, 22)
+        Me.CmePolEdit.Size = New System.Drawing.Size(169, 22)
         Me.CmePolEdit.Tag = "P"
         Me.CmePolEdit.Text = "Edit"
         '
         'CmeAllDetails
         '
         Me.CmeAllDetails.Name = "CmeAllDetails"
-        Me.CmeAllDetails.Size = New System.Drawing.Size(109, 22)
+        Me.CmeAllDetails.Size = New System.Drawing.Size(169, 22)
         Me.CmeAllDetails.Text = "Details"
         '
         'PolicyIcons
@@ -333,6 +335,32 @@ Partial Class Main
         Me.PolicyIcons.Images.SetKeyName(9, "arrow_right.png")
         Me.PolicyIcons.Images.SetKeyName(10, "package.png")
         Me.PolicyIcons.Images.SetKeyName(11, "computer.png")
+        Me.PolicyIcons.Images.SetKeyName(12, "database.png")
+        Me.PolicyIcons.Images.SetKeyName(13, "cog.png")
+        Me.PolicyIcons.Images.SetKeyName(14, "text_allcaps.png")
+        Me.PolicyIcons.Images.SetKeyName(15, "calculator.png")
+        Me.PolicyIcons.Images.SetKeyName(16, "cog_edit.png")
+        Me.PolicyIcons.Images.SetKeyName(17, "accept.png")
+        Me.PolicyIcons.Images.SetKeyName(18, "cross.png")
+        Me.PolicyIcons.Images.SetKeyName(19, "application_xp_terminal.png")
+        Me.PolicyIcons.Images.SetKeyName(20, "application_form.png")
+        Me.PolicyIcons.Images.SetKeyName(21, "text_align_left.png")
+        Me.PolicyIcons.Images.SetKeyName(22, "calculator_edit.png")
+        Me.PolicyIcons.Images.SetKeyName(23, "wrench.png")
+        Me.PolicyIcons.Images.SetKeyName(24, "textfield.png")
+        Me.PolicyIcons.Images.SetKeyName(25, "tick.png")
+        Me.PolicyIcons.Images.SetKeyName(26, "text_horizontalrule.png")
+        Me.PolicyIcons.Images.SetKeyName(27, "table.png")
+        Me.PolicyIcons.Images.SetKeyName(28, "table_sort.png")
+        Me.PolicyIcons.Images.SetKeyName(29, "font_go.png")
+        Me.PolicyIcons.Images.SetKeyName(30, "application_view_list.png")
+        Me.PolicyIcons.Images.SetKeyName(31, "brick.png")
+        Me.PolicyIcons.Images.SetKeyName(32, "error.png")
+        Me.PolicyIcons.Images.SetKeyName(33, "style.png")
+        Me.PolicyIcons.Images.SetKeyName(34, "sound_low.png")
+        Me.PolicyIcons.Images.SetKeyName(35, "arrow_down.png")
+        Me.PolicyIcons.Images.SetKeyName(36, "style_go.png")
+        Me.PolicyIcons.Images.SetKeyName(37, "exclamation.png")
         '
         'PoliciesList
         '
@@ -347,6 +375,7 @@ Partial Class Main
         Me.PoliciesList.Location = New System.Drawing.Point(190, 0)
         Me.PoliciesList.MultiSelect = False
         Me.PoliciesList.Name = "PoliciesList"
+        Me.PoliciesList.ShowItemToolTips = True
         Me.PoliciesList.Size = New System.Drawing.Size(322, 350)
         Me.PoliciesList.SmallImageList = Me.PolicyIcons
         Me.PoliciesList.TabIndex = 3
@@ -431,6 +460,13 @@ Partial Class Main
         Me.PolicyIsPrefLabel.Text = "Because it is not stored in a Policies section of the Registry, this policy is a " &
     "preference and will not be automatically undone if the setting is removed."
         '
+        'CmePolInspectElements
+        '
+        Me.CmePolInspectElements.Name = "CmePolInspectElements"
+        Me.CmePolInspectElements.Size = New System.Drawing.Size(169, 22)
+        Me.CmePolInspectElements.Tag = "P"
+        Me.CmePolInspectElements.Text = "Element Inspector"
+        '
         'Main
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
@@ -493,4 +529,5 @@ Partial Class Main
     Friend WithEvents CmeCatOpen As ToolStripMenuItem
     Friend WithEvents CmePolEdit As ToolStripMenuItem
     Friend WithEvents CmeAllDetails As ToolStripMenuItem
+    Friend WithEvents CmePolInspectElements As ToolStripMenuItem
 End Class
