@@ -181,6 +181,7 @@ Public Class AdmxFile
                         End Select
                         policy.ExplainCode = AttributeOrNull(polElement, "explainText")
                         policy.PresentationID = AttributeOrNull(polElement, "presentation")
+                        policy.ClientExtension = AttributeOrNull(polElement, "clientExtension")
                         policy.RegistryValue = AttributeOrNull(polElement, "valueName")
                         policy.AffectedValues = loadOnOffValList("enabledValue", "disabledValue", "enabledList", "disabledList", polElement)
                         For Each polInfo As XmlNode In polElement.ChildNodes

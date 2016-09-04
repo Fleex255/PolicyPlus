@@ -44,6 +44,7 @@ Public Class AdmxPolicy
     Public ExplainCode As String
     Public SupportedCode As String
     Public PresentationID As String
+    Public ClientExtension As String
     Public RegistryKey As String
     Public RegistryValue As String
     Public AffectedValues As PolicyRegistryList

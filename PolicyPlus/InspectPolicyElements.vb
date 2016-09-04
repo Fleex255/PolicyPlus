@@ -7,6 +7,7 @@
         InfoTreeview.ImageList = Images
         InfoTreeview.Nodes.Add("Registry key: " & Policy.RawPolicy.RegistryKey).ImageIndex = 0 ' Folder
         If Policy.RawPolicy.RegistryValue <> "" Then InfoTreeview.Nodes.Add("Registry value: " & Policy.RawPolicy.RegistryValue).ImageIndex = 13 ' Gear
+        If Policy.RawPolicy.ClientExtension <> "" Then InfoTreeview.Nodes.Add("Client extension: " & Policy.RawPolicy.ClientExtension).ImageIndex = 19 ' DOS window
         Dim addValueData = Sub(RegVal As PolicyRegistryValue, Node As TreeNode)
                                Select Case RegVal.RegistryType
                                    Case PolicyRegistryValueType.Delete
@@ -110,7 +111,7 @@
                 Dim elem = Policy.RawPolicy.Elements.First(Function(e) e.ID = presElem.ID)
                 Dim elemNode = presPartNode.Nodes.Add("Underlying element (type: """ & elem.ElementType & """)")
                 elemNode.ImageIndex = 31 ' Brick
-                If elem.ClientExtension <> "" Then elemNode.Nodes.Add("Client extension: " & elem.ClientExtension).ImageIndex = 19 ' DOS window
+                If elem.ClientExtension <> "" Then elemNode.Nodes.Add("Client extension: " & elem.ClientExtension).ImageIndex = 19
                 If elem.RegistryKey <> "" Then elemNode.Nodes.Add("Registry key: " & elem.RegistryKey).ImageIndex = 0
                 If elem.ElementType <> "list" Then elemNode.Nodes.Add("Registry value: " & elem.RegistryValue).ImageIndex = 13
                 Select Case elem.ElementType
