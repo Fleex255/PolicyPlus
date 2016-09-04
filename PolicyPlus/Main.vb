@@ -156,7 +156,7 @@ Public Class Main
         End If
     End Function
     Function GetPolicyState(Policy As PolicyPlusPolicy, Section As AdmxPolicySection) As String
-        Select Case PolicyProcessing.GetPolicyState(IIf(Section = AdmxPolicySection.Machine, CompPolicySource, UserPolicySource), Policy)
+        Select Case PolicyProcessing.GetPolicyState(If(Section = AdmxPolicySection.Machine, CompPolicySource, UserPolicySource), Policy)
             Case PolicyState.Disabled
                 Return "Disabled"
             Case PolicyState.Enabled
@@ -185,7 +185,7 @@ Public Class Main
         End If
     End Function
     Function GetPolicyComment(Policy As PolicyPlusPolicy, Section As AdmxPolicySection) As String
-        Dim commentSource As Dictionary(Of String, String) = IIf(Section = AdmxPolicySection.Machine, CompComments, UserComments)
+        Dim commentSource As Dictionary(Of String, String) = If(Section = AdmxPolicySection.Machine, CompComments, UserComments)
         If commentSource Is Nothing Then
             Return ""
         Else
@@ -465,7 +465,7 @@ Public Class Main
         PolicySupportedLabel.MaximumSize = New Size(PolicyInfoTable.Width, 0)
         PolicyDescLabel.MaximumSize = New Size(PolicyInfoTable.Width, 0)
         PolicyIsPrefLabel.MaximumSize = New Size(PolicyInfoTable.Width, 0)
-        PolicyInfoTable.MaximumSize = New Size(SettingInfoPanel.Width - IIf(SettingInfoPanel.VerticalScroll.Visible, SystemInformation.VerticalScrollBarWidth, 0), 0)
+        PolicyInfoTable.MaximumSize = New Size(SettingInfoPanel.Width - If(SettingInfoPanel.VerticalScroll.Visible, SystemInformation.VerticalScrollBarWidth, 0), 0)
         PolicyInfoTable.Width = PolicyInfoTable.MaximumSize.Width
         If PolicyInfoTable.ColumnCount > 0 Then PolicyInfoTable.ColumnStyles(0).Width = PolicyInfoTable.ClientSize.Width ' Only once everything is initialized
         PolicyInfoTable.PerformLayout() ' Force the table to take up its full desired size

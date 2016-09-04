@@ -20,13 +20,13 @@
         HelpTextbox.Text = CurrentSetting.DisplayExplanation
         If CurrentSetting.RawPolicy.Section = AdmxPolicySection.Both Then
             SectionDropdown.Enabled = True
-            CurrentSection = IIf(CurrentSection = AdmxPolicySection.Both, AdmxPolicySection.Machine, CurrentSection)
+            CurrentSection = If(CurrentSection = AdmxPolicySection.Both, AdmxPolicySection.Machine, CurrentSection)
         Else
             SectionDropdown.Enabled = False
             CurrentSection = CurrentSetting.RawPolicy.Section
         End If
         PreparePolicyElements()
-        SectionDropdown.Text = IIf(CurrentSection = AdmxPolicySection.Machine, "Computer", "User")
+        SectionDropdown.Text = If(CurrentSection = AdmxPolicySection.Machine, "Computer", "User")
         SectionDropdown_SelectedIndexChanged(Nothing, Nothing) ' Force an update of the current source
         PreparePolicyState()
         StateRadiosChanged(Nothing, Nothing)
@@ -276,9 +276,9 @@
     End Sub
     Private Sub SectionDropdown_SelectedIndexChanged(sender As Object, e As EventArgs) Handles SectionDropdown.SelectedIndexChanged
         Dim isUser = (SectionDropdown.Text = "User")
-        CurrentSource = IIf(isUser, UserPolSource, CompPolSource)
-        CurrentLoader = IIf(isUser, UserPolLoader, CompPolLoader)
-        CurrentComments = IIf(isUser, UserComments, CompComments)
+        CurrentSource = If(isUser, UserPolSource, CompPolSource)
+        CurrentLoader = If(isUser, UserPolLoader, CompPolLoader)
+        CurrentComments = If(isUser, UserComments, CompComments)
         PreparePolicyState()
     End Sub
     Private Sub OkButton_Click(sender As Object, e As EventArgs) Handles OkButton.Click

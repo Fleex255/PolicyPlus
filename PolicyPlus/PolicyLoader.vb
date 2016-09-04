@@ -13,7 +13,7 @@ Public Class PolicyLoader
         User = IsUser
         Select Case Source
             Case PolicyLoaderSource.LocalGpo
-                MainSourcePath = Environment.ExpandEnvironmentVariables("%SYSTEMROOT%\System32\GroupPolicy\" & IIf(IsUser, "User", "Machine") & "\Registry.pol")
+                MainSourcePath = Environment.ExpandEnvironmentVariables("%SYSTEMROOT%\System32\GroupPolicy\" & If(IsUser, "User", "Machine") & "\Registry.pol")
                 GptIniPath = Environment.ExpandEnvironmentVariables("%SYSTEMROOT%\System32\GroupPolicy\gpt.ini")
             Case PolicyLoaderSource.LocalRegistry
                 Dim pathParts = Split(Argument, "\", 2)
@@ -135,7 +135,7 @@ Public Class PolicyLoader
                     PInvoke.RefreshPolicyEx(Not User, 0)
                     Return "saved to disk and invoked policy refresh"
                 Else
-                    pol.ApplyDifference(oldPol, RegistryPolicyProxy.EncapsulateKey(IIf(User, RegistryHive.CurrentUser, RegistryHive.LocalMachine)))
+                    pol.ApplyDifference(oldPol, RegistryPolicyProxy.EncapsulateKey(If(User, RegistryHive.CurrentUser, RegistryHive.LocalMachine)))
                     Return "saved to disk and applied diff to Registry"
                 End If
             Case PolicyLoaderSource.LocalRegistry
@@ -159,7 +159,7 @@ Public Class PolicyLoader
         If SourceType = PolicyLoaderSource.PolFile Or SourceType = PolicyLoaderSource.NtUserDat Then
             Return IO.Path.ChangeExtension(MainSourcePath, "cmtx")
         ElseIf SourceType = PolicyLoaderSource.LocalRegistry Then
-            Return Environment.ExpandEnvironmentVariables("%LOCALAPPDATA%\Policy Plus\Reg" & IIf(User, "User", "Machine") & ".cmtx")
+            Return Environment.ExpandEnvironmentVariables("%LOCALAPPDATA%\Policy Plus\Reg" & If(User, "User", "Machine") & ".cmtx")
         ElseIf MainSourcePath <> "" Then
             Return IO.Path.Combine(IO.Path.GetDirectoryName(MainSourcePath), "comment.cmtx")
         Else
@@ -170,9 +170,9 @@ Public Class PolicyLoader
         If SourceType = PolicyLoaderSource.Null Then
             Return PolicySourceWritability.Writable
         ElseIf SourceType = PolicyLoaderSource.LocalRegistry Then
-            Return IIf(Writable, PolicySourceWritability.Writable, PolicySourceWritability.NoWriting)
+            Return If(Writable, PolicySourceWritability.Writable, PolicySourceWritability.NoWriting)
         Else
-            Return IIf(Writable, PolicySourceWritability.Writable, PolicySourceWritability.NoCommit)
+            Return If(Writable, PolicySourceWritability.Writable, PolicySourceWritability.NoCommit)
         End If
     End Function
     Private Sub UpdateGptIni()
@@ -182,7 +182,7 @@ Public Class PolicyLoader
                 For Each line In lines
                     If line.StartsWith("Version", StringComparison.InvariantCultureIgnoreCase) Then
                         Dim curVersion As Integer = Split(line, "=", 2)(1)
-                        curVersion += IIf(User, &H10000, 1)
+                        curVersion += If(User, &H10000, 1)
                         fGpt.WriteLine("Version=" & curVersion)
                     Else
                         fGpt.WriteLine(line)

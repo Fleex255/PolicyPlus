@@ -18,7 +18,7 @@
             Case AdmxProductType.Product
                 KindTextbox.Text = "Top-level product"
         End Select
-        VersionTextbox.Text = IIf(Product.RawProduct.Type = AdmxProductType.Product, "", Product.RawProduct.Version)
+        VersionTextbox.Text = If(Product.RawProduct.Type = AdmxProductType.Product, "", CStr(Product.RawProduct.Version))
         If Product.Parent Is Nothing Then
             ParentTextbox.Text = ""
             ParentButton.Enabled = False

@@ -73,7 +73,7 @@ Public Class FindResults
         Next
         If stoppedByCancel AndAlso Threading.Thread.VolatileRead(CancelDueToFormClose) Then Exit Sub ' Avoid accessing a disposed object
         Invoke(Sub()
-                   Dim status As String = IIf(stoppedByCancel, "Search canceled", "Finished searching")
+                   Dim status As String = If(stoppedByCancel, "Search canceled", "Finished searching")
                    ProgressLabel.Text = status & ": checked " & searchedSoFar & " policies, found " & results & " hits"
                    SearchProgress.Value = SearchProgress.Maximum
                    StopButton.Enabled = False

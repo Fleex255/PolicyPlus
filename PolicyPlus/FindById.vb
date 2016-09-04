@@ -42,12 +42,12 @@
                 StatusImage.Image = PolicyImage
                 SelectedPolicy = AdmxWorkspace.Policies(policyId)
                 If policyAndSection.Length = 2 AndAlso policyAndSection(1).Length = 1 AndAlso "UC".Contains(policyAndSection(1)) Then
-                    SelectedSection = IIf(policyAndSection(1) = "U", AdmxPolicySection.User, AdmxPolicySection.Machine)
+                    SelectedSection = If(policyAndSection(1) = "U", AdmxPolicySection.User, AdmxPolicySection.Machine)
                 Else
                     SelectedSection = AdmxPolicySection.Both
                 End If
             Else
-                StatusImage.Image = IIf(id = "", BlankImage, NotFoundImage)
+                StatusImage.Image = If(id = "", BlankImage, NotFoundImage)
             End If
         End If
     End Sub

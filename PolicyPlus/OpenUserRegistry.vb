@@ -11,7 +11,7 @@
             Dim access As String = ""
             Try
                 Using fNtuser As New IO.FileStream(ntuserPath, IO.FileMode.Open, IO.FileAccess.ReadWrite)
-                    access = IIf(canMountHives, "Yes", "No (unprivileged)")
+                    access = If(canMountHives, "Yes", "No (unprivileged)")
                 End Using
             Catch ex As UnauthorizedAccessException
                 access = "No"
