@@ -44,3 +44,7 @@ Public Class ListPresentationElement ' <listBox>
     Inherits PresentationElement
     Public Label As String ' Inner text
 End Class
+Public Class MultiTextPresentationElement ' <multiTextBox>
+    Inherits PresentationElement
+    ' Undocumented, but never appears to have any parameters except ID
+End Class

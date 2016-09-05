@@ -148,6 +148,8 @@
                         End If
                     Next
                     state.Add(elem.ID, selectedIndex)
+                Case "multiText"
+                    state.Add(elem.ID, PolicySource.GetValue(elemKey, elem.RegistryValue))
             End Select
         Next
         Return state
@@ -305,6 +307,8 @@
                                 Dim selItem = enumElem.Items(optionData)
                                 setValue(elemKey, elem.RegistryValue, selItem.Value)
                                 setSingleList(selItem.ValueList, elemKey)
+                            Case "multiText"
+                                PolicySource.SetValue(elemKey, elem.RegistryValue, optionData, Microsoft.Win32.RegistryValueKind.MultiString)
                         End Select
                     Next
                 End If

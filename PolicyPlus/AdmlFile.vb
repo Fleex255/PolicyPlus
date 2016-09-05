@@ -94,6 +94,8 @@ Public Class AdmlFile
                             Dim listPart As New ListPresentationElement
                             listPart.Label = uiElement.InnerText
                             presPart = listPart
+                        Case "multiTextBox"
+                            presPart = New MultiTextPresentationElement
                     End Select
                     If presPart IsNot Nothing Then
                         If uiElement.Attributes("refId") IsNot Nothing Then presPart.ID = uiElement.Attributes("refId").Value

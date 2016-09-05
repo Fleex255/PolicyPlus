@@ -66,7 +66,6 @@
                          End Sub
         ExtraOptionsTable.RowStyles.Clear()
         ElementControls = New Dictionary(Of String, Control)
-        ' The "soft" attribute is NYI because no default ADMX file uses it
         If CurrentSetting.RawPolicy.Elements IsNot Nothing And CurrentSetting.Presentation IsNot Nothing Then
             Dim elemDict = CurrentSetting.RawPolicy.Elements.ToDictionary(Function(e) e.ID)
             For Each pres In CurrentSetting.Presentation.Elements
@@ -162,6 +161,16 @@
                                                      If ListEditor.PresentDialog(listPres.Label, button.Tag, list.UserProvidesNames) = DialogResult.OK Then button.Tag = ListEditor.FinalData
                                                  End Sub
                         addControl(pres.ID, button, listPres.Label)
+                    Case "multiTextBox"
+                        Dim bigTextbox As New TextBox
+                        bigTextbox.AutoSize = False
+                        bigTextbox.Width = ExtraOptionsPanel.Width * 0.8
+                        bigTextbox.Multiline = True
+                        bigTextbox.Height *= 4
+                        bigTextbox.ScrollBars = ScrollBars.Both
+                        bigTextbox.WordWrap = False
+                        bigTextbox.AcceptsReturn = True
+                        addControl(pres.ID, bigTextbox, "")
                 End Select
             Next
         End If
@@ -192,6 +201,8 @@
                         combobox.SelectedItem = combobox.Items.OfType(Of DropdownPresentationMap).First(Function(i) i.ID = kv.Value)
                     ElseIf TypeOf kv.Value Is Boolean Then ' Check box
                         CType(uiControl, CheckBox).Checked = kv.Value
+                    ElseIf TypeOf kv.Value Is String() Then ' Multiline text box
+                        CType(uiControl, TextBox).Lines = kv.Value
                     Else ' List box (pop-out button)
                         uiControl.Tag = kv.Value
                     End If
@@ -239,6 +250,8 @@
                             options.Add(elem.ID, CType(CType(uiControl, ComboBox).SelectedItem, DropdownPresentationMap).ID)
                         Case "list"
                             options.Add(elem.ID, uiControl.Tag)
+                        Case "multiText"
+                            options.Add(elem.ID, CType(uiControl, TextBox).Lines)
                     End Select
                 Next
             End If

@@ -66,3 +66,7 @@ Public Class EnumPolicyElementItem ' <item>
     Public Value As PolicyRegistryValue
     Public ValueList As PolicyRegistrySingleList ' <valueList>
 End Class
+Public Class MultiTextPolicyElement ' <multiText>
+    Inherits PolicyElement
+    ' This is undocumented, so it's unknown whether there can be other options for it
+End Class

@@ -361,6 +361,7 @@ Partial Class Main
         Me.PolicyIcons.Images.SetKeyName(35, "arrow_down.png")
         Me.PolicyIcons.Images.SetKeyName(36, "style_go.png")
         Me.PolicyIcons.Images.SetKeyName(37, "exclamation.png")
+        Me.PolicyIcons.Images.SetKeyName(38, "application_cascade.png")
         '
         'PoliciesList
         '

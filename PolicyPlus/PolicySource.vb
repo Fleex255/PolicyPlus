@@ -232,6 +232,37 @@ Public Class PolFile
             ped.Data = data
             Return ped
         End Function
+        Public Function AsMultiString() As String()
+            Dim strings As New List(Of String)
+            Dim sb As New Text.StringBuilder
+            For n = 0 To (Data.Length / 2) - 1
+                Dim charCode = Data(n * 2) + (Data((n * 2) + 1) << 8)
+                If charCode = 0 Then
+                    If sb.Length = 0 Then Exit For
+                    strings.Add(sb.ToString)
+                    sb.Clear()
+                Else
+                    sb.Append(ChrW(charCode))
+                End If
+            Next
+            Return strings.ToArray
+        End Function
+        Public Shared Function FromMultiString(Strings As String()) As PolEntryData
+            Dim ped As New PolEntryData With {.Kind = RegistryValueKind.MultiString}
+            Dim data((Strings.Sum(Function(s) s.Length + 1) + 1) * 2 - 1) As Byte
+            Dim n As Integer = 0
+            For Each s In Strings
+                For Each c In s
+                    Dim charCode = AscW(c)
+                    data(n) = charCode And &HFF
+                    data(n + 1) = charCode >> 8
+                    n += 2
+                Next
+                n += 2 ' Leave two null bytes after each string
+            Next
+            ped.Data = data
+            Return ped
+        End Function
         Public Function AsBinary() As Byte()
             Return Data.Clone
         End Function
@@ -250,6 +281,8 @@ Public Class PolFile
                     Return AsString()
                 Case RegistryValueKind.QWord
                     Return AsQword()
+                Case RegistryValueKind.MultiString
+                    Return AsMultiString()
                 Case Else
                     Return AsBinary()
             End Select
@@ -264,6 +297,8 @@ Public Class PolFile
                     Return FromString(Data, True)
                 Case RegistryValueKind.QWord
                     Return FromQword(Data)
+                Case RegistryValueKind.MultiString
+                    Return FromMultiString(Data)
                 Case Else
                     Return FromBinary(Data, Kind)
             End Select

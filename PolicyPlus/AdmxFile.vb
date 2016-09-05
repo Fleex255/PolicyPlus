@@ -240,6 +240,8 @@ Public Class AdmxFile
                                                     End If
                                                 Next
                                                 entry = enumEntry
+                                            Case "multiText"
+                                                entry = New MultiTextPolicyElement
                                         End Select
                                         If entry IsNot Nothing Then
                                             entry.ClientExtension = AttributeOrNull(uiElement, "clientExtension")

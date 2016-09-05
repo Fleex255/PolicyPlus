@@ -31,7 +31,7 @@
                                             addListEntry(entry, Node)
                                         Next
                                     End Sub
-        Dim addList = Sub(RegList As PolicyRegistryList, Nodes As TreeNodeCollection)
+        Dim addList = Sub(RegList As PolicyRegistryList, Nodes As TreeNodeCollection, HasValue As Boolean)
                           Dim listNode = Nodes.Add("Affected Registry settings")
                           listNode.ImageIndex = 12 ' Database
                           If RegList.OnValue IsNot Nothing Then
@@ -54,14 +54,14 @@
                               offListNode.ImageIndex = 8
                               addSingleListContents(RegList.OffValueList, offListNode)
                           End If
-                          If listNode.Nodes.Count = 0 Then listNode.Nodes.Add("Left implicit").ImageIndex = 37
+                          If listNode.Nodes.Count = 0 Then listNode.Nodes.Add(If(HasValue, "Left implicit", "Left to elements")).ImageIndex = 37
                       End Sub
-        addList(Policy.RawPolicy.AffectedValues, InfoTreeview.Nodes)
+        addList(Policy.RawPolicy.AffectedValues, InfoTreeview.Nodes, Policy.RawPolicy.RegistryValue <> "")
         If Policy.Presentation IsNot Nothing And Policy.RawPolicy.Elements IsNot Nothing Then
             Dim presNode = InfoTreeview.Nodes.Add("Presentation: " & Policy.Presentation.Name)
             presNode.ImageIndex = 20 ' Form
             For Each presElem In Policy.Presentation.Elements
-                Dim presPartNode = presNode.Nodes.Add("Presentation element (type: """ & presElem.ElementType & """)" & If(presElem.ID <> "", ", ID: """ & presElem.ID & """", ""))
+                Dim presPartNode = presNode.Nodes.Add("Presentation element (type: " & presElem.ElementType & ")" & If(presElem.ID <> "", ", ID: " & presElem.ID & "", ""))
                 Select Case presElem.ElementType
                     Case "text"
                         Dim labelPres As LabelPresentationElement = presElem
@@ -70,13 +70,13 @@
                     Case "decimalTextBox"
                         Dim decTextPres As NumericBoxPresentationElement = presElem
                         presPartNode.ImageIndex = 22 ' Calculator with pencil
-                        presPartNode.Nodes.Add("Label: """ & decTextPres.Label & """").ImageIndex = 14
+                        If decTextPres.Label <> "" Then presPartNode.Nodes.Add("Label: """ & decTextPres.Label & """").ImageIndex = 14
                         presPartNode.Nodes.Add("Default: " & decTextPres.DefaultValue).ImageIndex = 23 ' Wrench
                         presPartNode.Nodes.Add(If(decTextPres.HasSpinner, "Spinner incremenent: " & decTextPres.SpinnerIncrement, "No spinner")).ImageIndex = 6
                     Case "textBox"
                         Dim textPres As TextBoxPresentationElement = presElem
                         presPartNode.ImageIndex = 24 ' Text field
-                        presPartNode.Nodes.Add("Label: """ & textPres.Label & """").ImageIndex = 14
+                        If textPres.Label <> "" Then presPartNode.Nodes.Add("Label: """ & textPres.Label & """").ImageIndex = 14
                         presPartNode.Nodes.Add("Default: """ & textPres.DefaultValue & """").ImageIndex = 23
                     Case "checkBox"
                         Dim checkPres As CheckBoxPresentationElement = presElem
@@ -86,9 +86,9 @@
                     Case "comboBox"
                         Dim comboPres As ComboBoxPresentationElement = presElem
                         presPartNode.ImageIndex = 26 ' Bar with text
-                        presPartNode.Nodes.Add("Label: """ & comboPres.Label & """").ImageIndex = 14
+                        If comboPres.Label <> "" Then presPartNode.Nodes.Add("Label: """ & comboPres.Label & """").ImageIndex = 14
                         presPartNode.Nodes.Add("Default: """ & comboPres.DefaultText & """").ImageIndex = 23
-                        presPartNode.Nodes.Add("Sorted: " & If(comboPres.NoSort, "no", "yes")).ImageIndex = 28 ' Sorted table
+                        presPartNode.Nodes.Add("Sorting: " & If(comboPres.NoSort, "from ADMX", "alphabetical")).ImageIndex = 28 ' Sorted table
                         If comboPres.Suggestions IsNot Nothing Then
                             Dim sugNode = presPartNode.Nodes.Add(comboPres.Suggestions.Count & " suggestions")
                             sugNode.ImageIndex = 29 ' Letter
@@ -99,17 +99,19 @@
                     Case "dropdownList"
                         Dim dropdownPres As DropDownPresentationElement = presElem
                         presPartNode.ImageIndex = 30 ' List view
-                        presPartNode.Nodes.Add("Label: """ & dropdownPres.Label & """").ImageIndex = 14
+                        If dropdownPres.Label <> "" Then presPartNode.Nodes.Add("Label: """ & dropdownPres.Label & """").ImageIndex = 14
                         If dropdownPres.DefaultItemID.HasValue Then presPartNode.Nodes.Add("Default: #" & dropdownPres.DefaultItemID.Value).ImageIndex = 23
-                        presPartNode.Nodes.Add("Sorted: " & If(dropdownPres.NoSort, "no", "yes")).ImageIndex = 28
+                        presPartNode.Nodes.Add("Sorting: " & If(dropdownPres.NoSort, "from ADMX", "alphabetical")).ImageIndex = 28
                     Case "listBox"
                         Dim listPres As ListPresentationElement = presElem
                         presPartNode.ImageIndex = 27 ' Table window
                         presPartNode.Nodes.Add("Label: """ & listPres.Label & """").ImageIndex = 14
+                    Case "multiTextBox"
+                        presPartNode.ImageIndex = 38 ' Cascading boxes
                 End Select
                 If presElem.ID = "" Then Continue For
                 Dim elem = Policy.RawPolicy.Elements.First(Function(e) e.ID = presElem.ID)
-                Dim elemNode = presPartNode.Nodes.Add("Underlying element (type: """ & elem.ElementType & """)")
+                Dim elemNode = presPartNode.Nodes.Add("Policy element (type: " & elem.ElementType & ")")
                 elemNode.ImageIndex = 31 ' Brick
                 If elem.ClientExtension <> "" Then elemNode.Nodes.Add("Client extension: " & elem.ClientExtension).ImageIndex = 19
                 If elem.RegistryKey <> "" Then elemNode.Nodes.Add("Registry key: " & elem.RegistryKey).ImageIndex = 0
@@ -124,7 +126,7 @@
                         If decimalElem.NoOverwrite Then elemNode.Nodes.Add("Soft").ImageIndex = 34 ' Soft speaker
                     Case "boolean"
                         Dim booleanElem As BooleanPolicyElement = elem
-                        addList(booleanElem.AffectedRegistry, elemNode.Nodes)
+                        addList(booleanElem.AffectedRegistry, elemNode.Nodes, True)
                     Case "text"
                         Dim textElem As TextPolicyElement = elem
                         elemNode.Nodes.Add("Maximum length: " & textElem.MaxLength).ImageIndex = 6
@@ -152,7 +154,7 @@
                             Dim itemNode = itemsNode.Nodes.Add("Choice #" & id)
                             itemNode.ImageIndex = 29
                             itemNode.Nodes.Add("Display code: " & item.DisplayCode).ImageIndex = 14
-                            itemNode.Nodes.Add("Display name: " & AdmxWorkspace.ResolveString(item.DisplayCode, Policy.RawPolicy.DefinedIn)).ImageIndex = 21
+                            itemNode.Nodes.Add("Display name: """ & AdmxWorkspace.ResolveString(item.DisplayCode, Policy.RawPolicy.DefinedIn) & """").ImageIndex = 21
                             addValueData(item.Value, itemNode)
                             If item.ValueList IsNot Nothing Then
                                 Dim regNode = itemNode.Nodes.Add("Additional Registry settings modified")
@@ -161,6 +163,8 @@
                             End If
                             id += 1
                         Next
+                    Case "multiText"
+                        ' Has no special attributes
                 End Select
             Next
         End If
@@ -174,6 +178,11 @@
                             End Sub
         normalizeSelIndex(InfoTreeview.Nodes)
         ShowDialog()
+    End Sub
+    Private Sub InfoTreeview_KeyDown(sender As Object, e As KeyEventArgs) Handles InfoTreeview.KeyDown
+        If e.KeyCode = Keys.C And e.Modifiers = Keys.Control And InfoTreeview.SelectedNode IsNot Nothing Then
+            My.Computer.Clipboard.SetText(InfoTreeview.SelectedNode.Text)
+        End If
     End Sub
     Private Sub PolicyDetailsButton_Click(sender As Object, e As EventArgs) Handles PolicyDetailsButton.Click
         DetailPolicy.PresentDialog(SelectedPolicy)
