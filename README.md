@@ -29,5 +29,4 @@ Policy Plus is usable on all editions. It can load and save all policy sources s
 
 These features will hopefully be implemented very soon:
 
-* Filtering by support
 * POL import/export
