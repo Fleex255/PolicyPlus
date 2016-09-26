@@ -6,10 +6,12 @@ Public Class Main
     Dim UserComments, CompComments As Dictionary(Of String, String)
     Dim CurrentCategory As PolicyPlusCategory
     Dim CurrentSetting As PolicyPlusPolicy
+    Dim CurrentFilter As New FilterConfiguration
     Dim HighlightCategory As PolicyPlusCategory
     Dim CategoryNodes As New Dictionary(Of PolicyPlusCategory, TreeNode)
     Dim ViewEmptyCategories As Boolean = False
     Dim ViewPolicyTypes As AdmxPolicySection = AdmxPolicySection.Both
+    Dim ViewFilteredOnly As Boolean = False
     Private Sub Main_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         Try
             AdmxWorkspace.LoadFolder(Environment.ExpandEnvironmentVariables("%windir%\PolicyDefinitions"), Globalization.CultureInfo.CurrentCulture.Name)
@@ -117,7 +119,17 @@ Public Class Main
         End If
     End Function
     Function ShouldShowPolicy(Policy As PolicyPlusPolicy) As Boolean
-        Return (ViewPolicyTypes And Policy.RawPolicy.Section) > 0
+        If Not PolicyVisibleInSection(Policy, ViewPolicyTypes) Then Return False
+        If ViewFilteredOnly Then
+            Dim visibleAfterFilter As Boolean = False
+            If (ViewPolicyTypes And AdmxPolicySection.Machine) > 0 And PolicyVisibleInSection(Policy, AdmxPolicySection.Machine) Then
+                If IsPolicyVisibleAfterFilter(Policy, False) Then visibleAfterFilter = True
+            ElseIf (ViewPolicyTypes And AdmxPolicySection.User) > 0 And PolicyVisibleInSection(Policy, AdmxPolicySection.User) Then
+                If IsPolicyVisibleAfterFilter(Policy, True) Then visibleAfterFilter = True
+            End If
+            If Not visibleAfterFilter Then Return False
+        End If
+        Return True
     End Function
     Sub MoveToVisibleCategoryAndReload()
         Dim newFocusCategory = CurrentCategory
@@ -297,6 +309,25 @@ Public Class Main
             Next
         End If
     End Sub
+    Function IsPolicyVisibleAfterFilter(Policy As PolicyPlusPolicy, IsUser As Boolean) As Boolean
+        If CurrentFilter.ManagedPolicy.HasValue Then
+            If IsPreference(Policy) = CurrentFilter.ManagedPolicy.Value Then Return False
+        End If
+        If CurrentFilter.PolicyState.HasValue Then
+            If PolicyProcessing.GetPolicyState(If(IsUser, UserPolicySource, CompPolicySource), Policy) <> CurrentFilter.PolicyState.Value Then Return False
+        End If
+        If CurrentFilter.Commented.HasValue Then
+            Dim commentDict = If(IsUser, UserComments, CompComments)
+            If (commentDict.ContainsKey(Policy.UniqueID) AndAlso commentDict(Policy.UniqueID) <> "") <> CurrentFilter.Commented.Value Then Return False
+        End If
+        If CurrentFilter.AllowedProducts IsNot Nothing Then
+            If Not PolicyProcessing.IsPolicySupported(Policy, CurrentFilter.AllowedProducts, CurrentFilter.AlwaysMatchAny, CurrentFilter.MatchBlankSupport) Then Return False
+        End If
+        Return True
+    End Function
+    Function PolicyVisibleInSection(Policy As PolicyPlusPolicy, Section As AdmxPolicySection) As Boolean
+        Return (Policy.RawPolicy.Section And Section) > 0
+    End Function
     Private Sub CategoriesTree_AfterSelect(sender As Object, e As TreeViewEventArgs) Handles CategoriesTree.AfterSelect
         CurrentCategory = e.Node.Tag
         UpdateCategoryListing()
@@ -477,6 +508,19 @@ Public Class Main
     Private Sub PoliciesList_KeyUp(sender As Object, e As KeyEventArgs) Handles PoliciesList.KeyUp
         If e.KeyCode = Keys.Enter And PoliciesList.SelectedItems.Count > 0 Then PoliciesList_DoubleClick(sender, e)
     End Sub
+    Private Sub FilterOptionsToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles FilterOptionsToolStripMenuItem.Click
+        If FilterOptions.PresentDialog(CurrentFilter, AdmxWorkspace) = DialogResult.OK Then
+            CurrentFilter = FilterOptions.CurrentFilter
+            ViewFilteredOnly = True
+            OnlyFilteredObjectsToolStripMenuItem.Checked = True
+            MoveToVisibleCategoryAndReload()
+        End If
+    End Sub
+    Private Sub OnlyFilteredObjectsToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles OnlyFilteredObjectsToolStripMenuItem.Click
+        ViewFilteredOnly = Not ViewFilteredOnly
+        OnlyFilteredObjectsToolStripMenuItem.Checked = ViewFilteredOnly
+        MoveToVisibleCategoryAndReload()
+    End Sub
     Private Sub PolicyObjectContext_Opening(sender As Object, e As CancelEventArgs) Handles PolicyObjectContext.Opening
         Dim showingForCategory As Boolean
         If PolicyObjectContext.SourceControl Is CategoriesTree Then
@@ -492,8 +536,8 @@ Public Class Main
         End If
         For Each item In PolicyObjectContext.Items.OfType(Of ToolStripMenuItem)
             Dim ok As Boolean = True
-            If item.Tag = "P" And showingForCategory Then ok = False
-            If item.Tag = "C" And Not showingForCategory Then ok = False
+            If CStr(item.Tag) = "P" And showingForCategory Then ok = False
+            If CStr(item.Tag) = "C" And Not showingForCategory Then ok = False
             item.Visible = ok
         Next
     End Sub

@@ -40,6 +40,8 @@ Partial Class Main
         Me.ExitToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.ViewToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.EmptyCategoriesToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.OnlyFilteredObjectsToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.FilterOptionsToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.DeduplicatePoliciesToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.FindToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.ByIDToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
@@ -56,6 +58,7 @@ Partial Class Main
         Me.CmeCatOpen = New System.Windows.Forms.ToolStripMenuItem()
         Me.CmePolEdit = New System.Windows.Forms.ToolStripMenuItem()
         Me.CmeAllDetails = New System.Windows.Forms.ToolStripMenuItem()
+        Me.CmePolInspectElements = New System.Windows.Forms.ToolStripMenuItem()
         Me.PolicyIcons = New System.Windows.Forms.ImageList(Me.components)
         Me.PoliciesList = New System.Windows.Forms.ListView()
         Me.ChSettingName = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
@@ -65,7 +68,6 @@ Partial Class Main
         Me.PolicySupportedLabel = New System.Windows.Forms.Label()
         Me.PolicyDescLabel = New System.Windows.Forms.Label()
         Me.PolicyIsPrefLabel = New System.Windows.Forms.Label()
-        Me.CmePolInspectElements = New System.Windows.Forms.ToolStripMenuItem()
         ChSettingEnabled = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
         ChSettingCommented = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
         ToolStripSeparator1 = New System.Windows.Forms.ToolStripSeparator()
@@ -97,7 +99,7 @@ Partial Class Main
         'ToolStripSeparator1
         '
         ToolStripSeparator1.Name = "ToolStripSeparator1"
-        ToolStripSeparator1.Size = New System.Drawing.Size(177, 6)
+        ToolStripSeparator1.Size = New System.Drawing.Size(181, 6)
         '
         'ToolStripSeparator2
         '
@@ -170,7 +172,7 @@ Partial Class Main
         '
         'ViewToolStripMenuItem
         '
-        Me.ViewToolStripMenuItem.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.EmptyCategoriesToolStripMenuItem, ToolStripSeparator1, Me.DeduplicatePoliciesToolStripMenuItem})
+        Me.ViewToolStripMenuItem.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.EmptyCategoriesToolStripMenuItem, Me.OnlyFilteredObjectsToolStripMenuItem, ToolStripSeparator1, Me.FilterOptionsToolStripMenuItem, Me.DeduplicatePoliciesToolStripMenuItem})
         Me.ViewToolStripMenuItem.Name = "ViewToolStripMenuItem"
         Me.ViewToolStripMenuItem.Size = New System.Drawing.Size(44, 20)
         Me.ViewToolStripMenuItem.Text = "View"
@@ -178,14 +180,27 @@ Partial Class Main
         'EmptyCategoriesToolStripMenuItem
         '
         Me.EmptyCategoriesToolStripMenuItem.Name = "EmptyCategoriesToolStripMenuItem"
-        Me.EmptyCategoriesToolStripMenuItem.Size = New System.Drawing.Size(180, 22)
+        Me.EmptyCategoriesToolStripMenuItem.Size = New System.Drawing.Size(184, 22)
         Me.EmptyCategoriesToolStripMenuItem.Text = "Empty Categories"
+        '
+        'OnlyFilteredObjectsToolStripMenuItem
+        '
+        Me.OnlyFilteredObjectsToolStripMenuItem.Name = "OnlyFilteredObjectsToolStripMenuItem"
+        Me.OnlyFilteredObjectsToolStripMenuItem.Size = New System.Drawing.Size(184, 22)
+        Me.OnlyFilteredObjectsToolStripMenuItem.Text = "Only Filtered Policies"
+        '
+        'FilterOptionsToolStripMenuItem
+        '
+        Me.FilterOptionsToolStripMenuItem.Name = "FilterOptionsToolStripMenuItem"
+        Me.FilterOptionsToolStripMenuItem.Size = New System.Drawing.Size(184, 22)
+        Me.FilterOptionsToolStripMenuItem.Text = "Filter Options"
         '
         'DeduplicatePoliciesToolStripMenuItem
         '
         Me.DeduplicatePoliciesToolStripMenuItem.Name = "DeduplicatePoliciesToolStripMenuItem"
-        Me.DeduplicatePoliciesToolStripMenuItem.Size = New System.Drawing.Size(180, 22)
+        Me.DeduplicatePoliciesToolStripMenuItem.Size = New System.Drawing.Size(184, 22)
         Me.DeduplicatePoliciesToolStripMenuItem.Text = "Deduplicate Policies"
+        Me.DeduplicatePoliciesToolStripMenuItem.Visible = False
         '
         'FindToolStripMenuItem
         '
@@ -318,6 +333,13 @@ Partial Class Main
         Me.CmeAllDetails.Name = "CmeAllDetails"
         Me.CmeAllDetails.Size = New System.Drawing.Size(169, 22)
         Me.CmeAllDetails.Text = "Details"
+        '
+        'CmePolInspectElements
+        '
+        Me.CmePolInspectElements.Name = "CmePolInspectElements"
+        Me.CmePolInspectElements.Size = New System.Drawing.Size(169, 22)
+        Me.CmePolInspectElements.Tag = "P"
+        Me.CmePolInspectElements.Text = "Element Inspector"
         '
         'PolicyIcons
         '
@@ -461,13 +483,6 @@ Partial Class Main
         Me.PolicyIsPrefLabel.Text = "Because it is not stored in a Policies section of the Registry, this policy is a " &
     "preference and will not be automatically undone if the setting is removed."
         '
-        'CmePolInspectElements
-        '
-        Me.CmePolInspectElements.Name = "CmePolInspectElements"
-        Me.CmePolInspectElements.Size = New System.Drawing.Size(169, 22)
-        Me.CmePolInspectElements.Tag = "P"
-        Me.CmePolInspectElements.Text = "Element Inspector"
-        '
         'Main
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
@@ -531,4 +546,6 @@ Partial Class Main
     Friend WithEvents CmePolEdit As ToolStripMenuItem
     Friend WithEvents CmeAllDetails As ToolStripMenuItem
     Friend WithEvents CmePolInspectElements As ToolStripMenuItem
+    Friend WithEvents OnlyFilteredObjectsToolStripMenuItem As ToolStripMenuItem
+    Friend WithEvents FilterOptionsToolStripMenuItem As ToolStripMenuItem
 End Class

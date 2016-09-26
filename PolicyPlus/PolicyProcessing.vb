@@ -323,6 +323,50 @@
                 End If
         End Select
     End Sub
+    Public Shared Function IsPolicySupported(Policy As PolicyPlusPolicy, Products As List(Of PolicyPlusProduct), AlwaysUseAny As Boolean, ApproveLiterals As Boolean) As Boolean
+        If Policy.SupportedOn Is Nothing OrElse Policy.SupportedOn.RawSupport.Logic = AdmxSupportLogicType.Blank Then Return ApproveLiterals
+        Dim supEntryMet = Function(SupportEntry As PolicyPlusSupportEntry) As Boolean ' Only for products (not support definitions)
+                              If SupportEntry.Product Is Nothing Then Return ApproveLiterals
+                              If Products.Contains(SupportEntry.Product) And Not SupportEntry.RawSupportEntry.IsRange Then Return True
+                              If SupportEntry.Product.Children Is Nothing OrElse SupportEntry.Product.Children.Count = 0 Then Return False ' Ranges only apply to parent products
+                              Dim rangeMin = If(SupportEntry.RawSupportEntry.MinVersion, 0)
+                              Dim rangeMax = If(SupportEntry.RawSupportEntry.MaxVersion, SupportEntry.Product.Children.Max(Function(p) p.RawProduct.Version))
+                              For v = rangeMin To rangeMax
+                                  Dim version = v ' To suppress compiler warnings about iteration variable in lambdas
+                                  Dim subproduct = SupportEntry.Product.Children.FirstOrDefault(Function(p) p.RawProduct.Version = version)
+                                  If subproduct Is Nothing Then Continue For
+                                  If Products.Contains(subproduct) Then Return True
+                                  If subproduct.Children IsNot Nothing Then Return subproduct.Children.Any(Function(p) Products.Contains(p))
+                              Next
+                              Return False
+                          End Function
+        Dim entriesSeen As New List(Of PolicyPlusSupport)
+        Dim supDefMet As Func(Of PolicyPlusSupport, Boolean)
+        supDefMet = Function(Support As PolicyPlusSupport) As Boolean
+                        If entriesSeen.Contains(Support) Then Return False ' Cyclic dependencies
+                        entriesSeen.Add(Support)
+                        Dim requireAll = If(AlwaysUseAny, Support.RawSupport.Logic = AdmxSupportLogicType.AllOf, False)
+                        ' It's much faster to check for plain products, so do that first
+                        For Each supElem In Support.Elements.Where(Function(e) e.SupportDefinition Is Nothing)
+                            Dim isMet = supEntryMet(supElem)
+                            If requireAll Then
+                                If Not isMet Then Return False
+                            Else
+                                If isMet Then Return True
+                            End If
+                        Next
+                        For Each subDef In Support.Elements.Where(Function(e) e.SupportDefinition IsNot Nothing)
+                            Dim isMet = supDefMet(subDef.SupportDefinition)
+                            If requireAll Then
+                                If Not isMet Then Return False
+                            Else
+                                If isMet Then Return True
+                            End If
+                        Next
+                        Return requireAll ' If all were required and this function hasn't exited yet, all are matched
+                    End Function
+        Return supDefMet(Policy.SupportedOn)
+    End Function
 End Class
 Public Enum PolicyState
     NotConfigured = 0
