@@ -70,7 +70,7 @@ Public Class Main
         End If
     End Sub
     Sub UpdatePolicyInfo()
-        Dim hasCurrentSetting = (CurrentSetting IsNot Nothing) Or (HighlightCategory IsNot Nothing)
+        Dim hasCurrentSetting = (CurrentSetting IsNot Nothing) Or (HighlightCategory IsNot Nothing) Or (CurrentCategory IsNot Nothing)
         PolicyTitleLabel.Visible = hasCurrentSetting
         PolicySupportedLabel.Visible = hasCurrentSetting
         If CurrentSetting IsNot Nothing Then
@@ -82,13 +82,14 @@ Public Class Main
             End If
             PolicyDescLabel.Text = CurrentSetting.DisplayExplanation.Trim()
             PolicyIsPrefLabel.Visible = IsPreference(CurrentSetting)
-        ElseIf HighlightCategory IsNot Nothing Then
-            PolicyTitleLabel.Text = HighlightCategory.DisplayName
-            PolicySupportedLabel.Text = "This category contains " & HighlightCategory.Policies.Count & " policies and " & HighlightCategory.Children.Count & " subcategories."
-            PolicyDescLabel.Text = HighlightCategory.DisplayExplanation.Trim()
+        ElseIf HighlightCategory IsNot Nothing Or CurrentCategory IsNot Nothing Then
+            Dim shownCategory = If(HighlightCategory, CurrentCategory)
+            PolicyTitleLabel.Text = shownCategory.DisplayName
+            PolicySupportedLabel.Text = If(HighlightCategory Is Nothing, "This", "The selected") & " category contains " & shownCategory.Policies.Count & " policies and " & shownCategory.Children.Count & " subcategories."
+            PolicyDescLabel.Text = shownCategory.DisplayExplanation.Trim()
             PolicyIsPrefLabel.Visible = False
         Else
-            PolicyDescLabel.Text = "Select a setting on the right to see its description."
+            PolicyDescLabel.Text = "Select an item to see its description."
             PolicyIsPrefLabel.Visible = False
         End If
         SettingInfoPanel_ClientSizeChanged(Nothing, Nothing)
