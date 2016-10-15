@@ -149,6 +149,12 @@
     <Compile Include="FindResults.vb">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="ImportSpol.Designer.vb">
+      <DependentUpon>ImportSpol.vb</DependentUpon>
+    </Compile>
+    <Compile Include="ImportSpol.vb">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="InspectPolicyElements.Designer.vb">
       <DependentUpon>InspectPolicyElements.vb</DependentUpon>
     </Compile>
@@ -213,6 +219,7 @@
     <Compile Include="PolicySource.vb" />
     <Compile Include="PolicyStructures.vb" />
     <Compile Include="PresentationStructures.vb" />
+    <Compile Include="SpolFile.vb" />
     <Compile Include="XmlExtensions.vb" />
   </ItemGroup>
   <ItemGroup>
@@ -245,6 +252,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="FindResults.resx">
       <DependentUpon>FindResults.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ImportSpol.resx">
+      <DependentUpon>ImportSpol.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="InspectPolicyElements.resx">
       <DependentUpon>InspectPolicyElements.vb</DependentUpon>

@@ -506,7 +506,7 @@ Public Class Main
     Private Sub Main_Closed(sender As Object, e As EventArgs) Handles Me.Closed
         ClosePolicySources()
     End Sub
-    Private Sub PoliciesList_KeyUp(sender As Object, e As KeyEventArgs) Handles PoliciesList.KeyUp
+    Private Sub PoliciesList_KeyDown(sender As Object, e As KeyEventArgs) Handles PoliciesList.KeyDown
         If e.KeyCode = Keys.Enter And PoliciesList.SelectedItems.Count > 0 Then PoliciesList_DoubleClick(sender, e)
     End Sub
     Private Sub FilterOptionsToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles FilterOptionsToolStripMenuItem.Click
@@ -521,6 +521,18 @@ Public Class Main
         ViewFilteredOnly = Not ViewFilteredOnly
         OnlyFilteredObjectsToolStripMenuItem.Checked = ViewFilteredOnly
         MoveToVisibleCategoryAndReload()
+    End Sub
+    Private Sub ImportSemanticPolicyToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles ImportSemanticPolicyToolStripMenuItem.Click
+        If ImportSpol.ShowDialog() = DialogResult.OK Then
+            Dim spol = ImportSpol.Spol
+            Dim fails = spol.ApplyAll(AdmxWorkspace, UserPolicySource, CompPolicySource)
+            UpdateCategoryListing()
+            If fails = 0 Then
+                MsgBox("Semantic Policy successfully applied.", MsgBoxStyle.Information)
+            Else
+                MsgBox(fails & " out of " & spol.Policies.Count & " could not be applied.", MsgBoxStyle.Exclamation)
+            End If
+        End If
     End Sub
     Private Sub PolicyObjectContext_Opening(sender As Object, e As CancelEventArgs) Handles PolicyObjectContext.Opening
         Dim showingForCategory As Boolean

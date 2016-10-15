@@ -68,6 +68,8 @@ Partial Class Main
         Me.PolicySupportedLabel = New System.Windows.Forms.Label()
         Me.PolicyDescLabel = New System.Windows.Forms.Label()
         Me.PolicyIsPrefLabel = New System.Windows.Forms.Label()
+        Me.ShareToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.ImportSemanticPolicyToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         ChSettingEnabled = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
         ChSettingCommented = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
         ToolStripSeparator1 = New System.Windows.Forms.ToolStripSeparator()
@@ -118,7 +120,7 @@ Partial Class Main
         '
         'MainMenu
         '
-        Me.MainMenu.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.FileToolStripMenuItem, Me.ViewToolStripMenuItem, Me.FindToolStripMenuItem, Me.HelpToolStripMenuItem})
+        Me.MainMenu.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.FileToolStripMenuItem, Me.ViewToolStripMenuItem, Me.FindToolStripMenuItem, Me.ShareToolStripMenuItem, Me.HelpToolStripMenuItem})
         Me.MainMenu.Location = New System.Drawing.Point(0, 0)
         Me.MainMenu.Name = "MainMenu"
         Me.MainMenu.Size = New System.Drawing.Size(706, 24)
@@ -483,6 +485,19 @@ Partial Class Main
         Me.PolicyIsPrefLabel.Text = "Because it is not stored in a Policies section of the Registry, this policy is a " &
     "preference and will not be automatically undone if the setting is removed."
         '
+        'ShareToolStripMenuItem
+        '
+        Me.ShareToolStripMenuItem.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.ImportSemanticPolicyToolStripMenuItem})
+        Me.ShareToolStripMenuItem.Name = "ShareToolStripMenuItem"
+        Me.ShareToolStripMenuItem.Size = New System.Drawing.Size(48, 20)
+        Me.ShareToolStripMenuItem.Text = "Share"
+        '
+        'ImportSemanticPolicyToolStripMenuItem
+        '
+        Me.ImportSemanticPolicyToolStripMenuItem.Name = "ImportSemanticPolicyToolStripMenuItem"
+        Me.ImportSemanticPolicyToolStripMenuItem.Size = New System.Drawing.Size(197, 22)
+        Me.ImportSemanticPolicyToolStripMenuItem.Text = "Import Semantic Policy"
+        '
         'Main
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
@@ -548,4 +563,6 @@ Partial Class Main
     Friend WithEvents CmePolInspectElements As ToolStripMenuItem
     Friend WithEvents OnlyFilteredObjectsToolStripMenuItem As ToolStripMenuItem
     Friend WithEvents FilterOptionsToolStripMenuItem As ToolStripMenuItem
+    Friend WithEvents ShareToolStripMenuItem As ToolStripMenuItem
+    Friend WithEvents ImportSemanticPolicyToolStripMenuItem As ToolStripMenuItem
 End Class
