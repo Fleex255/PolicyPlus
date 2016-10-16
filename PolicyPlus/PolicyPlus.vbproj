@@ -201,6 +201,12 @@
     <Compile Include="OpenPol.vb">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="OpenSection.Designer.vb">
+      <DependentUpon>OpenSection.vb</DependentUpon>
+    </Compile>
+    <Compile Include="OpenSection.vb">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="OpenUserGpo.Designer.vb">
       <DependentUpon>OpenUserGpo.vb</DependentUpon>
     </Compile>
@@ -276,6 +282,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="OpenPol.resx">
       <DependentUpon>OpenPol.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="OpenSection.resx">
+      <DependentUpon>OpenSection.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="OpenUserGpo.resx">
       <DependentUpon>OpenUserGpo.vb</DependentUpon>

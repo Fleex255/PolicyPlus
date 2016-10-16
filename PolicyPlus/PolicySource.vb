@@ -166,6 +166,9 @@ Public Class PolFile
             Target.ForgetValue(parts(0), parts(1))
         Next
     End Sub
+    Public Sub Apply(Target As IPolicySource)
+        ApplyDifference(Nothing, Target)
+    End Sub
     Public Sub ClearKey(Key As String) Implements IPolicySource.ClearKey
         For Each value In GetValueNames(Key)
             ForgetValue(Key, value)
@@ -350,9 +353,7 @@ Public Class RegistryPolicyProxy
         Return False
     End Function
     Public Shared Function IsPolicyKey(KeyPath As String) As Boolean
-        Return KeyPath.StartsWith("software\policies\", StringComparison.InvariantCultureIgnoreCase) Or
-            KeyPath.StartsWith("software\microsoft\windows\currentversion\policies\", StringComparison.InvariantCultureIgnoreCase) Or
-            KeyPath.StartsWith("system\currentcontrolset\policies\", StringComparison.InvariantCultureIgnoreCase)
+        Return PolicyKeys.Any(Function(pk) KeyPath.StartsWith(pk & "\", StringComparison.InvariantCultureIgnoreCase))
     End Function
     Public Sub ClearKey(Key As String) Implements IPolicySource.ClearKey
         For Each value In GetValueNames(Key)
@@ -362,4 +363,14 @@ Public Class RegistryPolicyProxy
     Public Sub ForgetKeyClearance(Key As String) Implements IPolicySource.ForgetKeyClearance
         ' Does nothing
     End Sub
+    Public ReadOnly Property EncapsulatedRegistry As RegistryKey
+        Get
+            Return RootKey
+        End Get
+    End Property
+    Public Shared ReadOnly Property PolicyKeys As IEnumerable(Of String)
+        Get
+            Return {"software\policies", "software\microsoft\windows\currentversion\policies", "system\currentcontrolset\policies"}
+        End Get
+    End Property
 End Class

@@ -534,6 +534,63 @@ Public Class Main
             End If
         End If
     End Sub
+    Private Sub ImportPOLToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles ImportPOLToolStripMenuItem.Click
+        Using ofd As New OpenFileDialog
+            ofd.Filter = "POL files|*.pol"
+            If ofd.ShowDialog = DialogResult.OK Then
+                Dim pol As PolFile = Nothing
+                Try
+                    pol = PolFile.Load(ofd.FileName)
+                Catch ex As Exception
+                    MsgBox("The POL file could not be loaded.", MsgBoxStyle.Exclamation)
+                    Exit Sub
+                End Try
+                If OpenSection.ShowDialog = DialogResult.OK Then
+                    Dim section = If(OpenSection.SelectedSection = AdmxPolicySection.User, UserPolicySource, CompPolicySource)
+                    pol.Apply(section)
+                    UpdateCategoryListing()
+                    MsgBox("POL import successful.", MsgBoxStyle.Information)
+                End If
+            End If
+        End Using
+    End Sub
+    Private Sub ExportPOLToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles ExportPOLToolStripMenuItem.Click
+        Using sfd As New SaveFileDialog
+            sfd.Filter = "POL files|*.pol"
+            If sfd.ShowDialog = DialogResult.OK AndAlso OpenSection.ShowDialog = DialogResult.OK Then
+                Dim section = If(OpenSection.SelectedSection = AdmxPolicySection.Machine, CompPolicySource, UserPolicySource)
+                Try
+                    If TypeOf section Is PolFile Then
+                        CType(section, PolFile).Save(sfd.FileName)
+                    ElseIf TypeOf section Is RegistryPolicyProxy Then
+                        Dim regRoot = CType(section, RegistryPolicyProxy).EncapsulatedRegistry
+                        Dim pol As New PolFile
+                        Dim addSubtree As Action(Of String, Microsoft.Win32.RegistryKey)
+                        addSubtree = Sub(PathRoot As String, Key As Microsoft.Win32.RegistryKey)
+                                         For Each valName In Key.GetValueNames
+                                             Dim valData = Key.GetValue(valName, Nothing, Microsoft.Win32.RegistryValueOptions.DoNotExpandEnvironmentNames)
+                                             pol.SetValue(PathRoot, valName, valData, Key.GetValueKind(valName))
+                                         Next
+                                         For Each subkeyName In Key.GetSubKeyNames
+                                             Using subkey = Key.OpenSubKey(subkeyName, False)
+                                                 addSubtree(PathRoot & "\" & subkeyName, subkey)
+                                             End Using
+                                         Next
+                                     End Sub
+                        For Each policyPath In RegistryPolicyProxy.PolicyKeys
+                            Using policyKey = regRoot.OpenSubKey(policyPath, False)
+                                addSubtree(policyPath, policyKey)
+                            End Using
+                        Next
+                        pol.Save(sfd.FileName)
+                    End If
+                    MsgBox("POL exported successfully.", MsgBoxStyle.Information)
+                Catch ex As Exception
+                    MsgBox("The POL file could not be saved.", MsgBoxStyle.Exclamation)
+                End Try
+            End If
+        End Using
+    End Sub
     Private Sub PolicyObjectContext_Opening(sender As Object, e As CancelEventArgs) Handles PolicyObjectContext.Opening
         Dim showingForCategory As Boolean
         If PolicyObjectContext.SourceControl Is CategoriesTree Then
