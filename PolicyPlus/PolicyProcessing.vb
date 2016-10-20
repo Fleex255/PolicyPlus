@@ -263,6 +263,7 @@
                 If rawpol.Elements IsNot Nothing Then
                     For Each elem In rawpol.Elements
                         Dim elemKey = If(elem.RegistryKey = "", rawpol.RegistryKey, elem.RegistryKey)
+                        If Not Options.ContainsKey(elem.ID) Then Continue For
                         Dim optionData = Options(elem.ID)
                         Select Case elem.ElementType
                             Case "decimal"
