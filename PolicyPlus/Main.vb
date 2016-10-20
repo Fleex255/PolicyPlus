@@ -626,6 +626,8 @@ Public Class Main
             End If
         ElseIf e.ClickedItem Is CmePolInspectElements Then
             InspectPolicyElements.PresentDialog(polObject, PolicyIcons, AdmxWorkspace)
+        ElseIf e.ClickedItem Is CmePolSpolFragment Then
+            InspectSpolFragment.PresentDialog(polObject, AdmxWorkspace, CompPolicySource, UserPolicySource)
         End If
     End Sub
     Private Sub CategoriesTree_NodeMouseClick(sender As Object, e As TreeNodeMouseClickEventArgs) Handles CategoriesTree.NodeMouseClick

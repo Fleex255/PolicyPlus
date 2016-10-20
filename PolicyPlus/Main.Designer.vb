@@ -73,6 +73,7 @@ Partial Class Main
         Me.PolicyIsPrefLabel = New System.Windows.Forms.Label()
         Me.ImportPOLToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.ExportPOLToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.CmePolSpolFragment = New System.Windows.Forms.ToolStripMenuItem()
         ChSettingEnabled = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
         ChSettingCommented = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
         ToolStripSeparator1 = New System.Windows.Forms.ToolStripSeparator()
@@ -327,15 +328,15 @@ Partial Class Main
         '
         'PolicyObjectContext
         '
-        Me.PolicyObjectContext.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.CmeCatOpen, Me.CmePolEdit, Me.CmeAllDetails, Me.CmePolInspectElements})
+        Me.PolicyObjectContext.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.CmeCatOpen, Me.CmePolEdit, Me.CmeAllDetails, Me.CmePolInspectElements, Me.CmePolSpolFragment})
         Me.PolicyObjectContext.Name = "PolicyObjectContext"
-        Me.PolicyObjectContext.Size = New System.Drawing.Size(170, 92)
+        Me.PolicyObjectContext.Size = New System.Drawing.Size(213, 136)
         '
         'CmeCatOpen
         '
         Me.CmeCatOpen.Font = New System.Drawing.Font("Segoe UI", 9.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.CmeCatOpen.Name = "CmeCatOpen"
-        Me.CmeCatOpen.Size = New System.Drawing.Size(169, 22)
+        Me.CmeCatOpen.Size = New System.Drawing.Size(212, 22)
         Me.CmeCatOpen.Tag = "C"
         Me.CmeCatOpen.Text = "Open"
         '
@@ -343,20 +344,20 @@ Partial Class Main
         '
         Me.CmePolEdit.Font = New System.Drawing.Font("Segoe UI", 9.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.CmePolEdit.Name = "CmePolEdit"
-        Me.CmePolEdit.Size = New System.Drawing.Size(169, 22)
+        Me.CmePolEdit.Size = New System.Drawing.Size(212, 22)
         Me.CmePolEdit.Tag = "P"
         Me.CmePolEdit.Text = "Edit"
         '
         'CmeAllDetails
         '
         Me.CmeAllDetails.Name = "CmeAllDetails"
-        Me.CmeAllDetails.Size = New System.Drawing.Size(169, 22)
+        Me.CmeAllDetails.Size = New System.Drawing.Size(212, 22)
         Me.CmeAllDetails.Text = "Details"
         '
         'CmePolInspectElements
         '
         Me.CmePolInspectElements.Name = "CmePolInspectElements"
-        Me.CmePolInspectElements.Size = New System.Drawing.Size(169, 22)
+        Me.CmePolInspectElements.Size = New System.Drawing.Size(212, 22)
         Me.CmePolInspectElements.Tag = "P"
         Me.CmePolInspectElements.Text = "Element Inspector"
         '
@@ -519,6 +520,13 @@ Partial Class Main
         Me.ExportPOLToolStripMenuItem.Size = New System.Drawing.Size(197, 22)
         Me.ExportPOLToolStripMenuItem.Text = "Export POL"
         '
+        'CmePolSpolFragment
+        '
+        Me.CmePolSpolFragment.Name = "CmePolSpolFragment"
+        Me.CmePolSpolFragment.Size = New System.Drawing.Size(212, 22)
+        Me.CmePolSpolFragment.Tag = "P"
+        Me.CmePolSpolFragment.Text = "Semantic Policy Fragment"
+        '
         'Main
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
@@ -588,4 +596,5 @@ Partial Class Main
     Friend WithEvents ImportSemanticPolicyToolStripMenuItem As ToolStripMenuItem
     Friend WithEvents ImportPOLToolStripMenuItem As ToolStripMenuItem
     Friend WithEvents ExportPOLToolStripMenuItem As ToolStripMenuItem
+    Friend WithEvents CmePolSpolFragment As ToolStripMenuItem
 End Class

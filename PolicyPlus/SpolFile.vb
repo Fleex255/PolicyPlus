@@ -76,7 +76,9 @@
                     ElseIf valueText.StartsWith("'") And valueText.EndsWith("'") Then
                         newObj = valueText.Substring(1, valueText.Length - 2)
                     ElseIf valueText.StartsWith("""") And valueText.EndsWith("""") Then
-                        newObj = getAllStrings(valueText, """")
+                        newObj = getAllStrings(valueText, """").ToArray
+                    ElseIf valueText = "None" Then
+                        newObj = Array.CreateInstance(GetType(String), 0)
                     ElseIf valueText = "[" Then
                         Dim entries As New List(Of List(Of String))
                         Do Until Trim(peekLine()) = "]"
@@ -99,6 +101,60 @@
             Policies.Add(singlePolicy)
         Loop
     End Sub
+    Public Shared Function GetFragment(State As SpolPolicyState) As String
+        Dim sb As New Text.StringBuilder
+        sb.Append(If(State.Section = AdmxPolicySection.Machine, "C ", "U "))
+        sb.AppendLine(State.UniqueID)
+        Select Case State.BasicState
+            Case PolicyState.NotConfigured
+                sb.AppendLine(" Not Configured")
+            Case PolicyState.Enabled
+                sb.AppendLine(" Enabled")
+            Case PolicyState.Disabled
+                sb.AppendLine(" Disabled")
+        End Select
+        Dim doubleQuoteString = Function(Text As String) """" & Text.Replace("""", """""") & """"
+        If State.BasicState = PolicyState.Enabled And State.ExtraOptions IsNot Nothing Then
+            For Each kv In State.ExtraOptions
+                sb.Append("  ")
+                sb.Append(kv.Key)
+                sb.Append(": ")
+                Select Case kv.Value.GetType
+                    Case GetType(Integer)
+                        sb.Append("#")
+                        sb.AppendLine(CInt(kv.Value))
+                    Case GetType(UInteger)
+                        sb.AppendLine(CUInt(kv.Value))
+                    Case GetType(Boolean)
+                        sb.AppendLine(CBool(kv.Value))
+                    Case GetType(String)
+                        sb.Append("'")
+                        sb.Append(CStr(kv.Value))
+                        sb.AppendLine("'")
+                    Case GetType(String())
+                        Dim stringArray = CType(kv.Value, String())
+                        If stringArray.Length = 0 Then sb.AppendLine("None") Else sb.AppendLine(String.Join(", ", stringArray.Select(doubleQuoteString)))
+                    Case Else ' List(Of String) or Dictionary(Of String, String)
+                        sb.AppendLine("[")
+                        If TypeOf kv.Value Is List(Of String) Then
+                            For Each listEntry In CType(kv.Value, List(Of String))
+                                sb.Append("   ")
+                                sb.AppendLine(doubleQuoteString(listEntry))
+                            Next
+                        Else
+                            For Each listKv In CType(kv.Value, Dictionary(Of String, String))
+                                sb.Append("   ")
+                                sb.Append(doubleQuoteString(listKv.Key))
+                                sb.Append(": ")
+                                sb.AppendLine(doubleQuoteString(listKv.Value))
+                            Next
+                        End If
+                        sb.AppendLine("  ]")
+                End Select
+            Next
+        End If
+        Return sb.ToString
+    End Function
     Public Function ApplyAll(AdmxWorkspace As AdmxBundle, UserSource As IPolicySource, CompSource As IPolicySource) As Integer
         Dim failures As Integer = 0
         For Each policy In Policies
