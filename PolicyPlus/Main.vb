@@ -591,6 +591,15 @@ Public Class Main
             End If
         End Using
     End Sub
+    Private Sub AcquireADMXFilesToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles AcquireADMXFilesToolStripMenuItem.Click
+        If DownloadAdmx.ShowDialog = DialogResult.OK Then
+            If DownloadAdmx.NewPolicySourceFolder <> "" Then
+                ClearAdmxWorkspace()
+                AdmxWorkspace.LoadFolder(DownloadAdmx.NewPolicySourceFolder, Globalization.CultureInfo.CurrentCulture.Name)
+                PopulateAdmxUi()
+            End If
+        End If
+    End Sub
     Private Sub PolicyObjectContext_Opening(sender As Object, e As CancelEventArgs) Handles PolicyObjectContext.Opening
         Dim showingForCategory As Boolean
         If PolicyObjectContext.SourceControl Is CategoriesTree Then

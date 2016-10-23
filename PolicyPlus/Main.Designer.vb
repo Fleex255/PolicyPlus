@@ -29,8 +29,8 @@ Partial Class Main
         Dim ToolStripSeparator2 As System.Windows.Forms.ToolStripSeparator
         Dim ToolStripSeparator3 As System.Windows.Forms.ToolStripSeparator
         Dim ToolStripSeparator4 As System.Windows.Forms.ToolStripSeparator
-        Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(Main))
         Dim ToolStripSeparator5 As System.Windows.Forms.ToolStripSeparator
+        Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(Main))
         Me.MainMenu = New System.Windows.Forms.MenuStrip()
         Me.FileToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.OpenADMXFolderToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
@@ -52,6 +52,8 @@ Partial Class Main
         Me.FindNextToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.ShareToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.ImportSemanticPolicyToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.ImportPOLToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.ExportPOLToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.HelpToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.AboutToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.SplitContainer = New System.Windows.Forms.SplitContainer()
@@ -62,6 +64,7 @@ Partial Class Main
         Me.CmePolEdit = New System.Windows.Forms.ToolStripMenuItem()
         Me.CmeAllDetails = New System.Windows.Forms.ToolStripMenuItem()
         Me.CmePolInspectElements = New System.Windows.Forms.ToolStripMenuItem()
+        Me.CmePolSpolFragment = New System.Windows.Forms.ToolStripMenuItem()
         Me.PolicyIcons = New System.Windows.Forms.ImageList(Me.components)
         Me.PoliciesList = New System.Windows.Forms.ListView()
         Me.ChSettingName = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
@@ -71,9 +74,7 @@ Partial Class Main
         Me.PolicySupportedLabel = New System.Windows.Forms.Label()
         Me.PolicyDescLabel = New System.Windows.Forms.Label()
         Me.PolicyIsPrefLabel = New System.Windows.Forms.Label()
-        Me.ImportPOLToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.ExportPOLToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.CmePolSpolFragment = New System.Windows.Forms.ToolStripMenuItem()
+        Me.AcquireADMXFilesToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         ChSettingEnabled = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
         ChSettingCommented = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
         ToolStripSeparator1 = New System.Windows.Forms.ToolStripSeparator()
@@ -122,6 +123,11 @@ Partial Class Main
         '
         ToolStripSeparator4.Name = "ToolStripSeparator4"
         ToolStripSeparator4.Size = New System.Drawing.Size(197, 6)
+        '
+        'ToolStripSeparator5
+        '
+        ToolStripSeparator5.Name = "ToolStripSeparator5"
+        ToolStripSeparator5.Size = New System.Drawing.Size(194, 6)
         '
         'MainMenu
         '
@@ -264,9 +270,21 @@ Partial Class Main
         Me.ImportSemanticPolicyToolStripMenuItem.Size = New System.Drawing.Size(197, 22)
         Me.ImportSemanticPolicyToolStripMenuItem.Text = "Import Semantic Policy"
         '
+        'ImportPOLToolStripMenuItem
+        '
+        Me.ImportPOLToolStripMenuItem.Name = "ImportPOLToolStripMenuItem"
+        Me.ImportPOLToolStripMenuItem.Size = New System.Drawing.Size(197, 22)
+        Me.ImportPOLToolStripMenuItem.Text = "Import POL"
+        '
+        'ExportPOLToolStripMenuItem
+        '
+        Me.ExportPOLToolStripMenuItem.Name = "ExportPOLToolStripMenuItem"
+        Me.ExportPOLToolStripMenuItem.Size = New System.Drawing.Size(197, 22)
+        Me.ExportPOLToolStripMenuItem.Text = "Export POL"
+        '
         'HelpToolStripMenuItem
         '
-        Me.HelpToolStripMenuItem.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.AboutToolStripMenuItem})
+        Me.HelpToolStripMenuItem.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.AboutToolStripMenuItem, Me.AcquireADMXFilesToolStripMenuItem})
         Me.HelpToolStripMenuItem.Name = "HelpToolStripMenuItem"
         Me.HelpToolStripMenuItem.Size = New System.Drawing.Size(44, 20)
         Me.HelpToolStripMenuItem.Text = "Help"
@@ -274,7 +292,7 @@ Partial Class Main
         'AboutToolStripMenuItem
         '
         Me.AboutToolStripMenuItem.Name = "AboutToolStripMenuItem"
-        Me.AboutToolStripMenuItem.Size = New System.Drawing.Size(107, 22)
+        Me.AboutToolStripMenuItem.Size = New System.Drawing.Size(178, 22)
         Me.AboutToolStripMenuItem.Text = "About"
         '
         'SplitContainer
@@ -330,7 +348,7 @@ Partial Class Main
         '
         Me.PolicyObjectContext.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.CmeCatOpen, Me.CmePolEdit, Me.CmeAllDetails, Me.CmePolInspectElements, Me.CmePolSpolFragment})
         Me.PolicyObjectContext.Name = "PolicyObjectContext"
-        Me.PolicyObjectContext.Size = New System.Drawing.Size(213, 136)
+        Me.PolicyObjectContext.Size = New System.Drawing.Size(213, 114)
         '
         'CmeCatOpen
         '
@@ -360,6 +378,13 @@ Partial Class Main
         Me.CmePolInspectElements.Size = New System.Drawing.Size(212, 22)
         Me.CmePolInspectElements.Tag = "P"
         Me.CmePolInspectElements.Text = "Element Inspector"
+        '
+        'CmePolSpolFragment
+        '
+        Me.CmePolSpolFragment.Name = "CmePolSpolFragment"
+        Me.CmePolSpolFragment.Size = New System.Drawing.Size(212, 22)
+        Me.CmePolSpolFragment.Tag = "P"
+        Me.CmePolSpolFragment.Text = "Semantic Policy Fragment"
         '
         'PolicyIcons
         '
@@ -503,29 +528,11 @@ Partial Class Main
         Me.PolicyIsPrefLabel.Text = "Because it is not stored in a Policies section of the Registry, this policy is a " &
     "preference and will not be automatically undone if the setting is removed."
         '
-        'ImportPOLToolStripMenuItem
+        'AcquireADMXFilesToolStripMenuItem
         '
-        Me.ImportPOLToolStripMenuItem.Name = "ImportPOLToolStripMenuItem"
-        Me.ImportPOLToolStripMenuItem.Size = New System.Drawing.Size(197, 22)
-        Me.ImportPOLToolStripMenuItem.Text = "Import POL"
-        '
-        'ToolStripSeparator5
-        '
-        ToolStripSeparator5.Name = "ToolStripSeparator5"
-        ToolStripSeparator5.Size = New System.Drawing.Size(194, 6)
-        '
-        'ExportPOLToolStripMenuItem
-        '
-        Me.ExportPOLToolStripMenuItem.Name = "ExportPOLToolStripMenuItem"
-        Me.ExportPOLToolStripMenuItem.Size = New System.Drawing.Size(197, 22)
-        Me.ExportPOLToolStripMenuItem.Text = "Export POL"
-        '
-        'CmePolSpolFragment
-        '
-        Me.CmePolSpolFragment.Name = "CmePolSpolFragment"
-        Me.CmePolSpolFragment.Size = New System.Drawing.Size(212, 22)
-        Me.CmePolSpolFragment.Tag = "P"
-        Me.CmePolSpolFragment.Text = "Semantic Policy Fragment"
+        Me.AcquireADMXFilesToolStripMenuItem.Name = "AcquireADMXFilesToolStripMenuItem"
+        Me.AcquireADMXFilesToolStripMenuItem.Size = New System.Drawing.Size(178, 22)
+        Me.AcquireADMXFilesToolStripMenuItem.Text = "Acquire ADMX Files"
         '
         'Main
         '
@@ -597,4 +604,5 @@ Partial Class Main
     Friend WithEvents ImportPOLToolStripMenuItem As ToolStripMenuItem
     Friend WithEvents ExportPOLToolStripMenuItem As ToolStripMenuItem
     Friend WithEvents CmePolSpolFragment As ToolStripMenuItem
+    Friend WithEvents AcquireADMXFilesToolStripMenuItem As ToolStripMenuItem
 End Class

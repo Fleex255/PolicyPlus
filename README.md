@@ -16,8 +16,7 @@ but they may be reconsidered at a later date.
 
 ## Special considerations for use on Home editions
 Some administrative templates are present by default on these editions, but many are missing. 
-The full package can be [downloaded for free from Microsoft](https://www.microsoft.com/en-us/download/details.aspx?id=48257).
-Use *Open ADMX Folder* to change your policy definition source to the folder where the ADMX files are extracted.
+The newest full package can be downloaded from Microsoft and installed with *Help | Acquire ADMX Files*.
 
 The `RefreshPolicyEx` native function does nothing on editions without full Group Policy infrastructure, so while Policy Plus can edit the local GPO and apply the changes to the Registry, 
 a reboot or logon/logoff cycle is required for most policy changes to take effect.
