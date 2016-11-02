@@ -38,7 +38,9 @@ Public Class DownloadAdmx
                                  IO.Directory.CreateDirectory(Dest)
                                  For Each file In IO.Directory.EnumerateFiles(Source)
                                      Dim plainFilename = IO.Path.GetFileName(file)
-                                     IO.File.Move(file, IO.Path.Combine(Dest, plainFilename))
+                                     Dim newName = IO.Path.Combine(Dest, plainFilename)
+                                     If IO.File.Exists(newName) Then IO.File.Delete(newName)
+                                     IO.File.Move(file, newName)
                                  Next
                              End Sub
         Task.Factory.StartNew(Sub()
@@ -59,6 +61,18 @@ Public Class DownloadAdmx
                                       proc.WaitForExit()
                                       If proc.ExitCode <> 0 Then Throw New Exception ' msiexec failed
                                       IO.File.Delete(downloadPath)
+                                      If IO.Directory.Exists(destination) Then
+                                          failPhase = "take control of the destination"
+                                          setProgress("Securing destination...")
+                                          Privilege.EnablePrivilege("SeTakeOwnershipPrivilege")
+                                          Privilege.EnablePrivilege("SeRestorePrivilege")
+                                          Dim dacl = IO.Directory.GetAccessControl(destination)
+                                          Dim adminSid As New Security.Principal.SecurityIdentifier(Security.Principal.WellKnownSidType.BuiltinAdministratorsSid, Nothing)
+                                          dacl.SetOwner(adminSid)
+                                          Dim allowRule As New Security.AccessControl.FileSystemAccessRule(adminSid, Security.AccessControl.FileSystemRights.FullControl, Security.AccessControl.AccessControlType.Allow)
+                                          dacl.AddAccessRule(allowRule)
+                                          IO.Directory.SetAccessControl(destination, dacl)
+                                      End If
                                       failPhase = "move the ADMX files"
                                       setProgress("Moving files to destination...")
                                       Dim langSubfolder = Globalization.CultureInfo.CurrentCulture.Name

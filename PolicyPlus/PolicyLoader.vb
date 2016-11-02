@@ -58,21 +58,8 @@ Public Class PolicyLoader
                 SourceObject = regPol
             Case PolicyLoaderSource.NtUserDat
                 ' Turn on the backup and restore privileges to allow the use of RegLoadKey
-                Dim restoreLuid, backupLuid As PInvokeLuid
-                Dim restorePriv, backupPriv As PInvokeTokenPrivileges
-                Dim thisProcToken As IntPtr
-                PInvoke.OpenProcessToken(PInvoke.GetCurrentProcess, &H28, thisProcToken) ' 0x28 = TOKEN_ADJUST_PRIVILEGES | TOKEN_QUERY
-                PInvoke.LookupPrivilegeValueW(Nothing, "SeRestorePrivilege", restoreLuid)
-                PInvoke.LookupPrivilegeValueW(Nothing, "SeBackupPrivilege", backupLuid)
-                restorePriv.PrivilegeCount = 1
-                restorePriv.Attributes = 2 ' SE_PRIVILEGE_ENABLED
-                restorePriv.LUID = restoreLuid
-                backupPriv.PrivilegeCount = 1
-                backupPriv.Attributes = 2
-                backupPriv.LUID = backupLuid
-                PInvoke.AdjustTokenPrivileges(thisProcToken, False, restorePriv, Marshal.SizeOf(restorePriv), IntPtr.Zero, 0)
-                PInvoke.AdjustTokenPrivileges(thisProcToken, False, backupPriv, Marshal.SizeOf(backupPriv), IntPtr.Zero, 0)
-                PInvoke.CloseHandle(thisProcToken)
+                Privilege.EnablePrivilege("SeBackupPrivilege")
+                Privilege.EnablePrivilege("SeRestorePrivilege")
                 ' Load the hive
                 Using machHive = RegistryKey.OpenBaseKey(RegistryHive.LocalMachine, RegistryView.Default)
                     Dim subkeyName = "PolicyPlusMount:" & Guid.NewGuid().ToString
