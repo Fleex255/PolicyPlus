@@ -89,6 +89,7 @@
     <Compile Include="AdmxStructures.vb" />
     <Compile Include="CmtxFile.vb" />
     <Compile Include="CompiledStructures.vb" />
+    <Compile Include="ConfigurationStorage.vb" />
     <Compile Include="DetailCategory.Designer.vb">
       <DependentUpon>DetailCategory.vb</DependentUpon>
     </Compile>

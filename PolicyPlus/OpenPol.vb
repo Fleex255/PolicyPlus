@@ -1,5 +1,37 @@
 ﻿Public Class OpenPol
     Public SelectedUser, SelectedComputer As PolicyLoader
+    Public Sub SetLastSources(ComputerType As PolicyLoaderSource, ComputerData As String, UserType As PolicyLoaderSource, UserData As String)
+        Select Case ComputerType
+            Case PolicyLoaderSource.LocalGpo
+                CompLocalOption.Checked = True
+            Case PolicyLoaderSource.LocalRegistry
+                CompRegistryOption.Checked = True
+                CompRegTextbox.Text = ComputerData
+            Case PolicyLoaderSource.PolFile
+                CompFileOption.Checked = True
+                CompPolFilenameTextbox.Text = ComputerData
+            Case PolicyLoaderSource.Null
+                CompNullOption.Checked = True
+        End Select
+        Select Case UserType
+            Case PolicyLoaderSource.LocalGpo
+                UserLocalOption.Checked = True
+            Case PolicyLoaderSource.LocalRegistry
+                UserRegistryOption.Checked = True
+                UserRegTextbox.Text = UserData
+            Case PolicyLoaderSource.PolFile
+                UserFileOption.Checked = True
+                UserPolFilenameTextbox.Text = UserData
+            Case PolicyLoaderSource.SidGpo
+                UserPerUserGpoOption.Checked = True
+                UserGpoSidTextbox.Text = UserData
+            Case PolicyLoaderSource.NtUserDat
+                UserPerUserRegOption.Checked = True
+                UserHivePathTextbox.Text = UserData
+            Case PolicyLoaderSource.Null
+                UserNullOption.Checked = True
+        End Select
+    End Sub
     Sub BrowseForPol(DestTextbox As TextBox)
         Using sfd As New SaveFileDialog
             sfd.OverwritePrompt = False
@@ -13,16 +45,6 @@
         Dim polActive = CompFileOption.Checked
         CompPolFilenameTextbox.Enabled = polActive
         CompFileBrowseButton.Enabled = polActive
-    End Sub
-    Private Sub OpenPol_Shown(sender As Object, e As EventArgs) Handles Me.Shown
-        CompLocalOption.Checked = True
-        UserLocalOption.Checked = True
-        CompRegTextbox.Text = "HKLM"
-        CompPolFilenameTextbox.Text = ""
-        UserRegTextbox.Text = "HKCU"
-        UserPolFilenameTextbox.Text = ""
-        UserGpoSidTextbox.Text = ""
-        UserHivePathTextbox.Text = ""
     End Sub
     Private Sub UserOptionsCheckedChanged(sender As Object, e As EventArgs) Handles UserLocalOption.CheckedChanged, UserRegistryOption.CheckedChanged, UserFileOption.CheckedChanged, UserPerUserGpoOption.CheckedChanged, UserPerUserRegOption.CheckedChanged, UserNullOption.CheckedChanged
         Dim regMount = UserRegistryOption.Checked

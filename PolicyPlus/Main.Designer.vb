@@ -30,6 +30,8 @@ Partial Class Main
         Dim ToolStripSeparator3 As System.Windows.Forms.ToolStripSeparator
         Dim ToolStripSeparator4 As System.Windows.Forms.ToolStripSeparator
         Dim ToolStripSeparator5 As System.Windows.Forms.ToolStripSeparator
+        Dim ToolStripStatusLabel1 As System.Windows.Forms.ToolStripStatusLabel
+        Dim ToolStripStatusLabel2 As System.Windows.Forms.ToolStripStatusLabel
         Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(Main))
         Me.MainMenu = New System.Windows.Forms.MenuStrip()
         Me.FileToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
@@ -56,6 +58,7 @@ Partial Class Main
         Me.ExportPOLToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.HelpToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.AboutToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.AcquireADMXFilesToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.SplitContainer = New System.Windows.Forms.SplitContainer()
         Me.ComboAppliesTo = New System.Windows.Forms.ComboBox()
         Me.CategoriesTree = New System.Windows.Forms.TreeView()
@@ -74,7 +77,9 @@ Partial Class Main
         Me.PolicySupportedLabel = New System.Windows.Forms.Label()
         Me.PolicyDescLabel = New System.Windows.Forms.Label()
         Me.PolicyIsPrefLabel = New System.Windows.Forms.Label()
-        Me.AcquireADMXFilesToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.InfoStrip = New System.Windows.Forms.StatusStrip()
+        Me.ComputerSourceLabel = New System.Windows.Forms.ToolStripStatusLabel()
+        Me.UserSourceLabel = New System.Windows.Forms.ToolStripStatusLabel()
         ChSettingEnabled = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
         ChSettingCommented = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
         ToolStripSeparator1 = New System.Windows.Forms.ToolStripSeparator()
@@ -82,6 +87,8 @@ Partial Class Main
         ToolStripSeparator3 = New System.Windows.Forms.ToolStripSeparator()
         ToolStripSeparator4 = New System.Windows.Forms.ToolStripSeparator()
         ToolStripSeparator5 = New System.Windows.Forms.ToolStripSeparator()
+        ToolStripStatusLabel1 = New System.Windows.Forms.ToolStripStatusLabel()
+        ToolStripStatusLabel2 = New System.Windows.Forms.ToolStripStatusLabel()
         Me.MainMenu.SuspendLayout()
         CType(Me.SplitContainer, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SplitContainer.Panel1.SuspendLayout()
@@ -90,6 +97,7 @@ Partial Class Main
         Me.PolicyObjectContext.SuspendLayout()
         Me.SettingInfoPanel.SuspendLayout()
         Me.PolicyInfoTable.SuspendLayout()
+        Me.InfoStrip.SuspendLayout()
         Me.SuspendLayout()
         '
         'ChSettingEnabled
@@ -128,6 +136,18 @@ Partial Class Main
         '
         ToolStripSeparator5.Name = "ToolStripSeparator5"
         ToolStripSeparator5.Size = New System.Drawing.Size(194, 6)
+        '
+        'ToolStripStatusLabel1
+        '
+        ToolStripStatusLabel1.Name = "ToolStripStatusLabel1"
+        ToolStripStatusLabel1.Size = New System.Drawing.Size(102, 17)
+        ToolStripStatusLabel1.Text = "Computer source:"
+        '
+        'ToolStripStatusLabel2
+        '
+        ToolStripStatusLabel2.Name = "ToolStripStatusLabel2"
+        ToolStripStatusLabel2.Size = New System.Drawing.Size(71, 17)
+        ToolStripStatusLabel2.Text = "User source:"
         '
         'MainMenu
         '
@@ -294,6 +314,12 @@ Partial Class Main
         Me.AboutToolStripMenuItem.Name = "AboutToolStripMenuItem"
         Me.AboutToolStripMenuItem.Size = New System.Drawing.Size(178, 22)
         Me.AboutToolStripMenuItem.Text = "About"
+        '
+        'AcquireADMXFilesToolStripMenuItem
+        '
+        Me.AcquireADMXFilesToolStripMenuItem.Name = "AcquireADMXFilesToolStripMenuItem"
+        Me.AcquireADMXFilesToolStripMenuItem.Size = New System.Drawing.Size(178, 22)
+        Me.AcquireADMXFilesToolStripMenuItem.Text = "Acquire ADMX Files"
         '
         'SplitContainer
         '
@@ -528,20 +554,37 @@ Partial Class Main
         Me.PolicyIsPrefLabel.Text = "Because it is not stored in a Policies section of the Registry, this policy is a " &
     "preference and will not be automatically undone if the setting is removed."
         '
-        'AcquireADMXFilesToolStripMenuItem
+        'InfoStrip
         '
-        Me.AcquireADMXFilesToolStripMenuItem.Name = "AcquireADMXFilesToolStripMenuItem"
-        Me.AcquireADMXFilesToolStripMenuItem.Size = New System.Drawing.Size(178, 22)
-        Me.AcquireADMXFilesToolStripMenuItem.Text = "Acquire ADMX Files"
+        Me.InfoStrip.Items.AddRange(New System.Windows.Forms.ToolStripItem() {ToolStripStatusLabel1, Me.ComputerSourceLabel, ToolStripStatusLabel2, Me.UserSourceLabel})
+        Me.InfoStrip.Location = New System.Drawing.Point(0, 352)
+        Me.InfoStrip.Name = "InfoStrip"
+        Me.InfoStrip.Size = New System.Drawing.Size(706, 22)
+        Me.InfoStrip.TabIndex = 2
+        Me.InfoStrip.Text = "StatusStrip1"
+        '
+        'ComputerSourceLabel
+        '
+        Me.ComputerSourceLabel.Name = "ComputerSourceLabel"
+        Me.ComputerSourceLabel.Size = New System.Drawing.Size(85, 17)
+        Me.ComputerSourceLabel.Text = "Computer info"
+        '
+        'UserSourceLabel
+        '
+        Me.UserSourceLabel.Name = "UserSourceLabel"
+        Me.UserSourceLabel.Size = New System.Drawing.Size(54, 17)
+        Me.UserSourceLabel.Text = "User info"
         '
         'Main
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.ClientSize = New System.Drawing.Size(706, 374)
+        Me.Controls.Add(Me.InfoStrip)
         Me.Controls.Add(Me.SplitContainer)
         Me.Controls.Add(Me.MainMenu)
         Me.MainMenuStrip = Me.MainMenu
+        Me.MinimumSize = New System.Drawing.Size(600, 400)
         Me.Name = "Main"
         Me.ShowIcon = False
         Me.Text = "Policy Plus"
@@ -556,6 +599,8 @@ Partial Class Main
         Me.SettingInfoPanel.PerformLayout()
         Me.PolicyInfoTable.ResumeLayout(False)
         Me.PolicyInfoTable.PerformLayout()
+        Me.InfoStrip.ResumeLayout(False)
+        Me.InfoStrip.PerformLayout()
         Me.ResumeLayout(False)
         Me.PerformLayout()
 
@@ -605,4 +650,7 @@ Partial Class Main
     Friend WithEvents ExportPOLToolStripMenuItem As ToolStripMenuItem
     Friend WithEvents CmePolSpolFragment As ToolStripMenuItem
     Friend WithEvents AcquireADMXFilesToolStripMenuItem As ToolStripMenuItem
+    Friend WithEvents InfoStrip As StatusStrip
+    Friend WithEvents ComputerSourceLabel As ToolStripStatusLabel
+    Friend WithEvents UserSourceLabel As ToolStripStatusLabel
 End Class

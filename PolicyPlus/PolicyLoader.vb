@@ -1,7 +1,7 @@
 ﻿Imports Microsoft.Win32
-Imports System.Runtime.InteropServices
 Public Class PolicyLoader
     Dim SourceType As PolicyLoaderSource
+    Dim OriginalArgument As String
     Dim User As Boolean ' Whether this is for a user policy source
     Dim SourceObject As IPolicySource
     Dim MainSourcePath As String ' Path to the POL file or NTUSER.DAT
@@ -11,6 +11,7 @@ Public Class PolicyLoader
     Public Sub New(Source As PolicyLoaderSource, Argument As String, IsUser As Boolean)
         SourceType = Source
         User = IsUser
+        OriginalArgument = Argument
         Select Case Source
             Case PolicyLoaderSource.LocalGpo
                 MainSourcePath = Environment.ExpandEnvironmentVariables("%SYSTEMROOT%\System32\GroupPolicy\" & If(IsUser, "User", "Machine") & "\Registry.pol")
@@ -185,6 +186,34 @@ Public Class PolicyLoader
             End Using
         End If
     End Sub
+    Public ReadOnly Property Source As PolicyLoaderSource
+        Get
+            Return SourceType
+        End Get
+    End Property
+    Public ReadOnly Property LoaderData As String
+        Get
+            Return OriginalArgument
+        End Get
+    End Property
+    Public Function GetDisplayInfo() As String
+        Dim name As String = ""
+        Select Case SourceType
+            Case PolicyLoaderSource.LocalGpo
+                name = "Local GPO"
+            Case PolicyLoaderSource.LocalRegistry
+                name = "Registry"
+            Case PolicyLoaderSource.PolFile
+                name = "File"
+            Case PolicyLoaderSource.SidGpo
+                name = "User GPO"
+            Case PolicyLoaderSource.NtUserDat
+                name = "User hive"
+            Case PolicyLoaderSource.Null
+                name = "Scratch space"
+        End Select
+        If OriginalArgument <> "" Then Return name & " (" & OriginalArgument & ")" Else Return name
+    End Function
 End Class
 Public Enum PolicyLoaderSource
     LocalGpo

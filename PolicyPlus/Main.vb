@@ -1,5 +1,7 @@
 ﻿Imports System.ComponentModel
+Imports Microsoft.Win32
 Public Class Main
+    Dim Configuration As ConfigurationStorage
     Dim AdmxWorkspace As New AdmxBundle
     Dim UserPolicySource, CompPolicySource As IPolicySource
     Dim UserPolicyLoader, CompPolicyLoader As PolicyLoader
@@ -13,13 +15,51 @@ Public Class Main
     Dim ViewPolicyTypes As AdmxPolicySection = AdmxPolicySection.Both
     Dim ViewFilteredOnly As Boolean = False
     Private Sub Main_Load(sender As Object, e As EventArgs) Handles MyBase.Load
+        ' Create the configuration manager (for the Registry)
+        Configuration = New ConfigurationStorage(RegistryHive.CurrentUser, "Software\Policy Plus")
+        ' Open the last policy definitions folder
+        Dim defaultAdmxSource = Environment.ExpandEnvironmentVariables("%windir%\PolicyDefinitions")
+        Dim admxSource As String = Configuration.GetValue("AdmxSource", defaultAdmxSource)
         Try
-            AdmxWorkspace.LoadFolder(Environment.ExpandEnvironmentVariables("%windir%\PolicyDefinitions"), Globalization.CultureInfo.CurrentCulture.Name)
+            AdmxWorkspace.LoadFolder(admxSource, Globalization.CultureInfo.CurrentCulture.Name)
         Catch ex As Exception
-            MsgBox("Policy definitions could not be loaded from the default folder. " & ex.Message, MsgBoxStyle.Exclamation)
+            Dim loadFailReason As String = ""
+            If admxSource <> defaultAdmxSource Then
+                If MsgBox("Policy definitions could not be loaded from """ & admxSource & """: " & ex.Message & vbCrLf & vbCrLf &
+                          "Load from the default location?", MsgBoxStyle.YesNo Or MsgBoxStyle.Question) = MsgBoxResult.Yes Then
+                    Try
+                        Configuration.SetValue("AdmxSource", defaultAdmxSource)
+                        AdmxWorkspace = New AdmxBundle
+                        AdmxWorkspace.LoadFolder(defaultAdmxSource, Globalization.CultureInfo.CurrentCulture.Name)
+                    Catch ex2 As Exception
+                        loadFailReason = ex2.Message
+                    End Try
+                End If
+            Else
+                loadFailReason = ex.Message
+            End If
+            If loadFailReason <> "" Then MsgBox("Policy definitions could not be loaded: " & loadFailReason, MsgBoxStyle.Exclamation)
         End Try
-        OpenPolicyLoaders(New PolicyLoader(PolicyLoaderSource.LocalGpo, "", True), New PolicyLoader(PolicyLoaderSource.LocalGpo, "", False), True)
+        ' Open the last policy loaders
+        Dim compLoaderType As PolicyLoaderSource = Configuration.GetValue("CompSourceType", 0)
+        Dim compLoaderData = Configuration.GetValue("CompSourceData", "")
+        Dim userLoaderType As PolicyLoaderSource = Configuration.GetValue("UserSourceType", 0)
+        Dim userLoaderData = Configuration.GetValue("UserSourceData", "")
+        Try
+            OpenPolicyLoaders(New PolicyLoader(userLoaderType, userLoaderData, True), New PolicyLoader(compLoaderType, compLoaderData, False), True)
+        Catch ex As Exception
+            MsgBox("The previous policy sources are not accessible. The defaults will be loaded.", MsgBoxStyle.Exclamation)
+            Configuration.SetValue("CompSourceType", CInt(PolicyLoaderSource.LocalGpo))
+            Configuration.SetValue("UserSourceType", CInt(PolicyLoaderSource.LocalGpo))
+            OpenPolicyLoaders(New PolicyLoader(PolicyLoaderSource.LocalGpo, "", True), New PolicyLoader(PolicyLoaderSource.LocalGpo, "", False), True)
+        End Try
+        OpenPol.SetLastSources(compLoaderType, compLoaderData, userLoaderType, userLoaderData)
+        ' Set up the UI
         ComboAppliesTo.Text = ComboAppliesTo.Items(0)
+        CategoriesTree.Height -= InfoStrip.ClientSize.Height
+        SettingInfoPanel.Height -= InfoStrip.ClientSize.Height
+        PoliciesList.Height -= InfoStrip.ClientSize.Height
+        InfoStrip.Items.Insert(2, New ToolStripSeparator)
         PopulateAdmxUi()
     End Sub
     Sub PopulateAdmxUi()
@@ -255,6 +295,8 @@ Public Class Main
         Dim compStatus = policyStatus(Computer)
         UserComments = loadComments(User)
         CompComments = loadComments(Computer)
+        UserSourceLabel.Text = UserPolicyLoader.GetDisplayInfo
+        ComputerSourceLabel.Text = CompPolicyLoader.GetDisplayInfo
         If allOk Then
             If Not Quiet Then
                 MsgBox("Both the user and computer policy sources are loaded and writable.", MsgBoxStyle.Information)
@@ -361,6 +403,8 @@ Public Class Main
             Try
                 If OpenAdmxFolder.ClearWorkspace Then ClearAdmxWorkspace()
                 AdmxWorkspace.LoadFolder(OpenAdmxFolder.SelectedFolder, Globalization.CultureInfo.CurrentCulture.Name)
+                ' Only update the last source when successfully opening a complete source
+                If OpenAdmxFolder.ClearWorkspace Then Configuration.SetValue("AdmxSource", OpenAdmxFolder.SelectedFolder)
             Catch ex As Exception
                 MsgBox("The folder could not be fully added to the workspace. " & ex.Message, MsgBoxStyle.Exclamation)
             End Try
@@ -460,6 +504,10 @@ Public Class Main
             Dim userStatus = "not writable"
             If CompPolicyLoader.GetWritability = PolicySourceWritability.Writable Then compStatus = CompPolicyLoader.Save
             If UserPolicyLoader.GetWritability = PolicySourceWritability.Writable Then userStatus = UserPolicyLoader.Save
+            Configuration.SetValue("CompSourceType", CInt(CompPolicyLoader.Source))
+            Configuration.SetValue("UserSourceType", CInt(UserPolicyLoader.Source))
+            Configuration.SetValue("CompSourceData", If(CompPolicyLoader.LoaderData, ""))
+            Configuration.SetValue("UserSourceData", If(UserPolicyLoader.LoaderData, ""))
             MsgBox("Success." & vbCrLf & vbCrLf & "User policies: " & userStatus & "." & vbCrLf & vbCrLf & "Computer policies: " & compStatus & ".", MsgBoxStyle.Information)
         Catch ex As Exception
             MsgBox("Saving failed!" & vbCrLf & vbCrLf & ex.Message, MsgBoxStyle.Exclamation)
@@ -565,10 +613,10 @@ Public Class Main
                     ElseIf TypeOf section Is RegistryPolicyProxy Then
                         Dim regRoot = CType(section, RegistryPolicyProxy).EncapsulatedRegistry
                         Dim pol As New PolFile
-                        Dim addSubtree As Action(Of String, Microsoft.Win32.RegistryKey)
-                        addSubtree = Sub(PathRoot As String, Key As Microsoft.Win32.RegistryKey)
+                        Dim addSubtree As Action(Of String, RegistryKey)
+                        addSubtree = Sub(PathRoot As String, Key As RegistryKey)
                                          For Each valName In Key.GetValueNames
-                                             Dim valData = Key.GetValue(valName, Nothing, Microsoft.Win32.RegistryValueOptions.DoNotExpandEnvironmentNames)
+                                             Dim valData = Key.GetValue(valName, Nothing, RegistryValueOptions.DoNotExpandEnvironmentNames)
                                              pol.SetValue(PathRoot, valName, valData, Key.GetValueKind(valName))
                                          Next
                                          For Each subkeyName In Key.GetSubKeyNames
@@ -596,6 +644,7 @@ Public Class Main
             If DownloadAdmx.NewPolicySourceFolder <> "" Then
                 ClearAdmxWorkspace()
                 AdmxWorkspace.LoadFolder(DownloadAdmx.NewPolicySourceFolder, Globalization.CultureInfo.CurrentCulture.Name)
+                Configuration.SetValue("AdmxSource", DownloadAdmx.NewPolicySourceFolder)
                 PopulateAdmxUi()
             End If
         End If
