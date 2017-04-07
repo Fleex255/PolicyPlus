@@ -84,6 +84,7 @@ Public Class Main
         UpdatePolicyInfo()
     End Sub
     Sub UpdateCategoryListing()
+        ' Update the right pane to include the current category's children
         PoliciesList.Items.Clear()
         If CurrentCategory IsNot Nothing Then
             If CurrentCategory.Parent IsNot Nothing Then ' Add the parent
@@ -110,6 +111,7 @@ Public Class Main
         End If
     End Sub
     Sub UpdatePolicyInfo()
+        ' Update the middle pane with the selected object's information
         Dim hasCurrentSetting = (CurrentSetting IsNot Nothing) Or (HighlightCategory IsNot Nothing) Or (CurrentCategory IsNot Nothing)
         PolicyTitleLabel.Visible = hasCurrentSetting
         PolicySupportedLabel.Visible = hasCurrentSetting
@@ -153,13 +155,15 @@ Public Class Main
         End If
     End Function
     Function ShouldShowCategory(Category As PolicyPlusCategory) As Boolean
+        ' Should this category be shown considering the current filter?
         If ViewEmptyCategories Then
             Return True
-        Else
+        Else ' Only if it has visible children
             Return Category.Policies.Any(AddressOf ShouldShowPolicy) OrElse Category.Children.Any(AddressOf ShouldShowCategory)
         End If
     End Function
     Function ShouldShowPolicy(Policy As PolicyPlusPolicy) As Boolean
+        ' Should this policy be shown considering the current filter and active sections?
         If Not PolicyVisibleInSection(Policy, ViewPolicyTypes) Then Return False
         If ViewFilteredOnly Then
             Dim visibleAfterFilter As Boolean = False
@@ -173,6 +177,7 @@ Public Class Main
         Return True
     End Function
     Sub MoveToVisibleCategoryAndReload()
+        ' Move up in the categories tree until a visible one is found
         Dim newFocusCategory = CurrentCategory
         Dim newFocusPolicy = CurrentSetting
         Do Until newFocusCategory Is Nothing OrElse ShouldShowCategory(newFocusCategory)
@@ -187,6 +192,7 @@ Public Class Main
         UpdatePolicyInfo()
     End Sub
     Function GetPolicyState(Policy As PolicyPlusPolicy) As String
+        ' Get a human-readable string describing the status of a policy, considering all active sections
         If ViewPolicyTypes = AdmxPolicySection.Both Then
             Dim userState = GetPolicyState(Policy, AdmxPolicySection.User)
             Dim machState = GetPolicyState(Policy, AdmxPolicySection.Machine)
@@ -209,6 +215,7 @@ Public Class Main
         End If
     End Function
     Function GetPolicyState(Policy As PolicyPlusPolicy, Section As AdmxPolicySection) As String
+        ' Get the human-readable status of a policy considering only one section
         Select Case PolicyProcessing.GetPolicyState(If(Section = AdmxPolicySection.Machine, CompPolicySource, UserPolicySource), Policy)
             Case PolicyState.Disabled
                 Return "Disabled"
@@ -221,6 +228,7 @@ Public Class Main
         End Select
     End Function
     Function GetPolicyCommentText(Policy As PolicyPlusPolicy) As String
+        ' Get the comment text to show in the Comment column, considering all active sections
         If ViewPolicyTypes = AdmxPolicySection.Both Then
             Dim userComment = GetPolicyComment(Policy, AdmxPolicySection.User)
             Dim compComment = GetPolicyComment(Policy, AdmxPolicySection.Machine)
@@ -238,6 +246,7 @@ Public Class Main
         End If
     End Function
     Function GetPolicyComment(Policy As PolicyPlusPolicy, Section As AdmxPolicySection) As String
+        ' Get a policy's comment in one section
         Dim commentSource As Dictionary(Of String, String) = If(Section = AdmxPolicySection.Machine, CompComments, UserComments)
         If commentSource Is Nothing Then
             Return ""
@@ -249,6 +258,7 @@ Public Class Main
         Return Policy.RawPolicy.RegistryKey <> "" And Not RegistryPolicyProxy.IsPolicyKey(Policy.RawPolicy.RegistryKey)
     End Function
     Sub ShowSettingEditor(Policy As PolicyPlusPolicy, Section As AdmxPolicySection)
+        ' Show the Edit Policy Setting dialog for a policy and reload if changes were made
         If EditSetting.PresentDialog(Policy, Section, AdmxWorkspace, CompPolicySource, UserPolicySource, CompPolicyLoader, UserPolicyLoader, CompComments, UserComments) = DialogResult.OK Then UpdateCategoryListing()
     End Sub
     Sub ClearSelections()
@@ -256,6 +266,7 @@ Public Class Main
         HighlightCategory = Nothing
     End Sub
     Sub OpenPolicyLoaders(User As PolicyLoader, Computer As PolicyLoader, Quiet As Boolean)
+        ' Create policy sources from the given loaders
         If CompPolicyLoader IsNot Nothing Or UserPolicyLoader IsNot Nothing Then ClosePolicySources()
         UserPolicyLoader = User
         UserPolicySource = User.OpenSource
@@ -308,6 +319,7 @@ Public Class Main
         End If
     End Sub
     Sub ClosePolicySources()
+        ' Clean up the policy sources
         Dim allOk As Boolean = True
         If UserPolicyLoader IsNot Nothing Then
             If Not UserPolicyLoader.Close() Then allOk = False
@@ -320,6 +332,7 @@ Public Class Main
         End If
     End Sub
     Sub ShowSearchDialog(Searcher As Func(Of PolicyPlusPolicy, Boolean))
+        ' Show the search dialog and make it start a search if appropriate
         Dim result As DialogResult
         If Searcher Is Nothing Then
             result = FindResults.PresentDialog()
@@ -353,6 +366,7 @@ Public Class Main
         End If
     End Sub
     Function IsPolicyVisibleAfterFilter(Policy As PolicyPlusPolicy, IsUser As Boolean) As Boolean
+        ' Calculate whether a policy is visible with the current filter
         If CurrentFilter.ManagedPolicy.HasValue Then
             If IsPreference(Policy) = CurrentFilter.ManagedPolicy.Value Then Return False
         End If
@@ -369,18 +383,22 @@ Public Class Main
         Return True
     End Function
     Function PolicyVisibleInSection(Policy As PolicyPlusPolicy, Section As AdmxPolicySection) As Boolean
+        ' Does this policy apply to the given section?
         Return (Policy.RawPolicy.Section And Section) > 0
     End Function
     Private Sub CategoriesTree_AfterSelect(sender As Object, e As TreeViewEventArgs) Handles CategoriesTree.AfterSelect
+        ' When the user selects a new category in the left pane
         CurrentCategory = e.Node.Tag
         UpdateCategoryListing()
         ClearSelections()
         UpdatePolicyInfo()
     End Sub
     Private Sub ResizePolicyNameColumn(sender As Object, e As EventArgs) Handles Me.SizeChanged, PoliciesList.SizeChanged
+        ' Fit the policy name column to the window size
         If IsHandleCreated Then BeginInvoke(Sub() PoliciesList.Columns(0).Width = PoliciesList.ClientSize.Width - (PoliciesList.Columns(1).Width + PoliciesList.Columns(2).Width))
     End Sub
     Private Sub PoliciesList_SelectedIndexChanged(sender As Object, e As EventArgs) Handles PoliciesList.SelectedIndexChanged
+        ' When the user highlights an item in the right pane
         If PoliciesList.SelectedItems.Count > 0 Then
             Dim selObject = PoliciesList.SelectedItems(0).Tag
             If TypeOf selObject Is PolicyPlusPolicy Then
@@ -399,6 +417,7 @@ Public Class Main
         Close()
     End Sub
     Private Sub OpenADMXFolderToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles OpenADMXFolderToolStripMenuItem.Click
+        ' Show the Open ADMX Folder dialog and load the policy definitions
         If OpenAdmxFolder.ShowDialog = DialogResult.OK Then
             Try
                 If OpenAdmxFolder.ClearWorkspace Then ClearAdmxWorkspace()
@@ -412,6 +431,7 @@ Public Class Main
         End If
     End Sub
     Private Sub OpenADMXFileToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles OpenADMXFileToolStripMenuItem.Click
+        ' Open a single ADMX file
         Using ofd As New OpenFileDialog
             ofd.Filter = "Policy definitions files|*.admx"
             ofd.Title = "Open ADMX file"
@@ -421,15 +441,18 @@ Public Class Main
         End Using
     End Sub
     Private Sub CloseADMXWorkspaceToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles CloseADMXWorkspaceToolStripMenuItem.Click
+        ' Close all policy definitions and clear the workspace
         ClearAdmxWorkspace()
         PopulateAdmxUi()
     End Sub
     Private Sub EmptyCategoriesToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles EmptyCategoriesToolStripMenuItem.Click
+        ' Toggle whether empty categories are visible
         ViewEmptyCategories = Not ViewEmptyCategories
         EmptyCategoriesToolStripMenuItem.Checked = ViewEmptyCategories
         MoveToVisibleCategoryAndReload()
     End Sub
     Private Sub ComboAppliesTo_SelectedIndexChanged(sender As Object, e As EventArgs) Handles ComboAppliesTo.SelectedIndexChanged
+        ' When the user chooses a different section to work with
         Select Case ComboAppliesTo.Text
             Case "User"
                 ViewPolicyTypes = AdmxPolicySection.User
@@ -441,6 +464,7 @@ Public Class Main
         MoveToVisibleCategoryAndReload()
     End Sub
     Private Sub PoliciesList_DoubleClick(sender As Object, e As EventArgs) Handles PoliciesList.DoubleClick
+        ' When the user opens a policy object in the right pane
         If PoliciesList.SelectedItems.Count = 0 Then Exit Sub
         Dim policyItem = PoliciesList.SelectedItems(0).Tag
         If TypeOf policyItem Is PolicyPlusCategory Then
@@ -451,6 +475,7 @@ Public Class Main
         End If
     End Sub
     Private Sub DeduplicatePoliciesToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles DeduplicatePoliciesToolStripMenuItem.Click
+        ' Make otherwise-identical pairs of user and computer policies into single dual-section policies
         ClearSelections()
         Dim deduped = PolicyProcessing.DeduplicatePolicies(AdmxWorkspace)
         MsgBox("Deduplicated " & deduped & " policies.", MsgBoxStyle.Information)
@@ -458,6 +483,7 @@ Public Class Main
         UpdatePolicyInfo()
     End Sub
     Private Sub FindByIDToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles ByIDToolStripMenuItem.Click
+        ' Show the Find By ID window and try to move to the selected object
         FindById.AdmxWorkspace = AdmxWorkspace
         If FindById.ShowDialog() = DialogResult.OK Then
             Dim selCat = FindById.SelectedCategory
@@ -484,12 +510,14 @@ Public Class Main
         End If
     End Sub
     Private Sub OpenPolicyResourcesToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles OpenPolicyResourcesToolStripMenuItem.Click
+        ' Show the Open Policy Resources dialog and open its loaders
         If OpenPol.ShowDialog = DialogResult.OK Then
             OpenPolicyLoaders(OpenPol.SelectedUser, OpenPol.SelectedComputer, False)
             UpdateCategoryListing()
         End If
     End Sub
     Private Sub SavePoliciesToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles SavePoliciesToolStripMenuItem.Click
+        ' Save policy state and comments to disk
         Dim saveComments = Sub(Comments As Dictionary(Of String, String), Loader As PolicyLoader)
                                Try
                                    If Comments IsNot Nothing Then CmtxFile.FromCommentTable(Comments).Save(Loader.GetCmtxPath)
@@ -517,14 +545,17 @@ Public Class Main
         MsgBox("Policy Plus by Ben Nordick. Available on GitHub: Fleex255/PolicyPlus. Still in early development (no version number).", MsgBoxStyle.Information)
     End Sub
     Private Sub ByTextToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles ByTextToolStripMenuItem.Click
+        ' Show the Find By Text window and start the search
         If FindByText.PresentDialog(UserComments, CompComments) = DialogResult.OK Then
             ShowSearchDialog(FindByText.Searcher)
         End If
     End Sub
     Private Sub SearchResultsToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles SearchResultsToolStripMenuItem.Click
+        ' Show the search results window but don't start a search
         ShowSearchDialog(Nothing)
     End Sub
     Private Sub FindNextToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles FindNextToolStripMenuItem.Click
+        ' Move to the next policy in the search results
         Do
             Dim nextPol = FindResults.NextPolicy
             If nextPol Is Nothing Then
@@ -537,9 +568,11 @@ Public Class Main
         Loop
     End Sub
     Private Sub ByRegistryToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles ByRegistryToolStripMenuItem.Click
+        ' Show the Find By Registry window and start the search
         If FindByRegistry.ShowDialog = DialogResult.OK Then ShowSearchDialog(FindByRegistry.Searcher)
     End Sub
     Private Sub SettingInfoPanel_ClientSizeChanged(sender As Object, e As EventArgs) Handles SettingInfoPanel.ClientSizeChanged, SettingInfoPanel.SizeChanged
+        ' Finagle the middle pane's UI elements
         SettingInfoPanel.AutoScrollMinSize = SettingInfoPanel.Size
         PolicyTitleLabel.MaximumSize = New Size(PolicyInfoTable.Width, 0)
         PolicySupportedLabel.MaximumSize = New Size(PolicyInfoTable.Width, 0)
@@ -552,12 +585,14 @@ Public Class Main
         PInvoke.ShowScrollBar(SettingInfoPanel.Handle, 0, False) ' 0 means horizontal
     End Sub
     Private Sub Main_Closed(sender As Object, e As EventArgs) Handles Me.Closed
-        ClosePolicySources()
+        ClosePolicySources() ' Make sure everything is cleaned up before quitting
     End Sub
     Private Sub PoliciesList_KeyDown(sender As Object, e As KeyEventArgs) Handles PoliciesList.KeyDown
+        ' Activate a right pane item if the user presses Enter on it
         If e.KeyCode = Keys.Enter And PoliciesList.SelectedItems.Count > 0 Then PoliciesList_DoubleClick(sender, e)
     End Sub
     Private Sub FilterOptionsToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles FilterOptionsToolStripMenuItem.Click
+        ' Show the Filter Options dialog and refresh if the filter changes
         If FilterOptions.PresentDialog(CurrentFilter, AdmxWorkspace) = DialogResult.OK Then
             CurrentFilter = FilterOptions.CurrentFilter
             ViewFilteredOnly = True
@@ -566,11 +601,13 @@ Public Class Main
         End If
     End Sub
     Private Sub OnlyFilteredObjectsToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles OnlyFilteredObjectsToolStripMenuItem.Click
+        ' Toggle whether the filter is used
         ViewFilteredOnly = Not ViewFilteredOnly
         OnlyFilteredObjectsToolStripMenuItem.Checked = ViewFilteredOnly
         MoveToVisibleCategoryAndReload()
     End Sub
     Private Sub ImportSemanticPolicyToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles ImportSemanticPolicyToolStripMenuItem.Click
+        ' Open the SPOL import dialog and apply the data
         If ImportSpol.ShowDialog() = DialogResult.OK Then
             Dim spol = ImportSpol.Spol
             Dim fails = spol.ApplyAll(AdmxWorkspace, UserPolicySource, CompPolicySource)
@@ -583,6 +620,7 @@ Public Class Main
         End If
     End Sub
     Private Sub ImportPOLToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles ImportPOLToolStripMenuItem.Click
+        ' Open a POL file and write it to a policy source
         Using ofd As New OpenFileDialog
             ofd.Filter = "POL files|*.pol"
             If ofd.ShowDialog = DialogResult.OK Then
@@ -603,14 +641,17 @@ Public Class Main
         End Using
     End Sub
     Private Sub ExportPOLToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles ExportPOLToolStripMenuItem.Click
+        ' Create a POL file from a current policy source
         Using sfd As New SaveFileDialog
             sfd.Filter = "POL files|*.pol"
             If sfd.ShowDialog = DialogResult.OK AndAlso OpenSection.ShowDialog = DialogResult.OK Then
                 Dim section = If(OpenSection.SelectedSection = AdmxPolicySection.Machine, CompPolicySource, UserPolicySource)
                 Try
                     If TypeOf section Is PolFile Then
+                        ' If it's already a POL, just save it
                         CType(section, PolFile).Save(sfd.FileName)
                     ElseIf TypeOf section Is RegistryPolicyProxy Then
+                        ' Recurse through the Registry branch and create a POL
                         Dim regRoot = CType(section, RegistryPolicyProxy).EncapsulatedRegistry
                         Dim pol As New PolFile
                         Dim addSubtree As Action(Of String, RegistryKey)
@@ -640,6 +681,7 @@ Public Class Main
         End Using
     End Sub
     Private Sub AcquireADMXFilesToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles AcquireADMXFilesToolStripMenuItem.Click
+        ' Show the Acquire ADMX Files dialog and load the new ADMX files
         If DownloadAdmx.ShowDialog = DialogResult.OK Then
             If DownloadAdmx.NewPolicySourceFolder <> "" Then
                 ClearAdmxWorkspace()
@@ -650,6 +692,7 @@ Public Class Main
         End If
     End Sub
     Private Sub PolicyObjectContext_Opening(sender As Object, e As CancelEventArgs) Handles PolicyObjectContext.Opening
+        ' When the right-click menu is opened
         Dim showingForCategory As Boolean
         If PolicyObjectContext.SourceControl Is CategoriesTree Then
             showingForCategory = True
@@ -662,6 +705,7 @@ Public Class Main
             e.Cancel = True
             Exit Sub
         End If
+        ' Items are tagged in the designer for the objects they apply to
         For Each item In PolicyObjectContext.Items.OfType(Of ToolStripMenuItem)
             Dim ok As Boolean = True
             If CStr(item.Tag) = "P" And showingForCategory Then ok = False
@@ -670,6 +714,7 @@ Public Class Main
         Next
     End Sub
     Private Sub PolicyObjectContext_ItemClicked(sender As Object, e As ToolStripItemClickedEventArgs) Handles PolicyObjectContext.ItemClicked
+        ' When the user clicks an item in the right-click menu
         Dim polObject = PolicyObjectContext.Tag ' The current policy object is in the Tag field
         If e.ClickedItem Is CmeCatOpen Then
             CurrentCategory = polObject

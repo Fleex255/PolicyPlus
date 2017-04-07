@@ -1,8 +1,10 @@
 ﻿Public Class OpenUserRegistry
     Public SelectedFilePath As String
     Private Sub OpenUserRegistry_Shown(sender As Object, e As EventArgs) Handles Me.Shown
+        ' Set up the UI
         SubfoldersListview.Columns(1).Width = SubfoldersListview.ClientSize.Width - SubfoldersListview.Columns(0).Width - SystemInformation.VerticalScrollBarWidth
         SubfoldersListview.Items.Clear()
+        ' Scan for user hives and whether they can be accessed now
         Dim canMountHives As Boolean = New Security.Principal.WindowsPrincipal(Security.Principal.WindowsIdentity.GetCurrent).IsInRole(Security.Principal.WindowsBuiltInRole.Administrator)
         For Each folder In IO.Directory.EnumerateDirectories("C:\Users")
             Dim dirInfo As New IO.DirectoryInfo(folder)

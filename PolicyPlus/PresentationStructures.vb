@@ -1,4 +1,5 @@
-﻿Public Class Presentation
+﻿' These structures hold information on how the UI for policy elements appears
+Public Class Presentation
     Public Name As String
     Public Elements As New List(Of PresentationElement)
 End Class

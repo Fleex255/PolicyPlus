@@ -5,6 +5,7 @@ Public Class CmtxFile
     Public Strings As New Dictionary(Of String, String)
     Public SourceFile As String
     Public Shared Function Load(File As String) As CmtxFile
+        ' CMTX documentation: https://msdn.microsoft.com/en-us/library/dn605929(v=vs.85).aspx
         Dim cmtx As New CmtxFile
         cmtx.SourceFile = File
         Dim xmlDoc As New XmlDocument
@@ -12,14 +13,14 @@ Public Class CmtxFile
         Dim policyComments = xmlDoc.GetElementsByTagName("policyComments")(0)
         For Each child As XmlNode In policyComments.ChildNodes
             Select Case child.LocalName
-                Case "policyNamespaces"
+                Case "policyNamespaces" ' ADMX file prefixes
                     For Each usingElement As XmlNode In child.ChildNodes
                         If usingElement.LocalName <> "using" Then Continue For
                         Dim prefix = usingElement.AttributeOrNull("prefix")
                         Dim ns = usingElement.AttributeOrNull("namespace")
                         cmtx.Prefixes.Add(prefix, ns)
                     Next
-                Case "comments"
+                Case "comments" ' Policy to comment ID mapping
                     For Each admTemplateElement As XmlNode In child.ChildNodes
                         If admTemplateElement.LocalName <> "admTemplate" Then Continue For
                         For Each commentElement As XmlNode In admTemplateElement.ChildNodes
@@ -29,7 +30,7 @@ Public Class CmtxFile
                             cmtx.Comments.Add(policy, text)
                         Next
                     Next
-                Case "resources"
+                Case "resources" ' The actual comment text
                     For Each stringTable As XmlNode In child.ChildNodes
                         If stringTable.LocalName <> "stringTable" Then Continue For
                         For Each stringElement As XmlNode In stringTable.ChildNodes
@@ -44,6 +45,7 @@ Public Class CmtxFile
         Return cmtx
     End Function
     Public Shared Function FromCommentTable(Table As Dictionary(Of String, String)) As CmtxFile
+        ' Create CMTX structures from a simple policy-to-comment-text mapping
         Dim cmtx As New CmtxFile
         Dim resNum As Integer = 0 ' A counter to make sure names are unique
         Dim revPrefixes As New Dictionary(Of String, String) ' Opposite-direction prefix lookup
@@ -62,6 +64,7 @@ Public Class CmtxFile
         Return cmtx
     End Function
     Public Function ToCommentTable() As Dictionary(Of String, String)
+        ' Create a convenient policy-to-comment-text mapping
         Dim commentTable As New Dictionary(Of String, String)
         For Each comment In Comments
             Dim refParts = Split(comment.Key, ":", 2)
@@ -76,6 +79,7 @@ Public Class CmtxFile
         Save(SourceFile)
     End Sub
     Public Sub Save(File As String)
+        ' Save the CMTX data to a fully compliant XML document
         Dim xml As New XmlDocument
         Dim declaration = xml.CreateXmlDeclaration("1.0", "utf-8", "")
         xml.AppendChild(declaration)

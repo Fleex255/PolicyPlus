@@ -12,6 +12,7 @@ Public Class AdmxFile
     Private Sub New()
     End Sub
     Public Shared Function Load(File As String) As AdmxFile
+        ' ADMX documentation: https://technet.microsoft.com/en-us/library/cc772138(v=ws.10).aspx
         Dim admx As New AdmxFile
         admx.SourceFile = File
         Dim xmlDoc As New XmlDocument
@@ -19,18 +20,18 @@ Public Class AdmxFile
         Dim policyDefinitions = xmlDoc.GetElementsByTagName("policyDefinitions")(0)
         For Each child As XmlNode In policyDefinitions.ChildNodes
             Select Case child.LocalName
-                Case "policyNamespaces"
+                Case "policyNamespaces" ' Referenced namespaces and current namespace
                     For Each policyNamespace As XmlNode In child.ChildNodes
                         Dim prefix = policyNamespace.Attributes("prefix").Value
                         Dim fqNamespace = policyNamespace.Attributes("namespace").Value
                         If policyNamespace.LocalName = "target" Then admx.AdmxNamespace = fqNamespace
                         admx.Prefixes.Add(prefix, fqNamespace)
                     Next
-                Case "supersededAdm"
+                Case "supersededAdm" ' The ADM file that this ADMX supersedes
                     admx.SupersededAdm = child.Attributes("fileName").Value
-                Case "resources"
+                Case "resources" ' Minimum required version
                     admx.MinAdmlVersion = Decimal.Parse(child.Attributes("minRequiredRevision").Value)
-                Case "supportedOn"
+                Case "supportedOn" ' Support definitions
                     For Each supportInfo As XmlNode In child.ChildNodes
                         If supportInfo.LocalName = "definitions" Then
                             For Each supportDef As XmlNode In supportInfo.ChildNodes
@@ -70,7 +71,7 @@ Public Class AdmxFile
                                 definition.DefinedIn = admx
                                 admx.SupportedOnDefinitions.Add(definition)
                             Next
-                        ElseIf supportInfo.LocalName = "products" Then
+                        ElseIf supportInfo.LocalName = "products" Then ' Product definitions
                             Dim loadProducts As Action(Of XmlNode, String, AdmxProduct)
                             loadProducts = Sub(Node As XmlNode, ChildTagName As String, Parent As AdmxProduct)
                                                For Each subproductElement As XmlNode In Node.ChildNodes
@@ -93,10 +94,10 @@ Public Class AdmxFile
                                                    End If
                                                Next
                                            End Sub
-                            loadProducts(supportInfo, "product", Nothing)
+                            loadProducts(supportInfo, "product", Nothing) ' Start the recursive load
                         End If
                     Next
-                Case "categories"
+                Case "categories" ' Categories
                     For Each categoryElement As XmlNode In child.ChildNodes
                         If categoryElement.LocalName <> "category" Then Continue For
                         Dim category As New AdmxCategory
@@ -110,7 +111,7 @@ Public Class AdmxFile
                         category.DefinedIn = admx
                         admx.Categories.Add(category)
                     Next
-                Case "policies"
+                Case "policies" ' Policy settings
                     Dim loadRegItem = Function(Node As XmlNode) As PolicyRegistryValue
                                           Dim regItem As New PolicyRegistryValue
                                           For Each subElement As XmlNode In Node.ChildNodes

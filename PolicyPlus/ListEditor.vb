@@ -24,6 +24,7 @@
     End Function
     Private Sub OkButton_Click(sender As Object, e As EventArgs) Handles OkButton.Click
         If UserProvidesNames Then
+            ' Check for duplicate keys
             Dim dict As New Dictionary(Of String, String)
             For Each row As DataGridViewRow In EntriesDatagrid.Rows
                 If row.IsNewRow Then Continue For

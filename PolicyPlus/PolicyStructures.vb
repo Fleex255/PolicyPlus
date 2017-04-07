@@ -1,4 +1,5 @@
-﻿Public Class PolicyRegistryList
+﻿' These structures hold information on the behavior of policies and policy elements
+Public Class PolicyRegistryList
     Public OnValue As PolicyRegistryValue
     Public OnValueList As PolicyRegistrySingleList
     Public OffValue As PolicyRegistryValue

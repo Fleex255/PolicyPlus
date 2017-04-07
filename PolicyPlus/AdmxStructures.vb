@@ -1,4 +1,5 @@
-﻿Public Class AdmxProduct
+﻿' Raw data loaded from ADMX files
+Public Class AdmxProduct
     Public ID As String
     Public DisplayCode As String
     Public Type As AdmxProductType

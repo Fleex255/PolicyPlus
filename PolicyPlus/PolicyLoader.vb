@@ -12,6 +12,7 @@ Public Class PolicyLoader
         SourceType = Source
         User = IsUser
         OriginalArgument = Argument
+        ' Parse the argument and open the physical resource
         Select Case Source
             Case PolicyLoaderSource.LocalGpo
                 MainSourcePath = Environment.ExpandEnvironmentVariables("%SYSTEMROOT%\System32\GroupPolicy\" & If(IsUser, "User", "Machine") & "\Registry.pol")
@@ -46,6 +47,7 @@ Public Class PolicyLoader
         End Select
     End Sub
     Public Function OpenSource() As IPolicySource
+        ' Create an IPolicySource so PolicyProcessing can work
         Select Case SourceType
             Case PolicyLoaderSource.LocalRegistry
                 Dim regPol = RegistryPolicyProxy.EncapsulateKey(MainSourceRegKey)
@@ -79,6 +81,7 @@ Public Class PolicyLoader
                 SourceObject = New PolFile
             Case Else
                 If IO.File.Exists(MainSourcePath) Then
+                    ' Open a POL file
                     Try
                         Using fPol As New IO.FileStream(MainSourcePath, IO.FileMode.Open, IO.FileAccess.ReadWrite)
                             Writable = True
@@ -88,6 +91,7 @@ Public Class PolicyLoader
                     End Try
                     SourceObject = PolFile.Load(MainSourcePath)
                 Else
+                    ' Create a new POL file
                     Try
                         IO.Directory.CreateDirectory(IO.Path.GetDirectoryName(MainSourcePath))
                         Dim pol As New PolFile
@@ -144,6 +148,7 @@ Public Class PolicyLoader
         Return ""
     End Function
     Public Function GetCmtxPath() As String
+        ' Get the path to the comments file, or nothing if comments don't work
         If SourceType = PolicyLoaderSource.PolFile Or SourceType = PolicyLoaderSource.NtUserDat Then
             Return IO.Path.ChangeExtension(MainSourcePath, "cmtx")
         ElseIf SourceType = PolicyLoaderSource.LocalRegistry Then
@@ -155,6 +160,7 @@ Public Class PolicyLoader
         End If
     End Function
     Public Function GetWritability() As PolicySourceWritability
+        ' Get whether the source can be updated
         If SourceType = PolicyLoaderSource.Null Then
             Return PolicySourceWritability.Writable
         ElseIf SourceType = PolicyLoaderSource.LocalRegistry Then
@@ -164,7 +170,9 @@ Public Class PolicyLoader
         End If
     End Function
     Private Sub UpdateGptIni()
+        ' Increment the version number in gpt.ini
         If IO.File.Exists(GptIniPath) Then
+            ' Alter the existing gpt.ini's Version line
             Dim lines = IO.File.ReadLines(GptIniPath).ToList
             Using fGpt As New IO.StreamWriter(GptIniPath, False)
                 For Each line In lines
@@ -178,6 +186,7 @@ Public Class PolicyLoader
                 Next
             End Using
         Else
+            ' Create a new gpt.ini
             Using fGpt As New IO.StreamWriter(GptIniPath)
                 fGpt.WriteLine("[General]")
                 fGpt.WriteLine("gPCMachineExtensionNames=[{35378EAC-683F-11D2-A89A-00C04FBBCFA2}{D02B1F72-3407-48AE-BA88-E8213C6761F1}]")
@@ -197,6 +206,7 @@ Public Class PolicyLoader
         End Get
     End Property
     Public Function GetDisplayInfo() As String
+        ' Get the human-readable name of the loader for display in the status bar
         Dim name As String = ""
         Select Case SourceType
             Case PolicyLoaderSource.LocalGpo

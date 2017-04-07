@@ -1,9 +1,11 @@
 ﻿Public Class InspectSpolFragment
     Dim SpolFragment As String
     Public Function PresentDialog(Policy As PolicyPlusPolicy, AdmxWorkspace As AdmxBundle, CompSource As IPolicySource, UserSource As IPolicySource) As DialogResult
+        ' Show the SPOL text for all the policy's sections
         TextPolicyName.Text = Policy.DisplayName
         Dim sb As New Text.StringBuilder
         Dim addSection = Function(Section As AdmxPolicySection) As Boolean
+                             ' Create SPOL info for one section of the policy
                              If (Policy.RawPolicy.Section And Section) = 0 Then Return False
                              Dim polSource = If(Section = AdmxPolicySection.Machine, CompSource, UserSource)
                              Dim spolState As New SpolPolicyState With {.UniqueID = Policy.UniqueID}

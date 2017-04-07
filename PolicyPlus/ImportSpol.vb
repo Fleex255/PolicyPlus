@@ -18,7 +18,7 @@
     End Sub
     Private Sub ButtonApply_Click(sender As Object, e As EventArgs) Handles ButtonApply.Click
         Try
-            Spol = SpolFile.FromText(TextSpol.Text)
+            Spol = SpolFile.FromText(TextSpol.Text) ' Tell the main form that the SPOL is ready to be committed
             DialogResult = DialogResult.OK
         Catch ex As Exception
             MsgBox("The SPOL text is invalid: " & ex.Message, MsgBoxStyle.Exclamation)

@@ -25,10 +25,12 @@ Public Class AdmxBundle
         BuildStructures()
     End Sub
     Private Sub AddSingleAdmx(AdmxPath As String, LanguageCode As String)
+        ' Load XML files
         Dim admx = AdmxFile.Load(AdmxPath)
         Dim fileTitle = Path.GetFileName(AdmxPath)
         Dim admlPath = Path.ChangeExtension(AdmxPath.Replace(fileTitle, LanguageCode & "\" & fileTitle), "adml")
         Dim adml = AdmlFile.Load(admlPath)
+        ' Stage the raw ADMX info for BuildStructures
         RawCategories.AddRange(admx.Categories)
         RawProducts.AddRange(admx.Products)
         RawPolicies.AddRange(admx.Policies)
@@ -139,6 +141,7 @@ Public Class AdmxBundle
         RawPolicies.Clear()
     End Sub
     Private Function FindInTempOrFlat(Of T)(UniqueID As String, TempDict As Dictionary(Of String, T), FlatDict As Dictionary(Of String, T)) As T
+        ' Get the best available structure for an ID
         If TempDict.ContainsKey(UniqueID) Then
             Return TempDict(UniqueID)
         ElseIf FlatDict IsNot Nothing AndAlso FlatDict.ContainsKey(UniqueID) Then
@@ -148,6 +151,7 @@ Public Class AdmxBundle
         End If
     End Function
     Public Function ResolveString(DisplayCode As String, Admx As AdmxFile) As String
+        ' Find a localized string from a display code
         If DisplayCode = "" Then Return ""
         If Not DisplayCode.StartsWith("$(string.") Then Return DisplayCode
         Dim stringId = DisplayCode.Substring(9, DisplayCode.Length - 10)
@@ -155,6 +159,7 @@ Public Class AdmxBundle
         If dict.ContainsKey(stringId) Then Return dict(stringId) Else Return DisplayCode
     End Function
     Public Function ResolvePresentation(DisplayCode As String, Admx As AdmxFile) As Presentation
+        ' Find a presentation from a code
         If Not DisplayCode.StartsWith("$(presentation.") Then Return Nothing
         Dim presId = DisplayCode.Substring(15, DisplayCode.Length - 16)
         Dim dict = SourceFiles(Admx).PresentationTable
@@ -164,6 +169,7 @@ Public Class AdmxBundle
         Return Admx.AdmxNamespace & ":" & ID
     End Function
     Private Function ResolveRef(Ref As String, Admx As AdmxFile) As String
+        ' Get a fully qualified name from a code and the current scope
         If Ref.Contains(":") Then
             Dim parts = Split(Ref, ":", 2)
             If Admx.Prefixes.ContainsKey(parts(0)) Then

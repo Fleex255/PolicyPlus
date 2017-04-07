@@ -1,6 +1,7 @@
 ﻿Public Class OpenSection
     Public SelectedSection As AdmxPolicySection
     Private Sub ButtonOK_Click(sender As Object, e As EventArgs) Handles ButtonOK.Click
+        ' Report the selected section
         If OptUser.Checked Or OptComputer.Checked Then
             SelectedSection = If(OptUser.Checked, AdmxPolicySection.User, AdmxPolicySection.Machine)
             DialogResult = DialogResult.OK

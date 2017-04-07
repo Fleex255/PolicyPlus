@@ -9,6 +9,7 @@ Public Class FindResults
     Dim LastSelectedIndex As Integer
     Public SelectedPolicy As PolicyPlusPolicy
     Public Function PresentDialogStartSearch(Workspace As AdmxBundle, Searcher As Func(Of PolicyPlusPolicy, Boolean)) As DialogResult
+        ' Start running a search defined by one of the Find By windows
         AdmxWorkspace = Workspace
         SearchFunc = Searcher
         ResultsListview.Items.Clear()
@@ -24,6 +25,7 @@ Public Class FindResults
         Return ShowDialog()
     End Function
     Public Function PresentDialog() As DialogResult
+        ' Open the dialog normally, like from the main form
         If Not HasSearched Then
             MsgBox("No search has been run yet, so there are no results to display.", MsgBoxStyle.Information)
             Return DialogResult.Cancel
@@ -41,6 +43,7 @@ Public Class FindResults
         Return ResultsListview.Items(LastSelectedIndex).Tag
     End Function
     Sub SearchJob(Workspace As AdmxBundle, Searcher As Func(Of PolicyPlusPolicy, Boolean))
+        ' The long-running task that searches all the policies
         Dim searchedSoFar As Integer = 0
         Dim results As Integer = 0
         Dim stoppedByCancel As Boolean = False
@@ -87,6 +90,7 @@ Public Class FindResults
         If SearchPending Then
             Task.Factory.StartNew(Sub() SearchJob(AdmxWorkspace, SearchFunc))
         Else
+            ' Restore the last selection
             Dim lastSelected = ResultsListview.Items(LastSelectedIndex)
             lastSelected.Selected = True
             lastSelected.Focused = True

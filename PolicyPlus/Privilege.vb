@@ -1,6 +1,7 @@
 ﻿Imports System.Runtime.InteropServices
 Public Class Privilege
     Public Shared Sub EnablePrivilege(Name As String)
+        ' Enable the given Win32 privilege
         Dim luid As PInvokeLuid
         Dim priv As PInvokeTokenPrivileges
         Dim thisProcToken As IntPtr

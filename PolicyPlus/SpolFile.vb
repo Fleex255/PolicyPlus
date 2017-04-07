@@ -11,11 +11,12 @@
         End Try
     End Function
     Private Sub LoadFromText(Text As String)
+        ' Load a SPOL script into policy states
         Dim allLines = Split(Text, vbCrLf)
         Dim line As String = ""
         Dim nextLine = Function() As String
                            ParserLine += 1
-                           line = allLines(ParserLine - 1) ' For human-readability
+                           line = allLines(ParserLine - 1) ' For human-readability in errors
                            Return line
                        End Function
         Dim atEnd = Function() As Boolean
@@ -102,6 +103,7 @@
         Loop
     End Sub
     Public Shared Function GetFragment(State As SpolPolicyState) As String
+        ' Create a SPOL text fragment from the given policy state
         Dim sb As New Text.StringBuilder
         sb.Append(If(State.Section = AdmxPolicySection.Machine, "C ", "U "))
         sb.AppendLine(State.UniqueID)
@@ -156,6 +158,7 @@
         Return sb.ToString
     End Function
     Public Function ApplyAll(AdmxWorkspace As AdmxBundle, UserSource As IPolicySource, CompSource As IPolicySource) As Integer
+        ' Write the policy states to the policy sources
         Dim failures As Integer = 0
         For Each policy In Policies
             Try

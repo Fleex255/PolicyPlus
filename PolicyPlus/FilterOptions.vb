@@ -14,11 +14,12 @@
                                               If product.Children IsNot Nothing Then addProductsToNodeCollection(product.Children, node.Nodes)
                                           Next
                                       End Sub
-        addProductsToNodeCollection(Workspace.Products.Values, AllowedProductsTreeview.Nodes)
+        addProductsToNodeCollection(Workspace.Products.Values, AllowedProductsTreeview.Nodes) ' Recursively add products
         PrepareDialog(Configuration)
         Return ShowDialog()
     End Function
     Sub PrepareDialog(Configuration As FilterConfiguration)
+        ' Set the UI element state from the current filter
         If Configuration.ManagedPolicy.HasValue Then
             PolicyTypeCombobox.SelectedIndex = If(Configuration.ManagedPolicy.Value, 1, 2)
         Else
@@ -67,6 +68,7 @@
         PrepareDialog(New FilterConfiguration)
     End Sub
     Private Sub OkButton_Click(sender As Object, e As EventArgs) Handles OkButton.Click
+        ' Create a filter configuration object from the user's settings
         Dim newConf As New FilterConfiguration
         Select Case PolicyTypeCombobox.SelectedIndex
             Case 1

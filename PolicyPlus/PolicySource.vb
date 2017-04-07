@@ -137,6 +137,7 @@ Public Class PolFile
         Return valNames
     End Function
     Public Sub ApplyDifference(OldVersion As PolFile, Target As IPolicySource)
+        ' Figure out which values have changed and commit only the changes
         If OldVersion Is Nothing Then OldVersion = New PolFile
         Dim oldEntries = OldVersion.Entries.Keys.Where(Function(k) Not k.Contains("\\**")).ToList
         For Each kv In Entries
@@ -167,6 +168,7 @@ Public Class PolFile
         Next
     End Sub
     Public Sub Apply(Target As IPolicySource)
+        ' Apply all the values to the policy source
         ApplyDifference(Nothing, Target)
     End Sub
     Public Sub ClearKey(Key As String) Implements IPolicySource.ClearKey
@@ -182,7 +184,7 @@ Public Class PolFile
             Entries.Remove(kv.Key)
         Next
     End Sub
-    Private Class PolEntryData
+    Private Class PolEntryData ' Represents one record in a POL file
         Public Kind As RegistryValueKind
         Public Data As Byte()
         Public Function AsString() As String ' Get a UTF-16LE string
@@ -194,7 +196,7 @@ Public Class PolFile
             Next
             Return sb.ToString
         End Function
-        Public Shared Function FromString(Text As String, Optional Expand As Boolean = False) As PolEntryData
+        Public Shared Function FromString(Text As String, Optional Expand As Boolean = False) As PolEntryData ' Save a UTF-16LE string
             Dim ped As New PolEntryData With {.Kind = RegistryValueKind.String}
             If Expand Then ped.Kind = RegistryValueKind.ExpandString
             Dim data((Text.Length * 2) + 1) As Byte
@@ -275,6 +277,7 @@ Public Class PolFile
             Return ped
         End Function
         Public Function AsArbitrary() As Object
+            ' Get the data in the best .NET type for it
             Select Case Kind
                 Case RegistryValueKind.String
                     Return AsString()
@@ -291,6 +294,7 @@ Public Class PolFile
             End Select
         End Function
         Public Shared Function FromArbitrary(Data As Object, Kind As RegistryValueKind) As PolEntryData
+            ' Take an arbitrary .NET object and turn it into bytes
             Select Case Kind
                 Case RegistryValueKind.String
                     Return FromString(Data)
@@ -308,7 +312,7 @@ Public Class PolFile
         End Function
     End Class
 End Class
-Public Class RegistryPolicyProxy
+Public Class RegistryPolicyProxy ' Pass operations through to the real Registry
     Implements IPolicySource
     Private RootKey As RegistryKey
     Public Shared Function EncapsulateKey(Key As RegistryKey) As RegistryPolicyProxy
@@ -370,6 +374,7 @@ Public Class RegistryPolicyProxy
     End Property
     Public Shared ReadOnly Property PolicyKeys As IEnumerable(Of String)
         Get
+            ' Values outside these branches are not tracked by PolFile.ApplyDifference
             Return {"software\policies", "software\microsoft\windows\currentversion\policies", "system\currentcontrolset\policies"}
         End Get
     End Property

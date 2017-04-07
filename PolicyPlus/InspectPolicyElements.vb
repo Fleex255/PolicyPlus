@@ -8,6 +8,7 @@
         InfoTreeview.Nodes.Add("Registry key: " & Policy.RawPolicy.RegistryKey).ImageIndex = 0 ' Folder
         If Policy.RawPolicy.RegistryValue <> "" Then InfoTreeview.Nodes.Add("Registry value: " & Policy.RawPolicy.RegistryValue).ImageIndex = 13 ' Gear
         If Policy.RawPolicy.ClientExtension <> "" Then InfoTreeview.Nodes.Add("Client extension: " & Policy.RawPolicy.ClientExtension).ImageIndex = 19 ' DOS window
+        ' Methods for adding info on a policy Registry information object
         Dim addValueData = Sub(RegVal As PolicyRegistryValue, Node As TreeNode)
                                Select Case RegVal.RegistryType
                                    Case PolicyRegistryValueType.Delete
@@ -56,7 +57,9 @@
                           End If
                           If listNode.Nodes.Count = 0 Then listNode.Nodes.Add(If(HasValue, "Left implicit", "Left to elements")).ImageIndex = 37
                       End Sub
+        ' Add the policy's basic Registry info
         addList(Policy.RawPolicy.AffectedValues, InfoTreeview.Nodes, Policy.RawPolicy.RegistryValue <> "")
+        ' Add all the info on the policy's elements
         If Policy.Presentation IsNot Nothing And Policy.RawPolicy.Elements IsNot Nothing Then
             Dim presNode = InfoTreeview.Nodes.Add("Presentation: " & Policy.Presentation.Name)
             presNode.ImageIndex = 20 ' Form

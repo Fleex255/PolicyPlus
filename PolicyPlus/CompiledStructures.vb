@@ -1,4 +1,5 @@
-﻿Public Class PolicyPlusCategory
+﻿' Compiled data, more object-oriented and display-worthy than raw data from ADMX files
+Public Class PolicyPlusCategory
     Public UniqueID As String
     Public Parent As PolicyPlusCategory
     Public Children As New List(Of PolicyPlusCategory)

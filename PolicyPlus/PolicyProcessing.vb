@@ -1,5 +1,6 @@
 ﻿Public Class PolicyProcessing
     Public Shared Function GetPolicyState(PolicySource As IPolicySource, Policy As PolicyPlusPolicy) As PolicyState
+        ' Determine the basic state of a policy
         Dim enabledEvidence As Integer = 0
         Dim disabledEvidence As Integer = 0
         Dim rawpol = Policy.RawPolicy
@@ -15,6 +16,7 @@
                                    checkOneVal(regVal.Value, entryKey, regVal.RegistryValue, EvidenceVar)
                                Next
                            End Sub
+        ' Check the policy's standard Registry values
         If rawpol.RegistryValue <> "" Then
             If rawpol.AffectedValues.OnValue Is Nothing Then
                 checkOneVal(New PolicyRegistryValue With {.NumberValue = 1UI, .RegistryType = PolicyRegistryValueType.Numeric}, rawpol.RegistryKey, rawpol.RegistryValue, enabledEvidence)
@@ -29,6 +31,7 @@
         End If
         checkValList(rawpol.AffectedValues.OnValueList, rawpol.RegistryKey, enabledEvidence)
         checkValList(rawpol.AffectedValues.OffValueList, rawpol.RegistryKey, disabledEvidence)
+        ' Check the policy's elements
         If rawpol.Elements IsNot Nothing Then
             Dim deletedElements As Integer = 0
             Dim presentElements As Integer = 0
@@ -46,6 +49,7 @@
                 disabledEvidence += deletedElements
             End If
         End If
+        ' Judge the evidence collected
         If enabledEvidence > disabledEvidence Then
             Return PolicyState.Enabled
         ElseIf disabledEvidence > enabledEvidence Then
@@ -57,6 +61,7 @@
         End If
     End Function
     Private Shared Function ValuePresent(Value As PolicyRegistryValue, Source As IPolicySource, Key As String, ValueName As String) As Boolean
+        ' Determine whether the given value is found in the Registry
         Select Case Value.RegistryType
             Case PolicyRegistryValueType.Delete
                 Return Source.WillDeleteValue(Key, ValueName)
@@ -75,6 +80,7 @@
         End Select
     End Function
     Private Shared Function ValueListPresent(ValueList As PolicyRegistrySingleList, Source As IPolicySource, Key As String, ValueName As String) As Boolean
+        ' Determine whether all the values in a value list are in the Registry data
         Dim sublistKey = If(ValueList.DefaultRegistryKey = "", Key, ValueList.DefaultRegistryKey)
         Return ValueList.AffectedValues.All(Function(e)
                                                 Dim entryKey = If(e.RegistryKey = "", sublistKey, e.RegistryKey)
@@ -82,6 +88,7 @@
                                             End Function)
     End Function
     Public Shared Function DeduplicatePolicies(Workspace As AdmxBundle) As Integer
+        ' Merge otherwise-identical pairs of user and computer policies into both-section policies
         Dim dedupeCount = 0
         For Each cat In Workspace.Policies.GroupBy(Function(c) c.Value.Category)
             For Each namegroup In cat.GroupBy(Function(p) p.Value.DisplayName).Select(Function(x) x.ToList).ToList
@@ -100,6 +107,7 @@
         Return dedupeCount
     End Function
     Public Shared Function GetPolicyOptionStates(PolicySource As IPolicySource, Policy As PolicyPlusPolicy) As Dictionary(Of String, Object)
+        ' Get the element states of an enabled policy
         Dim state As New Dictionary(Of String, Object)
         If Policy.RawPolicy.Elements Is Nothing Then Return state
         For Each elem In Policy.RawPolicy.Elements
@@ -114,13 +122,13 @@
                     state.Add(elem.ID, PolicySource.GetValue(elemKey, elem.RegistryValue))
                 Case "list"
                     Dim listElem As ListPolicyElement = elem
-                    If listElem.UserProvidesNames Then
+                    If listElem.UserProvidesNames Then ' Keys matter, use a dictionary
                         Dim entries As New Dictionary(Of String, String)
                         For Each value In PolicySource.GetValueNames(elemKey)
                             entries.Add(value, PolicySource.GetValue(elemKey, value))
                         Next
                         state.Add(elem.ID, entries)
-                    Else
+                    Else ' Keys don't matter, use a list
                         Dim entries As New List(Of String)
                         If listElem.HasPrefix Then
                             Dim n As Integer = 1
@@ -136,6 +144,7 @@
                         state.Add(elem.ID, entries)
                     End If
                 Case "enum"
+                    ' Determine which option has results that match the Registry
                     Dim enumElem As EnumPolicyElement = elem
                     Dim selectedIndex As Integer = -1
                     For n = 0 To enumElem.Items.Count - 1
@@ -155,6 +164,7 @@
         Return state
     End Function
     Private Shared Function GetRegistryListState(PolicySource As IPolicySource, RegList As PolicyRegistryList, DefaultKey As String, DefaultValueName As String) As Boolean
+        ' Whether a list of Registry values is present
         Dim isListAllPresent = Function(l As PolicyRegistrySingleList) ValueListPresent(l, PolicySource, DefaultKey, DefaultValueName)
         If RegList.OnValue IsNot Nothing Then
             If ValuePresent(RegList.OnValue, PolicySource, DefaultKey, DefaultValueName) Then Return True
@@ -183,6 +193,7 @@
                          Dim rkvp As New RegistryKeyValuePair With {.Key = Key, .Value = Value}
                          If Not entries.Contains(rkvp) Then entries.Add(rkvp)
                      End Sub
+        ' Get all Registry values affected by this policy
         Dim rawpol = Policy.RawPolicy
         If rawpol.RegistryValue <> "" Then addReg(rawpol.RegistryKey, rawpol.RegistryValue)
         Dim addSingleList = Sub(SingleList As PolicyRegistrySingleList, OverrideKey As String)
@@ -218,7 +229,7 @@
                 End Select
             Next
         End If
-        If Forget Then
+        If Forget Then ' Remove them if forgetting
             For Each e In entries
                 PolicySource.ForgetValue(e.Key, e.Value)
             Next
@@ -226,6 +237,7 @@
         Return entries
     End Function
     Public Shared Sub SetPolicyState(PolicySource As IPolicySource, Policy As PolicyPlusPolicy, State As PolicyState, Options As Dictionary(Of String, Object))
+        ' Write a full policy state to the policy source
         Dim setValue = Sub(Key As String, ValueName As String, Value As PolicyRegistryValue)
                            If Value Is Nothing Then Exit Sub
                            Select Case Value.RegistryType
@@ -260,7 +272,7 @@
             Case PolicyState.Enabled
                 If rawpol.AffectedValues.OnValue Is Nothing And rawpol.RegistryValue <> "" Then PolicySource.SetValue(rawpol.RegistryKey, rawpol.RegistryValue, 1UI, Microsoft.Win32.RegistryValueKind.DWord)
                 setList(rawpol.AffectedValues, rawpol.RegistryKey, rawpol.RegistryValue, True)
-                If rawpol.Elements IsNot Nothing Then
+                If rawpol.Elements IsNot Nothing Then ' Write the elements' states
                     For Each elem In rawpol.Elements
                         Dim elemKey = If(elem.RegistryKey = "", rawpol.RegistryKey, elem.RegistryKey)
                         If Not Options.ContainsKey(elem.ID) Then Continue For
@@ -316,7 +328,7 @@
             Case PolicyState.Disabled
                 If rawpol.AffectedValues.OffValue Is Nothing And rawpol.RegistryValue <> "" Then PolicySource.DeleteValue(rawpol.RegistryKey, rawpol.RegistryValue)
                 setList(rawpol.AffectedValues, rawpol.RegistryKey, rawpol.RegistryValue, False)
-                If rawpol.Elements IsNot Nothing Then
+                If rawpol.Elements IsNot Nothing Then ' Mark all the elements deleted
                     For Each elem In rawpol.Elements.Where(Function(e) e.ElementType <> "list")
                         Dim elemKey = If(elem.RegistryKey = "", rawpol.RegistryKey, elem.RegistryKey)
                         PolicySource.DeleteValue(elemKey, elem.RegistryValue)
@@ -325,6 +337,7 @@
         End Select
     End Sub
     Public Shared Function IsPolicySupported(Policy As PolicyPlusPolicy, Products As List(Of PolicyPlusProduct), AlwaysUseAny As Boolean, ApproveLiterals As Boolean) As Boolean
+        ' Whether a policy is supported on a computer with the given products
         If Policy.SupportedOn Is Nothing OrElse Policy.SupportedOn.RawSupport.Logic = AdmxSupportLogicType.Blank Then Return ApproveLiterals
         Dim supEntryMet = Function(SupportEntry As PolicyPlusSupportEntry) As Boolean ' Only for products (not support definitions)
                               If SupportEntry.Product Is Nothing Then Return ApproveLiterals

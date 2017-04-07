@@ -9,10 +9,12 @@ Public Class AdmlFile
     Private Sub New()
     End Sub
     Public Shared Function Load(File As String) As AdmlFile
+        ' ADML documentation: https://technet.microsoft.com/en-us/library/cc772050(v=ws.10).aspx
         Dim adml As New AdmlFile
         adml.SourceFile = File
         Dim xmlDoc As New XmlDocument
         xmlDoc.Load(File)
+        ' Load ADML metadata
         Dim policyDefinitionResources As XmlNode = xmlDoc.GetElementsByTagName("policyDefinitionResources")(0)
         adml.Revision = Decimal.Parse(policyDefinitionResources.Attributes("revision").Value)
         For Each child As XmlNode In policyDefinitionResources.ChildNodes
@@ -23,6 +25,7 @@ Public Class AdmlFile
                     adml.Description = child.InnerText
             End Select
         Next
+        ' Load localized strings
         Dim stringTableList = xmlDoc.GetElementsByTagName("stringTable")
         If stringTableList.Count > 0 Then
             Dim stringTable = stringTableList(0)
@@ -33,6 +36,7 @@ Public Class AdmlFile
                 adml.StringTable.Add(key, value)
             Next
         End If
+        ' Load presentations (UI arrangements)
         Dim presTableList = xmlDoc.GetElementsByTagName("presentationTable")
         If presTableList.Count > 0 Then
             Dim presTable = presTableList(0)

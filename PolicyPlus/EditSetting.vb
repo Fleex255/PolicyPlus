@@ -66,6 +66,7 @@
                          End Sub
         ExtraOptionsTable.RowStyles.Clear()
         ElementControls = New Dictionary(Of String, Control)
+        ' Create the Windows Forms elements
         If CurrentSetting.RawPolicy.Elements IsNot Nothing And CurrentSetting.Presentation IsNot Nothing Then
             Dim elemDict = CurrentSetting.RawPolicy.Elements.ToDictionary(Function(e) e.ID)
             For Each pres In CurrentSetting.Presentation.Elements
@@ -75,7 +76,7 @@
                         Dim label As New Label With {.Text = textPres.Text, .AutoSize = True}
                         label.Margin = New Padding(3, 6, 3, 0)
                         addControl(textPres.ID, label, "")
-                    Case "decimalTextBox"
+                    Case "decimalTextBox" ' Numeric spin box or a plain text box restricted to numbers
                         Dim decimalTextPres As NumericBoxPresentationElement = pres
                         Dim numeric As DecimalPolicyElement = elemDict(pres.ID)
                         Dim newControl As Control
@@ -101,7 +102,7 @@
                             newControl = text
                         End If
                         addControl(pres.ID, newControl, decimalTextPres.Label)
-                    Case "textBox"
+                    Case "textBox" ' Simple text box
                         Dim textboxPres As TextBoxPresentationElement = pres
                         Dim text As TextPolicyElement = elemDict(pres.ID)
                         Dim textbox As New TextBox
@@ -109,7 +110,7 @@
                         textbox.Text = textboxPres.DefaultValue
                         textbox.MaxLength = text.MaxLength
                         addControl(pres.ID, textbox, textboxPres.Label)
-                    Case "checkBox"
+                    Case "checkBox" ' Check box
                         Dim checkPres As CheckBoxPresentationElement = pres
                         Dim checkbox As New CheckBox With {.TextAlign = ContentAlignment.MiddleLeft}
                         checkbox.Text = checkPres.Text
@@ -120,7 +121,7 @@
                         End Using
                         checkbox.Checked = checkPres.DefaultState
                         addControl(pres.ID, checkbox, "")
-                    Case "comboBox" ' Not tested because it's not used in any default ADML
+                    Case "comboBox" ' Text box with suggestions, not tested because it's not used in any default ADML
                         Dim comboPres As ComboBoxPresentationElement = pres
                         Dim text As TextPolicyElement = elemDict(pres.ID)
                         Dim combobox As New ComboBox With {.DropDownStyle = ComboBoxStyle.DropDown}
@@ -132,7 +133,7 @@
                             combobox.Items.Add(suggestion)
                         Next
                         addControl(pres.ID, combobox, comboPres.Label)
-                    Case "dropdownList"
+                    Case "dropdownList" ' Dropdown list of options
                         Dim dropdownPres As DropDownPresentationElement = pres
                         Dim combobox As New ComboBox With {.DropDownStyle = ComboBoxStyle.DropDownList}
                         combobox.Sorted = Not dropdownPres.NoSort
@@ -151,7 +152,7 @@
                             combobox.Width = maxWidth
                         End Using
                         addControl(pres.ID, combobox, dropdownPres.Label)
-                    Case "listBox"
+                    Case "listBox" ' Button to launch a grid view editor
                         Dim listPres As ListPresentationElement = pres
                         Dim list As ListPolicyElement = elemDict(pres.ID)
                         Dim button As New Button
@@ -161,7 +162,7 @@
                                                      If ListEditor.PresentDialog(listPres.Label, button.Tag, list.UserProvidesNames) = DialogResult.OK Then button.Tag = ListEditor.FinalData
                                                  End Sub
                         addControl(pres.ID, button, listPres.Label)
-                    Case "multiTextBox"
+                    Case "multiTextBox" ' Multiline text box
                         Dim bigTextbox As New TextBox
                         bigTextbox.AutoSize = False
                         bigTextbox.Width = ExtraOptionsPanel.Width * 0.8
@@ -176,6 +177,7 @@
         End If
     End Sub
     Sub PreparePolicyState()
+        ' Set the value of the UI elements depending on the current policy state
         Select Case PolicyProcessing.GetPolicyState(CurrentSource, CurrentSetting)
             Case PolicyState.Disabled
                 DisabledOption.Checked = True
@@ -225,6 +227,7 @@
         End If
     End Sub
     Sub ApplyToPolicySource()
+        ' Write the new state to the policy source object
         PolicyProcessing.ForgetPolicy(CurrentSource, CurrentSetting)
         If EnabledOption.Checked Then
             Dim options As New Dictionary(Of String, Object)
@@ -259,6 +262,7 @@
         ElseIf DisabledOption.Checked Then
             PolicyProcessing.SetPolicyState(CurrentSource, CurrentSetting, PolicyState.Disabled, Nothing)
         End If
+        ' Update the comment for this policy
         If CurrentComments IsNot Nothing Then
             If CommentTextbox.Text = "" Then
                 If CurrentComments.ContainsKey(CurrentSetting.UniqueID) Then CurrentComments.Remove(CurrentSetting.UniqueID)
@@ -302,7 +306,7 @@
         ApplyToPolicySource()
         ChangesMade = True
     End Sub
-    Private Class DropdownPresentationMap
+    Private Class DropdownPresentationMap ' Used for keeping the ID with an option in dropdown boxes
         Public ID As Integer
         Public DisplayName As String
         Public Overrides Function ToString() As String
