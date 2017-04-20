@@ -1,6 +1,6 @@
 ﻿Imports System.ComponentModel
 Public Class DownloadAdmx
-    Const MicrosoftMsiDownloadLink As String = "https://download.microsoft.com/download/0/C/0/0C098953-38C6-4DF7-A2B6-DE10A57A1C55/Windows%2010%20and%20Windows%20Server%202016%20ADMX.msi"
+    Const MicrosoftMsiDownloadLink As String = "https://download.microsoft.com/download/D/7/4/D74DD144-DBC7-496E-A09F-A2DE8E9D38D1/Windows_%2010_Creators_Update_ADMX.msi"
     Dim Downloading As Boolean = False
     Public NewPolicySourceFolder As String
     Private Sub ButtonBrowse_Click(sender As Object, e As EventArgs) Handles ButtonBrowse.Click
