@@ -33,6 +33,7 @@ Partial Class Main
         Dim ToolStripStatusLabel1 As System.Windows.Forms.ToolStripStatusLabel
         Dim ToolStripStatusLabel2 As System.Windows.Forms.ToolStripStatusLabel
         Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(Main))
+        Dim ToolStripSeparator6 As System.Windows.Forms.ToolStripSeparator
         Me.MainMenu = New System.Windows.Forms.MenuStrip()
         Me.FileToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.OpenADMXFolderToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
@@ -80,6 +81,7 @@ Partial Class Main
         Me.InfoStrip = New System.Windows.Forms.StatusStrip()
         Me.ComputerSourceLabel = New System.Windows.Forms.ToolStripStatusLabel()
         Me.UserSourceLabel = New System.Windows.Forms.ToolStripStatusLabel()
+        Me.LoadedADMXFilesToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         ChSettingEnabled = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
         ChSettingCommented = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
         ToolStripSeparator1 = New System.Windows.Forms.ToolStripSeparator()
@@ -89,6 +91,7 @@ Partial Class Main
         ToolStripSeparator5 = New System.Windows.Forms.ToolStripSeparator()
         ToolStripStatusLabel1 = New System.Windows.Forms.ToolStripStatusLabel()
         ToolStripStatusLabel2 = New System.Windows.Forms.ToolStripStatusLabel()
+        ToolStripSeparator6 = New System.Windows.Forms.ToolStripSeparator()
         Me.MainMenu.SuspendLayout()
         CType(Me.SplitContainer, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SplitContainer.Panel1.SuspendLayout()
@@ -205,7 +208,7 @@ Partial Class Main
         '
         'ViewToolStripMenuItem
         '
-        Me.ViewToolStripMenuItem.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.EmptyCategoriesToolStripMenuItem, Me.OnlyFilteredObjectsToolStripMenuItem, ToolStripSeparator1, Me.FilterOptionsToolStripMenuItem, Me.DeduplicatePoliciesToolStripMenuItem})
+        Me.ViewToolStripMenuItem.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.EmptyCategoriesToolStripMenuItem, Me.OnlyFilteredObjectsToolStripMenuItem, ToolStripSeparator1, Me.FilterOptionsToolStripMenuItem, Me.DeduplicatePoliciesToolStripMenuItem, ToolStripSeparator6, Me.LoadedADMXFilesToolStripMenuItem})
         Me.ViewToolStripMenuItem.Name = "ViewToolStripMenuItem"
         Me.ViewToolStripMenuItem.Size = New System.Drawing.Size(44, 20)
         Me.ViewToolStripMenuItem.Text = "View"
@@ -575,6 +578,17 @@ Partial Class Main
         Me.UserSourceLabel.Size = New System.Drawing.Size(54, 17)
         Me.UserSourceLabel.Text = "User info"
         '
+        'ToolStripSeparator6
+        '
+        ToolStripSeparator6.Name = "ToolStripSeparator6"
+        ToolStripSeparator6.Size = New System.Drawing.Size(181, 6)
+        '
+        'LoadedADMXFilesToolStripMenuItem
+        '
+        Me.LoadedADMXFilesToolStripMenuItem.Name = "LoadedADMXFilesToolStripMenuItem"
+        Me.LoadedADMXFilesToolStripMenuItem.Size = New System.Drawing.Size(184, 22)
+        Me.LoadedADMXFilesToolStripMenuItem.Text = "Loaded ADMX Files"
+        '
         'Main
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
@@ -653,4 +667,5 @@ Partial Class Main
     Friend WithEvents InfoStrip As StatusStrip
     Friend WithEvents ComputerSourceLabel As ToolStripStatusLabel
     Friend WithEvents UserSourceLabel As ToolStripStatusLabel
+    Friend WithEvents LoadedADMXFilesToolStripMenuItem As ToolStripMenuItem
 End Class

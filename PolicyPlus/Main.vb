@@ -691,6 +691,9 @@ Public Class Main
             End If
         End If
     End Sub
+    Private Sub LoadedADMXFilesToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles LoadedADMXFilesToolStripMenuItem.Click
+        LoadedAdmx.PresentDialog(AdmxWorkspace)
+    End Sub
     Private Sub PolicyObjectContext_Opening(sender As Object, e As CancelEventArgs) Handles PolicyObjectContext.Opening
         ' When the right-click menu is opened
         Dim showingForCategory As Boolean

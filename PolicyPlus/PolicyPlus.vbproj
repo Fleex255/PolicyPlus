@@ -90,6 +90,12 @@
     <Compile Include="CmtxFile.vb" />
     <Compile Include="CompiledStructures.vb" />
     <Compile Include="ConfigurationStorage.vb" />
+    <Compile Include="DetailAdmx.Designer.vb">
+      <DependentUpon>DetailAdmx.vb</DependentUpon>
+    </Compile>
+    <Compile Include="DetailAdmx.vb">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="DetailCategory.Designer.vb">
       <DependentUpon>DetailCategory.vb</DependentUpon>
     </Compile>
@@ -180,6 +186,12 @@
     <Compile Include="ListEditor.vb">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="LoadedAdmx.Designer.vb">
+      <DependentUpon>LoadedAdmx.vb</DependentUpon>
+    </Compile>
+    <Compile Include="LoadedAdmx.vb">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Main.vb">
       <SubType>Form</SubType>
     </Compile>
@@ -243,6 +255,9 @@
     <Compile Include="XmlExtensions.vb" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="DetailAdmx.resx">
+      <DependentUpon>DetailAdmx.vb</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="DetailCategory.resx">
       <DependentUpon>DetailCategory.vb</DependentUpon>
     </EmbeddedResource>
@@ -287,6 +302,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="ListEditor.resx">
       <DependentUpon>ListEditor.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="LoadedAdmx.resx">
+      <DependentUpon>LoadedAdmx.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Main.resx">
       <DependentUpon>Main.vb</DependentUpon>

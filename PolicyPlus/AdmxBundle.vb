@@ -182,4 +182,9 @@ Public Class AdmxBundle
             Return QualifyName(Ref, Admx)
         End If
     End Function
+    Public ReadOnly Property Sources As IReadOnlyDictionary(Of AdmxFile, AdmlFile)
+        Get
+            Return SourceFiles
+        End Get
+    End Property
 End Class
