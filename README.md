@@ -26,9 +26,8 @@ While the UI allows the creation and editing of per-user GPOs, their settings ar
 ## Status
 Policy Plus is usable on all editions. It can load and save all policy sources successfully. Many more features are still to come, though.
 
-These features will hopefully be implemented very soon:
+These features will hopefully be implemented soon:
 
-* Viewing of all support definitions
 * Direct POL editing
 
 ## Download

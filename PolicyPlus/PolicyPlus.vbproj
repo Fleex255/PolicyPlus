@@ -192,6 +192,18 @@
     <Compile Include="LoadedAdmx.vb">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="LoadedProducts.Designer.vb">
+      <DependentUpon>LoadedProducts.vb</DependentUpon>
+    </Compile>
+    <Compile Include="LoadedProducts.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="LoadedSupportDefinitions.Designer.vb">
+      <DependentUpon>LoadedSupportDefinitions.vb</DependentUpon>
+    </Compile>
+    <Compile Include="LoadedSupportDefinitions.vb">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Main.vb">
       <SubType>Form</SubType>
     </Compile>
@@ -305,6 +317,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="LoadedAdmx.resx">
       <DependentUpon>LoadedAdmx.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="LoadedProducts.resx">
+      <DependentUpon>LoadedProducts.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="LoadedSupportDefinitions.resx">
+      <DependentUpon>LoadedSupportDefinitions.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Main.resx">
       <DependentUpon>Main.vb</DependentUpon>
