@@ -30,3 +30,8 @@ These features will hopefully be implemented very soon:
 
 * Viewing of all support definitions
 * Direct POL editing
+
+## Download
+[Download a Release build.](https://s3-us-west-2.amazonaws.com/policy-plus/Policy%20Plus.exe)
+This link will be updated for new commits after it is verified that they are fit for public use.
+Note that Policy Plus is still pre-release software, so there may be bugs; please submit any problems to the issue tracker.
