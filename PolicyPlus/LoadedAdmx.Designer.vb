@@ -74,7 +74,6 @@ Partial Class LoadedAdmx
         '
         'LoadedAdmx
         '
-        Me.AcceptButton = Me.ButtonClose
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.CancelButton = Me.ButtonClose

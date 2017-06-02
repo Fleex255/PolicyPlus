@@ -24,4 +24,7 @@
         ' Only repopulate if the form isn't still setting up
         If Visible Then UpdateListing()
     End Sub
+    Private Sub LsvSupport_KeyDown(sender As Object, e As KeyEventArgs) Handles LsvSupport.KeyDown
+        If e.KeyCode = Keys.Enter And LsvSupport.SelectedItems.Count > 0 Then LsvSupport_DoubleClick(sender, e)
+    End Sub
 End Class

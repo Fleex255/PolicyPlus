@@ -59,4 +59,10 @@
         If lsv.SelectedItems.Count = 0 Then Exit Sub
         DetailProduct.PresentDialog(sender.SelectedItems(0).Tag)
     End Sub
+    Sub ListKeyPressed(sender As Object, e As KeyEventArgs) Handles LsvTopLevelProducts.KeyDown, LsvMajorVersions.KeyDown, LsvMinorVersions.KeyDown
+        If e.KeyCode = Keys.Enter Then
+            OpenProductDetails(sender, e)
+            e.Handled = True
+        End If
+    End Sub
 End Class

@@ -19,4 +19,7 @@
     Private Sub LoadedAdmx_SizeChanged(sender As Object, e As EventArgs) Handles Me.SizeChanged
         ChNamespace.Width = Math.Max(30, LsvAdmx.ClientRectangle.Width - ChFolder.Width - ChFileTitle.Width)
     End Sub
+    Private Sub LsvAdmx_KeyDown(sender As Object, e As KeyEventArgs) Handles LsvAdmx.KeyDown
+        If e.KeyCode = Keys.Enter And LsvAdmx.SelectedItems.Count > 0 Then LsvAdmx_DoubleClick(sender, e)
+    End Sub
 End Class
