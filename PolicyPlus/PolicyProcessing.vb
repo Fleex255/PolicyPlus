@@ -37,6 +37,7 @@
             Dim presentElements As Integer = 0
             For Each elem In rawpol.Elements.Where(Function(e) e.ElementType <> "list")
                 Dim elemKey = If(elem.RegistryKey = "", rawpol.RegistryKey, elem.RegistryKey)
+                If PolicySource.WillDeleteValue(elemKey, elem.RegistryValue) And elem.ElementType <> "boolean" Then ' Implicit check boxes are deleted when unchecked
                     deletedElements += 1
                 ElseIf PolicySource.ContainsValue(elemKey, elem.RegistryValue) Then
                     presentElements += 1
