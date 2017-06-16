@@ -631,7 +631,7 @@ Public Class Main
                     MsgBox("The POL file could not be loaded.", MsgBoxStyle.Exclamation)
                     Exit Sub
                 End Try
-                If OpenSection.ShowDialog = DialogResult.OK Then
+                If OpenSection.PresentDialog(True, True) = DialogResult.OK Then
                     Dim section = If(OpenSection.SelectedSection = AdmxPolicySection.User, UserPolicySource, CompPolicySource)
                     pol.Apply(section)
                     UpdateCategoryListing()
@@ -644,7 +644,7 @@ Public Class Main
         ' Create a POL file from a current policy source
         Using sfd As New SaveFileDialog
             sfd.Filter = "POL files|*.pol"
-            If sfd.ShowDialog = DialogResult.OK AndAlso OpenSection.ShowDialog = DialogResult.OK Then
+            If sfd.ShowDialog = DialogResult.OK AndAlso OpenSection.PresentDialog(True, True) = DialogResult.OK Then
                 Dim section = If(OpenSection.SelectedSection = AdmxPolicySection.Machine, CompPolicySource, UserPolicySource)
                 Try
                     If TypeOf section Is PolFile Then
@@ -699,6 +699,17 @@ Public Class Main
     End Sub
     Private Sub AllProductsToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles AllProductsToolStripMenuItem.Click
         LoadedProducts.PresentDialog(AdmxWorkspace)
+    End Sub
+    Private Sub EditRawPOLToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles EditRawPOLToolStripMenuItem.Click
+        Dim userIsPol = TypeOf UserPolicySource Is PolFile
+        Dim compIsPol = TypeOf CompPolicySource Is PolFile
+        If Not (userIsPol Or compIsPol) Then
+            MsgBox("Neither loaded source is backed by a POL file.", MsgBoxStyle.Exclamation)
+            Exit Sub
+        End If
+        If OpenSection.PresentDialog(userIsPol, compIsPol) = DialogResult.OK Then
+            EditPol.PresentDialog(PolicyIcons, If(OpenSection.SelectedSection = AdmxPolicySection.Machine, CompPolicySource, UserPolicySource))
+        End If
     End Sub
     Private Sub PolicyObjectContext_Opening(sender As Object, e As CancelEventArgs) Handles PolicyObjectContext.Opening
         ' When the right-click menu is opened

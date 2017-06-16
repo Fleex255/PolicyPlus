@@ -14,4 +14,9 @@
         OptUser.Checked = False
         OptComputer.Checked = False
     End Sub
+    Public Function PresentDialog(UserEnabled As Boolean, CompEnabled As Boolean) As DialogResult
+        OptUser.Enabled = UserEnabled
+        OptComputer.Enabled = CompEnabled
+        Return ShowDialog()
+    End Function
 End Class

@@ -126,6 +126,12 @@
     <Compile Include="DownloadAdmx.vb">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="EditPol.Designer.vb">
+      <DependentUpon>EditPol.vb</DependentUpon>
+    </Compile>
+    <Compile Include="EditPol.vb">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="EditSetting.Designer.vb">
       <DependentUpon>EditSetting.vb</DependentUpon>
     </Compile>
@@ -284,6 +290,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="DownloadAdmx.resx">
       <DependentUpon>DownloadAdmx.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="EditPol.resx">
+      <DependentUpon>EditPol.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="EditSetting.resx">
       <DependentUpon>EditSetting.vb</DependentUpon>
