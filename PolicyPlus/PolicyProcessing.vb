@@ -37,7 +37,6 @@
             Dim presentElements As Integer = 0
             For Each elem In rawpol.Elements.Where(Function(e) e.ElementType <> "list")
                 Dim elemKey = If(elem.RegistryKey = "", rawpol.RegistryKey, elem.RegistryKey)
-                If PolicySource.WillDeleteValue(elemKey, elem.RegistryValue) Then
                     deletedElements += 1
                 ElseIf PolicySource.ContainsValue(elemKey, elem.RegistryValue) Then
                     presentElements += 1
@@ -290,6 +289,9 @@
                                 Dim checkState As Boolean = optionData
                                 If booleanElem.AffectedRegistry.OnValue Is Nothing And checkState Then
                                     PolicySource.SetValue(elemKey, elem.RegistryValue, 1UI, Microsoft.Win32.RegistryValueKind.DWord)
+                                End If
+                                If booleanElem.AffectedRegistry.OffValue Is Nothing And Not checkState Then
+                                    PolicySource.DeleteValue(elemKey, elem.RegistryValue)
                                 End If
                                 setList(booleanElem.AffectedRegistry, elemKey, elem.RegistryValue, checkState)
                             Case "text"
