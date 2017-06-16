@@ -184,6 +184,21 @@ Public Class PolFile
             Entries.Remove(kv.Key)
         Next
     End Sub
+    Public Function GetKeyNames(Key As String) As List(Of String)
+        Dim subkeyNames As New List(Of String)
+        Dim prefix = If(Key = "", "", Key & "\") ' Let an empty key name mean the root
+        For Each entry In Entries.Keys.Where(Function(e) e.StartsWith(prefix, StringComparison.InvariantCultureIgnoreCase))
+            If entry.StartsWith(prefix & "\", StringComparison.InvariantCultureIgnoreCase) Then Continue For
+            Dim properCased = Split(CasePreservation(entry), "\\", 2)(0)
+            If prefix.Length >= properCased.Length Then Continue For
+            Dim localKeyName = Split(properCased.Substring(prefix.Length), "\", 2)(0)
+            If Not subkeyNames.Contains(localKeyName, StringComparer.InvariantCultureIgnoreCase) Then subkeyNames.Add(localKeyName)
+        Next
+        Return subkeyNames
+    End Function
+    Public Function GetValueKind(Key As String, Value As String) As RegistryValueKind
+        Return Entries(GetDictKey(Key, Value)).Kind
+    End Function
     Private Class PolEntryData ' Represents one record in a POL file
         Public Kind As RegistryValueKind
         Public Data As Byte()
@@ -215,8 +230,8 @@ Public Class PolFile
             Dim ped As New PolEntryData With {.Kind = RegistryValueKind.DWord}
             Dim data(3) As Byte
             data(0) = Dword And &HFF
-            data(1) = Dword And &HFF00
-            data(2) = Dword And &HFF0000
+            data(1) = (Dword >> 8) And &HFF
+            data(2) = (Dword >> 16) And &HFF
             data(3) = Dword >> 24
             ped.Data = data
             Return ped
@@ -224,7 +239,7 @@ Public Class PolFile
         Public Function AsQword() As ULong
             Dim value As ULong = 0
             For n = 0 To 7
-                value += (Data(n) << (n * 8))
+                value += (CULng(Data(n)) << (n * 8))
             Next
             Return value
         End Function
