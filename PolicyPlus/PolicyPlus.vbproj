@@ -132,6 +132,42 @@
     <Compile Include="EditPol.vb">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="EditPolDelete.Designer.vb">
+      <DependentUpon>EditPolDelete.vb</DependentUpon>
+    </Compile>
+    <Compile Include="EditPolDelete.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="EditPolKey.Designer.vb">
+      <DependentUpon>EditPolKey.vb</DependentUpon>
+    </Compile>
+    <Compile Include="EditPolKey.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="EditPolMultiStringData.Designer.vb">
+      <DependentUpon>EditPolMultiStringData.vb</DependentUpon>
+    </Compile>
+    <Compile Include="EditPolMultiStringData.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="EditPolNumericData.Designer.vb">
+      <DependentUpon>EditPolNumericData.vb</DependentUpon>
+    </Compile>
+    <Compile Include="EditPolNumericData.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="EditPolStringData.Designer.vb">
+      <DependentUpon>EditPolStringData.vb</DependentUpon>
+    </Compile>
+    <Compile Include="EditPolStringData.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="EditPolValue.Designer.vb">
+      <DependentUpon>EditPolValue.vb</DependentUpon>
+    </Compile>
+    <Compile Include="EditPolValue.vb">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="EditSetting.Designer.vb">
       <DependentUpon>EditSetting.vb</DependentUpon>
     </Compile>
@@ -293,6 +329,24 @@
     </EmbeddedResource>
     <EmbeddedResource Include="EditPol.resx">
       <DependentUpon>EditPol.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="EditPolDelete.resx">
+      <DependentUpon>EditPolDelete.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="EditPolKey.resx">
+      <DependentUpon>EditPolKey.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="EditPolMultiStringData.resx">
+      <DependentUpon>EditPolMultiStringData.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="EditPolNumericData.resx">
+      <DependentUpon>EditPolNumericData.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="EditPolStringData.resx">
+      <DependentUpon>EditPolStringData.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="EditPolValue.resx">
+      <DependentUpon>EditPolValue.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="EditSetting.resx">
       <DependentUpon>EditSetting.vb</DependentUpon>

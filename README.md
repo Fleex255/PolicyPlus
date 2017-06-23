@@ -26,10 +26,6 @@ While the UI allows the creation and editing of per-user GPOs, their settings ar
 ## Status
 Policy Plus is usable on all editions. It can load and save all policy sources successfully. Many more features are still to come, though.
 
-These features will hopefully be implemented soon:
-
-* Direct POL editing
-
 ## Download
 [Download a Release build.](https://s3-us-west-2.amazonaws.com/policy-plus/Policy%20Plus.exe)
 This link will be updated for new commits after it is verified that they are fit for public use.

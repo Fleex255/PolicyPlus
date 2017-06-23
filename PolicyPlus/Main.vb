@@ -707,9 +707,16 @@ Public Class Main
             MsgBox("Neither loaded source is backed by a POL file.", MsgBoxStyle.Exclamation)
             Exit Sub
         End If
+        If Configuration.GetValue("EditPolDangerAcknowledged", 0) = 0 Then
+            If MsgBox("Caution! This tool is for very advanced users. Improper modifications may result in inconsistencies in policies' states." & vbCrLf & vbCrLf &
+                      "Changes operate directly on the policy source, though they will not be committed to disk until you save. Are you sure you want to continue?",
+                      MsgBoxStyle.Exclamation Or MsgBoxStyle.YesNo) = MsgBoxResult.No Then Exit Sub
+            Configuration.SetValue("EditPolDangerAcknowledged", 1)
+        End If
         If OpenSection.PresentDialog(userIsPol, compIsPol) = DialogResult.OK Then
             EditPol.PresentDialog(PolicyIcons, If(OpenSection.SelectedSection = AdmxPolicySection.Machine, CompPolicySource, UserPolicySource))
         End If
+        MoveToVisibleCategoryAndReload()
     End Sub
     Private Sub PolicyObjectContext_Opening(sender As Object, e As CancelEventArgs) Handles PolicyObjectContext.Opening
         ' When the right-click menu is opened

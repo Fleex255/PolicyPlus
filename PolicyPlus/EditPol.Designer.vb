@@ -26,6 +26,11 @@ Partial Class EditPol
         Me.ChItem = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
         Me.ChValue = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
         Me.ButtonSave = New System.Windows.Forms.Button()
+        Me.ButtonAddKey = New System.Windows.Forms.Button()
+        Me.ButtonAddValue = New System.Windows.Forms.Button()
+        Me.ButtonDeleteValue = New System.Windows.Forms.Button()
+        Me.ButtonForget = New System.Windows.Forms.Button()
+        Me.ButtonEdit = New System.Windows.Forms.Button()
         Me.SuspendLayout()
         '
         'LsvPol
@@ -36,11 +41,11 @@ Partial Class EditPol
         Me.LsvPol.Columns.AddRange(New System.Windows.Forms.ColumnHeader() {Me.ChItem, Me.ChValue})
         Me.LsvPol.FullRowSelect = True
         Me.LsvPol.HideSelection = False
-        Me.LsvPol.Location = New System.Drawing.Point(12, 12)
+        Me.LsvPol.Location = New System.Drawing.Point(12, 41)
         Me.LsvPol.MultiSelect = False
         Me.LsvPol.Name = "LsvPol"
         Me.LsvPol.ShowItemToolTips = True
-        Me.LsvPol.Size = New System.Drawing.Size(555, 223)
+        Me.LsvPol.Size = New System.Drawing.Size(555, 235)
         Me.LsvPol.TabIndex = 0
         Me.LsvPol.UseCompatibleStateImageBehavior = False
         Me.LsvPol.View = System.Windows.Forms.View.Details
@@ -58,19 +63,69 @@ Partial Class EditPol
         'ButtonSave
         '
         Me.ButtonSave.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.ButtonSave.Location = New System.Drawing.Point(492, 241)
+        Me.ButtonSave.Location = New System.Drawing.Point(492, 282)
         Me.ButtonSave.Name = "ButtonSave"
         Me.ButtonSave.Size = New System.Drawing.Size(75, 23)
         Me.ButtonSave.TabIndex = 2
-        Me.ButtonSave.Text = "OK"
+        Me.ButtonSave.Text = "Done"
         Me.ButtonSave.UseVisualStyleBackColor = True
+        '
+        'ButtonAddKey
+        '
+        Me.ButtonAddKey.Location = New System.Drawing.Point(12, 12)
+        Me.ButtonAddKey.Name = "ButtonAddKey"
+        Me.ButtonAddKey.Size = New System.Drawing.Size(75, 23)
+        Me.ButtonAddKey.TabIndex = 3
+        Me.ButtonAddKey.Text = "Add Key"
+        Me.ButtonAddKey.UseVisualStyleBackColor = True
+        '
+        'ButtonAddValue
+        '
+        Me.ButtonAddValue.Location = New System.Drawing.Point(93, 12)
+        Me.ButtonAddValue.Name = "ButtonAddValue"
+        Me.ButtonAddValue.Size = New System.Drawing.Size(87, 23)
+        Me.ButtonAddValue.TabIndex = 4
+        Me.ButtonAddValue.Text = "Add Value"
+        Me.ButtonAddValue.UseVisualStyleBackColor = True
+        '
+        'ButtonDeleteValue
+        '
+        Me.ButtonDeleteValue.Location = New System.Drawing.Point(186, 12)
+        Me.ButtonDeleteValue.Name = "ButtonDeleteValue"
+        Me.ButtonDeleteValue.Size = New System.Drawing.Size(100, 23)
+        Me.ButtonDeleteValue.TabIndex = 5
+        Me.ButtonDeleteValue.Text = "Delete Value(s)"
+        Me.ButtonDeleteValue.UseVisualStyleBackColor = True
+        '
+        'ButtonForget
+        '
+        Me.ButtonForget.Location = New System.Drawing.Point(292, 12)
+        Me.ButtonForget.Name = "ButtonForget"
+        Me.ButtonForget.Size = New System.Drawing.Size(75, 23)
+        Me.ButtonForget.TabIndex = 6
+        Me.ButtonForget.Text = "Forget"
+        Me.ButtonForget.UseVisualStyleBackColor = True
+        '
+        'ButtonEdit
+        '
+        Me.ButtonEdit.Location = New System.Drawing.Point(373, 12)
+        Me.ButtonEdit.Name = "ButtonEdit"
+        Me.ButtonEdit.Size = New System.Drawing.Size(75, 23)
+        Me.ButtonEdit.TabIndex = 7
+        Me.ButtonEdit.Text = "Edit"
+        Me.ButtonEdit.UseVisualStyleBackColor = True
         '
         'EditPol
         '
         Me.AcceptButton = Me.ButtonSave
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
-        Me.ClientSize = New System.Drawing.Size(579, 276)
+        Me.ClientSize = New System.Drawing.Size(579, 317)
+        Me.Controls.Add(Me.ButtonEdit)
+        Me.Controls.Add(Me.ButtonForget)
+        Me.Controls.Add(Me.ButtonDeleteValue)
+        Me.Controls.Add(Me.ButtonAddValue)
+        Me.Controls.Add(Me.ButtonAddKey)
         Me.Controls.Add(Me.ButtonSave)
         Me.Controls.Add(Me.LsvPol)
         Me.KeyPreview = True
@@ -89,4 +144,9 @@ Partial Class EditPol
     Friend WithEvents ButtonSave As Button
     Friend WithEvents ChItem As ColumnHeader
     Friend WithEvents ChValue As ColumnHeader
+    Friend WithEvents ButtonAddKey As Button
+    Friend WithEvents ButtonAddValue As Button
+    Friend WithEvents ButtonDeleteValue As Button
+    Friend WithEvents ButtonForget As Button
+    Friend WithEvents ButtonEdit As Button
 End Class

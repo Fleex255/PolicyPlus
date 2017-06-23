@@ -13,7 +13,9 @@ Public Interface IPolicySource
 End Interface
 Public Class PolFile
     Implements IPolicySource
-    Private Entries As New Dictionary(Of String, PolEntryData) ' Keys are lowercase Registry keys and values, separated by "\\"
+    ' The sortedness is important because key clearances need to be processed before the addition of their values
+    ' Fortunately, clearing entries start with **, which sorts before normal values
+    Private Entries As New SortedDictionary(Of String, PolEntryData) ' Keys are lowercase Registry keys and values, separated by "\\"
     Private CasePreservation As New Dictionary(Of String, String) ' Keep track of the original cases
     Private Function GetDictKey(Key As String, Value As String) As String
         Dim origCase = Key & "\\" & Value
@@ -60,29 +62,32 @@ Public Class PolFile
     End Function
     Public Sub Save(File As String)
         Using fPol As New FileStream(File, FileMode.Create), binary As New BinaryWriter(fPol, Text.Encoding.Unicode)
-            Dim writeSz = Sub(Text As String)
-                              For Each c In Text
-                                  binary.Write(c)
-                              Next
-                              binary.Write(0S)
-                          End Sub
-            binary.Write(&H67655250UI)
-            binary.Write(1)
-            For Each kv In Entries
-                binary.Write("["c)
-                Dim pathparts = Split(CasePreservation(kv.Key), "\\")
-                writeSz(pathparts(0)) ' Key name
-                binary.Write(";"c)
-                writeSz(pathparts(1)) ' Value name
-                binary.Write(";"c)
-                binary.Write(kv.Value.Kind)
-                binary.Write(";"c)
-                binary.Write(kv.Value.Data.Length)
-                binary.Write(";"c)
-                binary.Write(kv.Value.Data)
-                binary.Write("]"c)
-            Next
+            Save(binary)
         End Using
+    End Sub
+    Public Sub Save(Writer As BinaryWriter)
+        Dim writeSz = Sub(Text As String)
+                          For Each c In Text
+                              Writer.Write(c)
+                          Next
+                          Writer.Write(0S)
+                      End Sub
+        Writer.Write(&H67655250UI)
+        Writer.Write(1)
+        For Each kv In Entries
+            Writer.Write("["c)
+            Dim pathparts = Split(CasePreservation(kv.Key), "\\")
+            writeSz(pathparts(0)) ' Key name
+            Writer.Write(";"c)
+            writeSz(pathparts(1)) ' Value name
+            Writer.Write(";"c)
+            Writer.Write(kv.Value.Kind)
+            Writer.Write(";"c)
+            Writer.Write(kv.Value.Data.Length)
+            Writer.Write(";"c)
+            Writer.Write(kv.Value.Data)
+            Writer.Write("]"c)
+        Next
     End Sub
     Public Sub DeleteValue(Key As String, Value As String) Implements IPolicySource.DeleteValue
         ForgetValue(Key, Value)
@@ -115,7 +120,7 @@ Public Class PolFile
         Dim keyRoot = GetDictKey(Key, "")
         For Each kv In Entries.Where(Function(e) e.Key.StartsWith(keyRoot))
             If kv.Key = GetDictKey(Key, "**del." & Value) Then
-                willDelete = True
+                willDelete = False
             ElseIf kv.Key.StartsWith(GetDictKey(Key, "**delvals")) Then ' MS POL files also use "**delvals."
                 willDelete = True
             ElseIf kv.Key = GetDictKey(Key, "**deletevalues") Then
@@ -198,6 +203,17 @@ Public Class PolFile
     End Function
     Public Function GetValueKind(Key As String, Value As String) As RegistryValueKind
         Return Entries(GetDictKey(Key, Value)).Kind
+    End Function
+    Public Function Duplicate() As PolFile
+        Using ms As New MemoryStream
+            Using writer As New BinaryWriter(ms, Text.Encoding.Unicode, True)
+                Save(writer)
+            End Using
+            ms.Position = 0
+            Using reader As New BinaryReader(ms, Text.Encoding.Unicode)
+                Return Load(reader)
+            End Using
+        End Using
     End Function
     Private Class PolEntryData ' Represents one record in a POL file
         Public Kind As RegistryValueKind
