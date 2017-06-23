@@ -388,7 +388,8 @@ Public Class RegistryPolicyProxy ' Pass operations through to the real Registry
         Return False
     End Function
     Public Shared Function IsPolicyKey(KeyPath As String) As Boolean
-        Return PolicyKeys.Any(Function(pk) KeyPath.StartsWith(pk & "\", StringComparison.InvariantCultureIgnoreCase))
+        Return PolicyKeys.Any(Function(pk) KeyPath.StartsWith(pk & "\", StringComparison.InvariantCultureIgnoreCase) Or
+                                  KeyPath.Equals(pk, StringComparison.InvariantCultureIgnoreCase))
     End Function
     Public Sub ClearKey(Key As String) Implements IPolicySource.ClearKey
         For Each value In GetValueNames(Key)
