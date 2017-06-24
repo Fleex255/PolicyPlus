@@ -69,7 +69,7 @@ Public Class EditPol
                  End Sub
         addKey("", 0)
         LsvPol.EndUpdate()
-        If topItemIndex.HasValue Then LsvPol.TopItem = LsvPol.Items(topItemIndex.Value)
+        If topItemIndex.HasValue AndAlso LsvPol.Items.Count > topItemIndex.Value Then LsvPol.TopItem = LsvPol.Items(topItemIndex.Value)
     End Sub
     Public Sub PresentDialog(Images As ImageList, Pol As PolFile)
         LsvPol.SmallImageList = Images
@@ -204,30 +204,35 @@ Public Class EditPol
         End If
     End Sub
     Private Sub ButtonForget_Click(sender As Object, e As EventArgs) Handles ButtonForget.Click
-        Dim containerKey As String
+        Dim containerKey As String = ""
         Dim tag = LsvPol.SelectedItems(0).Tag
         If TypeOf tag Is String Then
-            If MsgBox("Are you sure you want to remove this key and all its contents?", MsgBoxStyle.Exclamation) = MsgBoxResult.No Then Exit Sub
-            containerKey = CStr(tag).Remove(CStr(tag).LastIndexOf("\"c))
+            If MsgBox("Are you sure you want to remove this key and all its contents?", MsgBoxStyle.Exclamation Or MsgBoxStyle.YesNo) = MsgBoxResult.No Then Exit Sub
+            Dim keyPath As String = tag
+            If keyPath.Contains("\") Then containerKey = keyPath.Remove(keyPath.LastIndexOf("\"c))
             Dim removeKey As Action(Of String)
             removeKey = Sub(Key As String)
+                            For Each subkey In EditingPol.GetKeyNames(Key)
+                                removeKey(Key & "\" & subkey)
+                            Next
                             EditingPol.ClearKey(Key)
                             EditingPol.ForgetKeyClearance(Key)
-                            For Each subkey In EditingPol.GetKeyNames(Key)
-                                removeKey(subkey)
-                            Next
                         End Sub
-            removeKey(tag)
+            removeKey(keyPath)
         Else
             Dim info As PolValueInfo = tag
             containerKey = info.Key
             EditingPol.ForgetValue(info.Key, info.Name)
         End If
         UpdateTree()
-        Dim pathParts = Split(containerKey, "\")
-        For n = 1 To pathParts.Length
-            SelectKey(String.Join("\", pathParts.Take(n)))
-        Next
+        If containerKey <> "" Then
+            Dim pathParts = Split(containerKey, "\")
+            For n = 1 To pathParts.Length
+                SelectKey(String.Join("\", pathParts.Take(n)))
+            Next
+        Else
+            LsvPol_SelectedIndexChanged(Nothing, Nothing) ' Make sure the buttons don't stay enabled
+        End If
     End Sub
     Private Sub ButtonEdit_Click(sender As Object, e As EventArgs) Handles ButtonEdit.Click
         Dim info As PolValueInfo = LsvPol.SelectedItems(0).Tag
