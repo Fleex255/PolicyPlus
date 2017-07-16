@@ -171,27 +171,36 @@ Public Class PolicyLoader
     End Function
     Private Sub UpdateGptIni()
         ' Increment the version number in gpt.ini
+        Const MachExtensionsLine = "gPCMachineExtensionNames=[{35378EAC-683F-11D2-A89A-00C04FBBCFA2}{D02B1F72-3407-48AE-BA88-E8213C6761F1}]"
+        Const UserExtensionsLine = "gPCUserExtensionNames=[{35378EAC-683F-11D2-A89A-00C04FBBCFA2}{D02B1F73-3407-48AE-BA88-E8213C6761F1}]"
         If IO.File.Exists(GptIniPath) Then
-            ' Alter the existing gpt.ini's Version line
+            ' Alter the existing gpt.ini's Version line and add any necessary other lines
             Dim lines = IO.File.ReadLines(GptIniPath).ToList
             Using fGpt As New IO.StreamWriter(GptIniPath, False)
+                Dim seenMachExts, seenUserExts, seenVersion As Boolean
                 For Each line In lines
                     If line.StartsWith("Version", StringComparison.InvariantCultureIgnoreCase) Then
                         Dim curVersion As Integer = Split(line, "=", 2)(1)
                         curVersion += If(User, &H10000, 1)
                         fGpt.WriteLine("Version=" & curVersion)
+                        seenVersion = True
                     Else
                         fGpt.WriteLine(line)
+                        If line.StartsWith("gPCMachineExtensionNames=", StringComparison.InvariantCultureIgnoreCase) Then seenMachExts = True
+                        If line.StartsWith("gPCUserExtensionNames=", StringComparison.InvariantCultureIgnoreCase) Then seenUserExts = True
                     End If
                 Next
+                If Not seenVersion Then fGpt.WriteLine("Version=" & &H10001)
+                If Not seenMachExts Then fGpt.WriteLine(MachExtensionsLine)
+                If Not seenUserExts Then fGpt.WriteLine(UserExtensionsLine)
             End Using
         Else
             ' Create a new gpt.ini
             Using fGpt As New IO.StreamWriter(GptIniPath)
                 fGpt.WriteLine("[General]")
-                fGpt.WriteLine("gPCMachineExtensionNames=[{35378EAC-683F-11D2-A89A-00C04FBBCFA2}{D02B1F72-3407-48AE-BA88-E8213C6761F1}]")
+                fGpt.WriteLine(MachExtensionsLine)
+                fGpt.WriteLine(UserExtensionsLine)
                 fGpt.WriteLine("Version=" & &H10001)
-                fGpt.WriteLine("gPCUserExtensionNames=[{35378EAC-683F-11D2-A89A-00C04FBBCFA2}{D02B1F73-3407-48AE-BA88-E8213C6761F1}]")
             End Using
         End If
     End Sub
