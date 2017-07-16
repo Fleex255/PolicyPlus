@@ -78,6 +78,10 @@ Public Class DownloadAdmx
                                       Dim langSubfolder = Globalization.CultureInfo.CurrentCulture.Name
                                       moveFilesInDir(unpackPath & "\PolicyDefinitions", destination)
                                       moveFilesInDir(unpackPath & "\PolicyDefinitions\" & langSubfolder, destination & "\" & langSubfolder)
+                                      If langSubfolder <> "en-US" Then
+                                          ' Also copy the English language files as a fallback
+                                          moveFilesInDir(unpackPath & "\PolicyDefinitions\en-US", destination & "\en-US")
+                                      End If
                                       failPhase = "remove temporary files"
                                       setProgress("Cleaning up...")
                                       IO.Directory.Delete(tempPath, True)

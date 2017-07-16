@@ -30,7 +30,7 @@ Public Class AdmxFile
                 Case "supersededAdm" ' The ADM file that this ADMX supersedes
                     admx.SupersededAdm = child.Attributes("fileName").Value
                 Case "resources" ' Minimum required version
-                    admx.MinAdmlVersion = Decimal.Parse(child.Attributes("minRequiredRevision").Value)
+                    admx.MinAdmlVersion = Decimal.Parse(child.Attributes("minRequiredRevision").Value, Globalization.CultureInfo.InvariantCulture)
                 Case "supportedOn" ' Support definitions
                     For Each supportInfo As XmlNode In child.ChildNodes
                         If supportInfo.LocalName = "definitions" Then

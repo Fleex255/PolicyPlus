@@ -29,6 +29,7 @@ Public Class AdmxBundle
         Dim admx = AdmxFile.Load(AdmxPath)
         Dim fileTitle = Path.GetFileName(AdmxPath)
         Dim admlPath = Path.ChangeExtension(AdmxPath.Replace(fileTitle, LanguageCode & "\" & fileTitle), "adml")
+        If Not File.Exists(admlPath) Then admlPath = Path.ChangeExtension(AdmxPath.Replace(fileTitle, "en-US\" & fileTitle), "adml")
         Dim adml = AdmlFile.Load(admlPath)
         ' Stage the raw ADMX info for BuildStructures
         RawCategories.AddRange(admx.Categories)

@@ -16,7 +16,7 @@ Public Class AdmlFile
         xmlDoc.Load(File)
         ' Load ADML metadata
         Dim policyDefinitionResources As XmlNode = xmlDoc.GetElementsByTagName("policyDefinitionResources")(0)
-        adml.Revision = Decimal.Parse(policyDefinitionResources.Attributes("revision").Value)
+        adml.Revision = Decimal.Parse(policyDefinitionResources.Attributes("revision").Value, Globalization.CultureInfo.InvariantCulture)
         For Each child As XmlNode In policyDefinitionResources.ChildNodes
             Select Case child.LocalName
                 Case "displayName"
