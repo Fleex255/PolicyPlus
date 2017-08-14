@@ -719,7 +719,8 @@ Public Class Main
             Configuration.SetValue("EditPolDangerAcknowledged", 1)
         End If
         If OpenSection.PresentDialog(userIsPol, compIsPol) = DialogResult.OK Then
-            EditPol.PresentDialog(PolicyIcons, If(OpenSection.SelectedSection = AdmxPolicySection.Machine, CompPolicySource, UserPolicySource))
+            EditPol.PresentDialog(PolicyIcons, If(OpenSection.SelectedSection = AdmxPolicySection.Machine, CompPolicySource, UserPolicySource),
+                                  OpenSection.SelectedSection = AdmxPolicySection.User)
         End If
         MoveToVisibleCategoryAndReload()
     End Sub

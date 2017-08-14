@@ -1,6 +1,7 @@
 ﻿Imports Microsoft.Win32
 Public Class EditPol
     Public EditingPol As PolFile
+    Dim EditingUserSource As Boolean
     Sub UpdateTree()
         ' Repopulate the main list view, keeping the scroll position in the same place
         Dim topItemIndex As Integer?
@@ -71,9 +72,10 @@ Public Class EditPol
         LsvPol.EndUpdate()
         If topItemIndex.HasValue AndAlso LsvPol.Items.Count > topItemIndex.Value Then LsvPol.TopItem = LsvPol.Items(topItemIndex.Value)
     End Sub
-    Public Sub PresentDialog(Images As ImageList, Pol As PolFile)
+    Public Sub PresentDialog(Images As ImageList, Pol As PolFile, IsUser As Boolean)
         LsvPol.SmallImageList = Images
         EditingPol = Pol
+        EditingUserSource = IsUser
         UpdateTree()
         ChItem.Width = LsvPol.ClientSize.Width - ChValue.Width - SystemInformation.VerticalScrollBarWidth
         LsvPol_SelectedIndexChanged(Nothing, Nothing)
@@ -244,12 +246,14 @@ Public Class EditPol
         End If
     End Sub
     Private Sub LsvPol_SelectedIndexChanged(sender As Object, e As EventArgs) Handles LsvPol.SelectedIndexChanged
+        ' Update the enabled status of all the buttons
         If LsvPol.SelectedItems.Count = 0 Then
             ButtonAddKey.Enabled = True
             ButtonAddValue.Enabled = False
             ButtonDeleteValue.Enabled = False
             ButtonEdit.Enabled = False
             ButtonForget.Enabled = False
+            ButtonExport.Enabled = True
         Else
             Dim tag = LsvPol.SelectedItems(0).Tag
             ButtonForget.Enabled = True
@@ -258,14 +262,24 @@ Public Class EditPol
                 ButtonAddValue.Enabled = True
                 ButtonEdit.Enabled = False
                 ButtonDeleteValue.Enabled = True
+                ButtonExport.Enabled = True
             Else ' It's a value
                 ButtonAddKey.Enabled = False
                 ButtonAddValue.Enabled = False
                 Dim delete = CType(tag, PolValueInfo).IsDeleter
                 ButtonEdit.Enabled = Not delete
                 ButtonDeleteValue.Enabled = Not delete
+                ButtonExport.Enabled = False
             End If
         End If
+    End Sub
+    Private Sub ButtonImport_Click(sender As Object, e As EventArgs) Handles ButtonImport.Click
+        If ImportReg.PresentDialog(EditingPol) = DialogResult.OK Then UpdateTree()
+    End Sub
+    Private Sub ButtonExport_Click(sender As Object, e As EventArgs) Handles ButtonExport.Click
+        Dim branch As String = ""
+        If LsvPol.SelectedItems.Count > 0 Then branch = LsvPol.SelectedItems(0).Tag
+        ExportReg.PresentDialog(branch, EditingPol, EditingUserSource)
     End Sub
     Private Class PolValueInfo
         Public Key As String

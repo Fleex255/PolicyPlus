@@ -31,6 +31,8 @@ Partial Class EditPol
         Me.ButtonDeleteValue = New System.Windows.Forms.Button()
         Me.ButtonForget = New System.Windows.Forms.Button()
         Me.ButtonEdit = New System.Windows.Forms.Button()
+        Me.ButtonImport = New System.Windows.Forms.Button()
+        Me.ButtonExport = New System.Windows.Forms.Button()
         Me.SuspendLayout()
         '
         'LsvPol
@@ -66,7 +68,7 @@ Partial Class EditPol
         Me.ButtonSave.Location = New System.Drawing.Point(492, 282)
         Me.ButtonSave.Name = "ButtonSave"
         Me.ButtonSave.Size = New System.Drawing.Size(75, 23)
-        Me.ButtonSave.TabIndex = 2
+        Me.ButtonSave.TabIndex = 11
         Me.ButtonSave.Text = "Done"
         Me.ButtonSave.UseVisualStyleBackColor = True
         '
@@ -115,12 +117,34 @@ Partial Class EditPol
         Me.ButtonEdit.Text = "Edit"
         Me.ButtonEdit.UseVisualStyleBackColor = True
         '
+        'ButtonImport
+        '
+        Me.ButtonImport.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
+        Me.ButtonImport.Location = New System.Drawing.Point(12, 282)
+        Me.ButtonImport.Name = "ButtonImport"
+        Me.ButtonImport.Size = New System.Drawing.Size(75, 23)
+        Me.ButtonImport.TabIndex = 9
+        Me.ButtonImport.Text = "Import REG"
+        Me.ButtonImport.UseVisualStyleBackColor = True
+        '
+        'ButtonExport
+        '
+        Me.ButtonExport.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
+        Me.ButtonExport.Location = New System.Drawing.Point(93, 282)
+        Me.ButtonExport.Name = "ButtonExport"
+        Me.ButtonExport.Size = New System.Drawing.Size(75, 23)
+        Me.ButtonExport.TabIndex = 10
+        Me.ButtonExport.Text = "Export REG"
+        Me.ButtonExport.UseVisualStyleBackColor = True
+        '
         'EditPol
         '
         Me.AcceptButton = Me.ButtonSave
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.ClientSize = New System.Drawing.Size(579, 317)
+        Me.Controls.Add(Me.ButtonExport)
+        Me.Controls.Add(Me.ButtonImport)
         Me.Controls.Add(Me.ButtonEdit)
         Me.Controls.Add(Me.ButtonForget)
         Me.Controls.Add(Me.ButtonDeleteValue)
@@ -149,4 +173,6 @@ Partial Class EditPol
     Friend WithEvents ButtonDeleteValue As Button
     Friend WithEvents ButtonForget As Button
     Friend WithEvents ButtonEdit As Button
+    Friend WithEvents ButtonImport As Button
+    Friend WithEvents ButtonExport As Button
 End Class
