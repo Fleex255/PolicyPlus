@@ -174,6 +174,12 @@
     <Compile Include="EditSetting.vb">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="ExportReg.Designer.vb">
+      <DependentUpon>ExportReg.vb</DependentUpon>
+    </Compile>
+    <Compile Include="ExportReg.vb">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="FilterOptions.Designer.vb">
       <DependentUpon>FilterOptions.vb</DependentUpon>
     </Compile>
@@ -202,6 +208,12 @@
       <DependentUpon>FindResults.vb</DependentUpon>
     </Compile>
     <Compile Include="FindResults.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ImportReg.Designer.vb">
+      <DependentUpon>ImportReg.vb</DependentUpon>
+    </Compile>
+    <Compile Include="ImportReg.vb">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="ImportSpol.Designer.vb">
@@ -305,6 +317,7 @@
     <Compile Include="PolicyStructures.vb" />
     <Compile Include="PresentationStructures.vb" />
     <Compile Include="Privilege.vb" />
+    <Compile Include="RegFile.vb" />
     <Compile Include="SpolFile.vb" />
     <Compile Include="XmlExtensions.vb" />
   </ItemGroup>
@@ -351,6 +364,9 @@
     <EmbeddedResource Include="EditSetting.resx">
       <DependentUpon>EditSetting.vb</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="ExportReg.resx">
+      <DependentUpon>ExportReg.vb</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="FilterOptions.resx">
       <DependentUpon>FilterOptions.vb</DependentUpon>
     </EmbeddedResource>
@@ -365,6 +381,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="FindResults.resx">
       <DependentUpon>FindResults.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ImportReg.resx">
+      <DependentUpon>ImportReg.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="ImportSpol.resx">
       <DependentUpon>ImportSpol.vb</DependentUpon>

@@ -85,6 +85,8 @@ Partial Class Main
         Me.InfoStrip = New System.Windows.Forms.StatusStrip()
         Me.ComputerSourceLabel = New System.Windows.Forms.ToolStripStatusLabel()
         Me.UserSourceLabel = New System.Windows.Forms.ToolStripStatusLabel()
+        Me.ExportREGToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.ImportREGToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         ChSettingEnabled = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
         ChSettingCommented = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
         ToolStripSeparator1 = New System.Windows.Forms.ToolStripSeparator()
@@ -314,7 +316,7 @@ Partial Class Main
         '
         'ShareToolStripMenuItem
         '
-        Me.ShareToolStripMenuItem.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.ImportSemanticPolicyToolStripMenuItem, Me.ImportPOLToolStripMenuItem, ToolStripSeparator5, Me.ExportPOLToolStripMenuItem})
+        Me.ShareToolStripMenuItem.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.ImportSemanticPolicyToolStripMenuItem, Me.ImportPOLToolStripMenuItem, Me.ImportREGToolStripMenuItem, ToolStripSeparator5, Me.ExportPOLToolStripMenuItem, Me.ExportREGToolStripMenuItem})
         Me.ShareToolStripMenuItem.Name = "ShareToolStripMenuItem"
         Me.ShareToolStripMenuItem.Size = New System.Drawing.Size(48, 20)
         Me.ShareToolStripMenuItem.Text = "Share"
@@ -614,6 +616,18 @@ Partial Class Main
         Me.UserSourceLabel.Size = New System.Drawing.Size(54, 17)
         Me.UserSourceLabel.Text = "User info"
         '
+        'ExportREGToolStripMenuItem
+        '
+        Me.ExportREGToolStripMenuItem.Name = "ExportREGToolStripMenuItem"
+        Me.ExportREGToolStripMenuItem.Size = New System.Drawing.Size(197, 22)
+        Me.ExportREGToolStripMenuItem.Text = "Export REG"
+        '
+        'ImportREGToolStripMenuItem
+        '
+        Me.ImportREGToolStripMenuItem.Name = "ImportREGToolStripMenuItem"
+        Me.ImportREGToolStripMenuItem.Size = New System.Drawing.Size(197, 22)
+        Me.ImportREGToolStripMenuItem.Text = "Import REG"
+        '
         'Main
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
@@ -696,4 +710,6 @@ Partial Class Main
     Friend WithEvents AllSupportDefinitionsToolStripMenuItem As ToolStripMenuItem
     Friend WithEvents AllProductsToolStripMenuItem As ToolStripMenuItem
     Friend WithEvents EditRawPOLToolStripMenuItem As ToolStripMenuItem
+    Friend WithEvents ExportREGToolStripMenuItem As ToolStripMenuItem
+    Friend WithEvents ImportREGToolStripMenuItem As ToolStripMenuItem
 End Class

@@ -386,6 +386,36 @@ Public Class Main
         ' Does this policy apply to the given section?
         Return (Policy.RawPolicy.Section And Section) > 0
     End Function
+    Function GetOrCreatePolFromPolicySource(Source As IPolicySource) As PolFile
+        If TypeOf Source Is PolFile Then
+            ' If it's already a POL, just save it
+            Return Source
+        ElseIf TypeOf Source Is RegistryPolicyProxy Then
+            ' Recurse through the Registry branch and create a POL
+            Dim regRoot = CType(Source, RegistryPolicyProxy).EncapsulatedRegistry
+            Dim pol As New PolFile
+            Dim addSubtree As Action(Of String, RegistryKey)
+            addSubtree = Sub(PathRoot As String, Key As RegistryKey)
+                             For Each valName In Key.GetValueNames
+                                 Dim valData = Key.GetValue(valName, Nothing, RegistryValueOptions.DoNotExpandEnvironmentNames)
+                                 pol.SetValue(PathRoot, valName, valData, Key.GetValueKind(valName))
+                             Next
+                             For Each subkeyName In Key.GetSubKeyNames
+                                 Using subkey = Key.OpenSubKey(subkeyName, False)
+                                     addSubtree(PathRoot & "\" & subkeyName, subkey)
+                                 End Using
+                             Next
+                         End Sub
+            For Each policyPath In RegistryPolicyProxy.PolicyKeys
+                Using policyKey = regRoot.OpenSubKey(policyPath, False)
+                    addSubtree(policyPath, policyKey)
+                End Using
+            Next
+            Return pol
+        Else
+            Throw New InvalidOperationException("Policy source type not supported")
+        End If
+    End Function
     Private Sub CategoriesTree_AfterSelect(sender As Object, e As TreeViewEventArgs) Handles CategoriesTree.AfterSelect
         ' When the user selects a new category in the left pane
         CurrentCategory = e.Node.Tag
@@ -647,32 +677,7 @@ Public Class Main
             If sfd.ShowDialog = DialogResult.OK AndAlso OpenSection.PresentDialog(True, True) = DialogResult.OK Then
                 Dim section = If(OpenSection.SelectedSection = AdmxPolicySection.Machine, CompPolicySource, UserPolicySource)
                 Try
-                    If TypeOf section Is PolFile Then
-                        ' If it's already a POL, just save it
-                        CType(section, PolFile).Save(sfd.FileName)
-                    ElseIf TypeOf section Is RegistryPolicyProxy Then
-                        ' Recurse through the Registry branch and create a POL
-                        Dim regRoot = CType(section, RegistryPolicyProxy).EncapsulatedRegistry
-                        Dim pol As New PolFile
-                        Dim addSubtree As Action(Of String, RegistryKey)
-                        addSubtree = Sub(PathRoot As String, Key As RegistryKey)
-                                         For Each valName In Key.GetValueNames
-                                             Dim valData = Key.GetValue(valName, Nothing, RegistryValueOptions.DoNotExpandEnvironmentNames)
-                                             pol.SetValue(PathRoot, valName, valData, Key.GetValueKind(valName))
-                                         Next
-                                         For Each subkeyName In Key.GetSubKeyNames
-                                             Using subkey = Key.OpenSubKey(subkeyName, False)
-                                                 addSubtree(PathRoot & "\" & subkeyName, subkey)
-                                             End Using
-                                         Next
-                                     End Sub
-                        For Each policyPath In RegistryPolicyProxy.PolicyKeys
-                            Using policyKey = regRoot.OpenSubKey(policyPath, False)
-                                addSubtree(policyPath, policyKey)
-                            End Using
-                        Next
-                        pol.Save(sfd.FileName)
-                    End If
+                    GetOrCreatePolFromPolicySource(section).Save(sfd.FileName)
                     MsgBox("POL exported successfully.", MsgBoxStyle.Information)
                 Catch ex As Exception
                     MsgBox("The POL file could not be saved.", MsgBoxStyle.Exclamation)
@@ -717,6 +722,18 @@ Public Class Main
             EditPol.PresentDialog(PolicyIcons, If(OpenSection.SelectedSection = AdmxPolicySection.Machine, CompPolicySource, UserPolicySource))
         End If
         MoveToVisibleCategoryAndReload()
+    End Sub
+    Private Sub ExportREGToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles ExportREGToolStripMenuItem.Click
+        If OpenSection.PresentDialog(True, True) = DialogResult.OK Then
+            Dim source = If(OpenSection.SelectedSection = AdmxPolicySection.Machine, CompPolicySource, UserPolicySource)
+            ExportReg.PresentDialog("", GetOrCreatePolFromPolicySource(source), OpenSection.SelectedSection = AdmxPolicySection.User)
+        End If
+    End Sub
+    Private Sub ImportREGToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles ImportREGToolStripMenuItem.Click
+        If OpenSection.PresentDialog(True, True) = DialogResult.OK Then
+            Dim source = If(OpenSection.SelectedSection = AdmxPolicySection.Machine, CompPolicySource, UserPolicySource)
+            If ImportReg.PresentDialog(source) = DialogResult.OK Then MoveToVisibleCategoryAndReload()
+        End If
     End Sub
     Private Sub PolicyObjectContext_Opening(sender As Object, e As CancelEventArgs) Handles PolicyObjectContext.Opening
         ' When the right-click menu is opened

@@ -215,6 +215,12 @@ Public Class PolFile
             End Using
         End Using
     End Function
+    Public Shared Function ObjectToBytes(Data As Object, Kind As RegistryValueKind) As Byte()
+        Return PolEntryData.FromArbitrary(Data, Kind).Data
+    End Function
+    Public Shared Function BytesToObject(Data As Byte(), Kind As RegistryValueKind) As Object
+        Return (New PolEntryData With {.Data = Data, .Kind = Kind}).AsArbitrary()
+    End Function
     Private Class PolEntryData ' Represents one record in a POL file
         Public Kind As RegistryValueKind
         Public Data As Byte()
