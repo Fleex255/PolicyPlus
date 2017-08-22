@@ -44,3 +44,12 @@ Policy Plus is usable on all editions. It can load and save all policy sources s
 [Download a Release build.](https://s3-us-west-2.amazonaws.com/policy-plus/Policy%20Plus.exe)
 This link will be updated for new commits after it is verified that they are fit for public use.
 Note that Policy Plus is still pre-release software, so there may be bugs; please submit any problems to the issue tracker.
+
+[Download a Debug build.](https://s3-us-west-2.amazonaws.com/policy-plus/PolicyPlusDev.exe)
+This link will be updated more frequently than the previous.
+It may include more features, but those features will be less tested and could have unintended effects.
+Please be careful.
+
+**N.B.** A few antivirus programs incorrectly flag Policy Plus as malware. 
+Policy Plus is a powerful tool and so may cause problems if used recklessly, but it is not malicious.
+If you would prefer to not trust binaries, feel free to read the code and [compile Policy Plus from source](https://github.com/Fleex255/PolicyPlus/blob/master/COMPILE.md).
