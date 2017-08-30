@@ -77,7 +77,8 @@ Public Class DownloadAdmx
                                       setProgress("Moving files to destination...")
                                       Dim langSubfolder = Globalization.CultureInfo.CurrentCulture.Name
                                       moveFilesInDir(unpackPath & "\PolicyDefinitions", destination)
-                                      moveFilesInDir(unpackPath & "\PolicyDefinitions\" & langSubfolder, destination & "\" & langSubfolder)
+                                      Dim sourceAdmlPath = unpackPath & "\PolicyDefinitions\" & langSubfolder
+                                      If IO.Directory.Exists(sourceAdmlPath) Then moveFilesInDir(sourceAdmlPath, destination & "\" & langSubfolder)
                                       If langSubfolder <> "en-US" Then
                                           ' Also copy the English language files as a fallback
                                           moveFilesInDir(unpackPath & "\PolicyDefinitions\en-US", destination & "\en-US")
