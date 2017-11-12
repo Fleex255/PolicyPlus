@@ -120,7 +120,7 @@ Public Class PolFile
         Dim keyRoot = GetDictKey(Key, "")
         For Each kv In Entries.Where(Function(e) e.Key.StartsWith(keyRoot))
             If kv.Key = GetDictKey(Key, "**del." & Value) Then
-                willDelete = False
+                willDelete = True
             ElseIf kv.Key.StartsWith(GetDictKey(Key, "**delvals")) Then ' MS POL files also use "**delvals."
                 willDelete = True
             ElseIf kv.Key = GetDictKey(Key, "**deletevalues") Then
