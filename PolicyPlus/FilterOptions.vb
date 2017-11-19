@@ -27,12 +27,14 @@
         End If
         If Configuration.PolicyState.HasValue Then
             Select Case Configuration.PolicyState.Value
-                Case PolicyState.Enabled
-                    PolicyStateCombobox.SelectedIndex = 2
-                Case PolicyState.Disabled
-                    PolicyStateCombobox.SelectedIndex = 3
-                Case Else
+                Case FilterPolicyState.NotConfigured
                     PolicyStateCombobox.SelectedIndex = 1
+                Case FilterPolicyState.Configured
+                    PolicyStateCombobox.SelectedIndex = 2
+                Case FilterPolicyState.Enabled
+                    PolicyStateCombobox.SelectedIndex = 3
+                Case FilterPolicyState.Disabled
+                    PolicyStateCombobox.SelectedIndex = 4
             End Select
         Else
             PolicyStateCombobox.SelectedIndex = 0
@@ -78,11 +80,13 @@
         End Select
         Select Case PolicyStateCombobox.SelectedIndex
             Case 1
-                newConf.PolicyState = PolicyState.NotConfigured
+                newConf.PolicyState = FilterPolicyState.NotConfigured
             Case 2
-                newConf.PolicyState = PolicyState.Enabled
+                newConf.PolicyState = FilterPolicyState.Configured
             Case 3
-                newConf.PolicyState = PolicyState.Disabled
+                newConf.PolicyState = FilterPolicyState.Enabled
+            Case 4
+                newConf.PolicyState = FilterPolicyState.Disabled
         End Select
         Select Case CommentedCombobox.SelectedIndex
             Case 1
@@ -113,9 +117,15 @@
         End If
     End Sub
 End Class
+Public Enum FilterPolicyState
+    Configured
+    NotConfigured
+    Enabled
+    Disabled
+End Enum
 Public Class FilterConfiguration
     Public ManagedPolicy As Boolean?
-    Public PolicyState As PolicyState?
+    Public PolicyState As FilterPolicyState?
     Public Commented As Boolean?
     Public AllowedProducts As List(Of PolicyPlusProduct)
     Public AlwaysMatchAny As Boolean

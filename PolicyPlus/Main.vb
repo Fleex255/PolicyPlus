@@ -371,7 +371,17 @@ Public Class Main
             If IsPreference(Policy) = CurrentFilter.ManagedPolicy.Value Then Return False
         End If
         If CurrentFilter.PolicyState.HasValue Then
-            If PolicyProcessing.GetPolicyState(If(IsUser, UserPolicySource, CompPolicySource), Policy) <> CurrentFilter.PolicyState.Value Then Return False
+            Dim policyState = PolicyProcessing.GetPolicyState(If(IsUser, UserPolicySource, CompPolicySource), Policy)
+            Select Case CurrentFilter.PolicyState.Value
+                Case FilterPolicyState.Configured
+                    If policyState = PolicyState.NotConfigured Then Return False
+                Case FilterPolicyState.NotConfigured
+                    If policyState <> PolicyState.NotConfigured Then Return False
+                Case FilterPolicyState.Disabled
+                    If policyState <> PolicyState.Disabled Then Return False
+                Case FilterPolicyState.Enabled
+                    If policyState <> PolicyState.Enabled Then Return False
+            End Select
         End If
         If CurrentFilter.Commented.HasValue Then
             Dim commentDict = If(IsUser, UserComments, CompComments)

@@ -82,7 +82,7 @@ Partial Class FilterOptions
         '
         Me.PolicyStateCombobox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
         Me.PolicyStateCombobox.FormattingEnabled = True
-        Me.PolicyStateCombobox.Items.AddRange(New Object() {"Any", "Not Configured", "Enabled", "Disabled"})
+        Me.PolicyStateCombobox.Items.AddRange(New Object() {"Any", "Not Configured", "Configured", "Enabled", "Disabled"})
         Me.PolicyStateCombobox.Location = New System.Drawing.Point(121, 25)
         Me.PolicyStateCombobox.Name = "PolicyStateCombobox"
         Me.PolicyStateCombobox.Size = New System.Drawing.Size(103, 21)
