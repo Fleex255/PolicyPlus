@@ -22,9 +22,9 @@ Partial Class EditSetting
     'Do not modify it using the code editor.
     <System.Diagnostics.DebuggerStepThrough()> _
     Private Sub InitializeComponent()
-        Dim CommentLabel As System.Windows.Forms.Label
-        Dim SupportedLabel As System.Windows.Forms.Label
         Dim SectionLabel As System.Windows.Forms.Label
+        Me.CommentLabel = New System.Windows.Forms.Label()
+        Me.SupportedLabel = New System.Windows.Forms.Label()
         Me.SettingNameLabel = New System.Windows.Forms.Label()
         Me.CommentTextbox = New System.Windows.Forms.TextBox()
         Me.SupportedTextbox = New System.Windows.Forms.TextBox()
@@ -38,29 +38,27 @@ Partial Class EditSetting
         Me.HelpTextbox = New System.Windows.Forms.TextBox()
         Me.SectionDropdown = New System.Windows.Forms.ComboBox()
         Me.ApplyButton = New System.Windows.Forms.Button()
-        CommentLabel = New System.Windows.Forms.Label()
-        SupportedLabel = New System.Windows.Forms.Label()
         SectionLabel = New System.Windows.Forms.Label()
         Me.ExtraOptionsPanel.SuspendLayout()
         Me.SuspendLayout()
         '
         'CommentLabel
         '
-        CommentLabel.AutoSize = True
-        CommentLabel.Location = New System.Drawing.Point(260, 28)
-        CommentLabel.Name = "CommentLabel"
-        CommentLabel.Size = New System.Drawing.Size(51, 13)
-        CommentLabel.TabIndex = 2
-        CommentLabel.Text = "Comment"
+        Me.CommentLabel.AutoSize = True
+        Me.CommentLabel.Location = New System.Drawing.Point(260, 28)
+        Me.CommentLabel.Name = "CommentLabel"
+        Me.CommentLabel.Size = New System.Drawing.Size(51, 13)
+        Me.CommentLabel.TabIndex = 2
+        Me.CommentLabel.Text = "Comment"
         '
         'SupportedLabel
         '
-        SupportedLabel.AutoSize = True
-        SupportedLabel.Location = New System.Drawing.Point(240, 103)
-        SupportedLabel.Name = "SupportedLabel"
-        SupportedLabel.Size = New System.Drawing.Size(71, 13)
-        SupportedLabel.TabIndex = 4
-        SupportedLabel.Text = "Supported on"
+        Me.SupportedLabel.AutoSize = True
+        Me.SupportedLabel.Location = New System.Drawing.Point(240, 103)
+        Me.SupportedLabel.Name = "SupportedLabel"
+        Me.SupportedLabel.Size = New System.Drawing.Size(71, 13)
+        Me.SupportedLabel.TabIndex = 4
+        Me.SupportedLabel.Text = "Supported on"
         '
         'SectionLabel
         '
@@ -83,6 +81,7 @@ Partial Class EditSetting
         'CommentTextbox
         '
         Me.CommentTextbox.AcceptsReturn = True
+        Me.CommentTextbox.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.CommentTextbox.Location = New System.Drawing.Point(317, 25)
         Me.CommentTextbox.Multiline = True
         Me.CommentTextbox.Name = "CommentTextbox"
@@ -91,6 +90,7 @@ Partial Class EditSetting
         '
         'SupportedTextbox
         '
+        Me.SupportedTextbox.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.SupportedTextbox.Location = New System.Drawing.Point(317, 100)
         Me.SupportedTextbox.Multiline = True
         Me.SupportedTextbox.Name = "SupportedTextbox"
@@ -133,7 +133,8 @@ Partial Class EditSetting
         '
         'ExtraOptionsPanel
         '
-        Me.ExtraOptionsPanel.AutoScroll = True
+        Me.ExtraOptionsPanel.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
+            Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
         Me.ExtraOptionsPanel.BackColor = System.Drawing.Color.White
         Me.ExtraOptionsPanel.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
         Me.ExtraOptionsPanel.Controls.Add(Me.ExtraOptionsTable)
@@ -160,6 +161,7 @@ Partial Class EditSetting
         '
         'CloseButton
         '
+        Me.CloseButton.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.CloseButton.DialogResult = System.Windows.Forms.DialogResult.Cancel
         Me.CloseButton.Location = New System.Drawing.Point(470, 400)
         Me.CloseButton.Name = "CloseButton"
@@ -170,6 +172,7 @@ Partial Class EditSetting
         '
         'OkButton
         '
+        Me.OkButton.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.OkButton.Location = New System.Drawing.Point(389, 400)
         Me.OkButton.Name = "OkButton"
         Me.OkButton.Size = New System.Drawing.Size(75, 23)
@@ -179,6 +182,8 @@ Partial Class EditSetting
         '
         'HelpTextbox
         '
+        Me.HelpTextbox.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.HelpTextbox.Location = New System.Drawing.Point(317, 150)
         Me.HelpTextbox.Multiline = True
         Me.HelpTextbox.Name = "HelpTextbox"
@@ -199,6 +204,7 @@ Partial Class EditSetting
         '
         'ApplyButton
         '
+        Me.ApplyButton.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.ApplyButton.Location = New System.Drawing.Point(551, 400)
         Me.ApplyButton.Name = "ApplyButton"
         Me.ApplyButton.Size = New System.Drawing.Size(75, 23)
@@ -223,14 +229,14 @@ Partial Class EditSetting
         Me.Controls.Add(Me.DisabledOption)
         Me.Controls.Add(Me.EnabledOption)
         Me.Controls.Add(Me.NotConfiguredOption)
-        Me.Controls.Add(SupportedLabel)
+        Me.Controls.Add(Me.SupportedLabel)
         Me.Controls.Add(Me.SupportedTextbox)
-        Me.Controls.Add(CommentLabel)
+        Me.Controls.Add(Me.CommentLabel)
         Me.Controls.Add(Me.CommentTextbox)
         Me.Controls.Add(Me.SettingNameLabel)
-        Me.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog
         Me.MaximizeBox = False
         Me.MinimizeBox = False
+        Me.MinimumSize = New System.Drawing.Size(654, 474)
         Me.Name = "EditSetting"
         Me.ShowIcon = False
         Me.ShowInTaskbar = False
@@ -256,4 +262,6 @@ Partial Class EditSetting
     Friend WithEvents HelpTextbox As TextBox
     Friend WithEvents SectionDropdown As ComboBox
     Friend WithEvents ApplyButton As Button
+    Friend WithEvents CommentLabel As Label
+    Friend WithEvents SupportedLabel As Label
 End Class

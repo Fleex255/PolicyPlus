@@ -7,6 +7,7 @@
     Dim CompComments, UserComments As Dictionary(Of String, String)
     ' Above: passed in; below: internal state
     Dim ElementControls As Dictionary(Of String, Control)
+    Dim ResizableControls As List(Of Control)
     Dim CurrentSource As IPolicySource
     Dim CurrentLoader As PolicyLoader
     Dim CurrentComments As Dictionary(Of String, String)
@@ -25,6 +26,9 @@
             SectionDropdown.Enabled = False
             CurrentSection = CurrentSetting.RawPolicy.Section
         End If
+        ExtraOptionsPanel.HorizontalScroll.Maximum = 0
+        ExtraOptionsPanel.VerticalScroll.Visible = True
+        ExtraOptionsPanel.AutoScroll = True
         PreparePolicyElements()
         SectionDropdown.Text = If(CurrentSection = AdmxPolicySection.Machine, "Computer", "User")
         SectionDropdown_SelectedIndexChanged(Nothing, Nothing) ' Force an update of the current source
@@ -42,11 +46,10 @@
         Dim addControl = Sub(ID As String, Control As Control, Label As String)
                              ExtraOptionsTable.RowStyles.Add(New RowStyle(SizeType.AutoSize))
                              If Label = "" Then ' Just a single control
-                                 If Control.AutoSize Then Control.MaximumSize = New Size(ExtraOptionsTable.ClientSize.Width, 0)
+                                 If Control.AutoSize Then ResizableControls.Add(Control)
                                  ExtraOptionsTable.Controls.Add(Control, 0, ExtraOptionsTable.RowStyles.Count - 1)
                              Else ' Has a label attached
                                  Dim flowPanel As New FlowLayoutPanel With {.WrapContents = True, .AutoSize = True, .AutoSizeMode = AutoSizeMode.GrowAndShrink}
-                                 flowPanel.MaximumSize = New Size(ExtraOptionsTable.ClientRectangle.Width, 0)
                                  flowPanel.Margin = New Padding(0)
                                  ExtraOptionsTable.Controls.Add(flowPanel, 0, ExtraOptionsTable.RowStyles.Count - 1)
                                  Dim labelControl As New Label With {.AutoSize = True, .Text = Label}
@@ -54,6 +57,7 @@
                                  Control.Anchor = AnchorStyles.Left
                                  flowPanel.Controls.Add(labelControl)
                                  flowPanel.Controls.Add(Control)
+                                 ResizableControls.Add(flowPanel)
                              End If
                              If ID <> "" Then
                                  ElementControls.Add(ID, Control)
@@ -66,6 +70,7 @@
                          End Sub
         ExtraOptionsTable.RowStyles.Clear()
         ElementControls = New Dictionary(Of String, Control)
+        ResizableControls = New List(Of Control)
         ' Create the Windows Forms elements
         If CurrentSetting.RawPolicy.Elements IsNot Nothing And CurrentSetting.Presentation IsNot Nothing Then
             Dim elemDict = CurrentSetting.RawPolicy.Elements.ToDictionary(Function(e) e.ID)
@@ -74,7 +79,7 @@
                     Case "text" ' A plain label
                         Dim textPres As LabelPresentationElement = pres
                         Dim label As New Label With {.Text = textPres.Text, .AutoSize = True}
-                        label.Margin = New Padding(3, 6, 3, 0)
+                        label.Margin = New Padding(3, 6, 3, 6)
                         addControl(textPres.ID, label, "")
                     Case "decimalTextBox" ' Numeric spin box or a plain text box restricted to numbers
                         Dim decimalTextPres As NumericBoxPresentationElement = pres
@@ -174,6 +179,7 @@
                         addControl(pres.ID, bigTextbox, "")
                 End Select
             Next
+            OptionsTableResized()
         End If
     End Sub
     Sub PreparePolicyState()
@@ -305,6 +311,29 @@
     Private Sub ApplyButton_Click(sender As Object, e As EventArgs) Handles ApplyButton.Click
         ApplyToPolicySource()
         ChangesMade = True
+    End Sub
+    Private Sub OptionsTableResized()
+        ' Update the width limit on the extra options controls (in case the vertical scrollbar appeared or disappeared)
+        If ResizableControls Is Nothing Then Exit Sub
+        ExtraOptionsTable.MaximumSize = New Size(ExtraOptionsPanel.ClientSize.Width, 0)
+        ExtraOptionsTable.MinimumSize = ExtraOptionsTable.MaximumSize
+        For Each ctl In ResizableControls
+            ctl.MaximumSize = New Size(ExtraOptionsPanel.ClientSize.Width, 0)
+        Next
+    End Sub
+    Private Sub EditSetting_Resize(sender As Object, e As EventArgs) Handles Me.Resize
+        ' Share the extra width between the two halves of the form
+        Dim extraWidth = Width - 654
+        ExtraOptionsPanel.Width = 299 + (extraWidth / 2)
+        HelpTextbox.Width = 309 + (extraWidth / 2)
+        HelpTextbox.Left = ExtraOptionsPanel.Left + ExtraOptionsPanel.Width + 6
+        CommentTextbox.Left = HelpTextbox.Left
+        CommentTextbox.Width = HelpTextbox.Width
+        SupportedTextbox.Left = HelpTextbox.Left
+        SupportedTextbox.Width = HelpTextbox.Width
+        CommentLabel.Left = CommentTextbox.Left - 57
+        SupportedLabel.Left = SupportedTextbox.Left - 77
+        OptionsTableResized()
     End Sub
     Private Class DropdownPresentationMap ' Used for keeping the ID with an option in dropdown boxes
         Public ID As Integer
