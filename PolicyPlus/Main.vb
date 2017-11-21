@@ -553,7 +553,7 @@ Public Class Main
         ' Show the Open Policy Resources dialog and open its loaders
         If OpenPol.ShowDialog = DialogResult.OK Then
             OpenPolicyLoaders(OpenPol.SelectedUser, OpenPol.SelectedComputer, False)
-            UpdateCategoryListing()
+            MoveToVisibleCategoryAndReload()
         End If
     End Sub
     Private Sub SavePoliciesToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles SavePoliciesToolStripMenuItem.Click
