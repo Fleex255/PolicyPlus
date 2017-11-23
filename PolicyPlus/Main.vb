@@ -85,8 +85,12 @@ Public Class Main
     End Sub
     Sub UpdateCategoryListing()
         ' Update the right pane to include the current category's children
+        Dim topItemIndex As Integer?
+        If PoliciesList.TopItem IsNot Nothing Then topItemIndex = PoliciesList.TopItem.Index
+        Dim inSameCategory As Boolean = False
         PoliciesList.Items.Clear()
         If CurrentCategory IsNot Nothing Then
+            If CurrentSetting IsNot Nothing AndAlso CurrentSetting.Category Is CurrentCategory Then inSameCategory = True
             If CurrentCategory.Parent IsNot Nothing Then ' Add the parent
                 Dim listItem = PoliciesList.Items.Add("Up: " & CurrentCategory.Parent.DisplayName)
                 listItem.Tag = CurrentCategory.Parent
@@ -104,7 +108,15 @@ Public Class Main
                 listItem.ImageIndex = GetImageIndexForSetting(policy)
                 listItem.SubItems.Add(GetPolicyState(policy))
                 listItem.SubItems.Add(GetPolicyCommentText(policy))
+                If policy Is CurrentSetting Then ' Keep the current policy selected
+                    listItem.Selected = True
+                    listItem.Focused = True
+                    listItem.EnsureVisible()
+                End If
             Next
+            If topItemIndex.HasValue And inSameCategory Then ' Minimize the list view's jumping around when refreshing
+                If PoliciesList.Items.Count > topItemIndex.Value Then PoliciesList.TopItem = PoliciesList.Items(topItemIndex.Value)
+            End If
             If CategoriesTree.SelectedNode Is Nothing OrElse CategoriesTree.SelectedNode.Tag IsNot CurrentCategory Then ' Update the tree view
                 CategoriesTree.SelectedNode = CategoryNodes(CurrentCategory)
             End If
@@ -259,7 +271,10 @@ Public Class Main
     End Function
     Sub ShowSettingEditor(Policy As PolicyPlusPolicy, Section As AdmxPolicySection)
         ' Show the Edit Policy Setting dialog for a policy and reload if changes were made
-        If EditSetting.PresentDialog(Policy, Section, AdmxWorkspace, CompPolicySource, UserPolicySource, CompPolicyLoader, UserPolicyLoader, CompComments, UserComments) = DialogResult.OK Then UpdateCategoryListing()
+        If EditSetting.PresentDialog(Policy, Section, AdmxWorkspace, CompPolicySource, UserPolicySource, CompPolicyLoader, UserPolicyLoader, CompComments, UserComments) = DialogResult.OK Then
+            ' Keep the selection where it is if possible
+            If ShouldShowCategory(CurrentCategory) Then UpdateCategoryListing() Else MoveToVisibleCategoryAndReload()
+        End If
     End Sub
     Sub ClearSelections()
         CurrentSetting = Nothing
@@ -651,7 +666,7 @@ Public Class Main
         If ImportSpol.ShowDialog() = DialogResult.OK Then
             Dim spol = ImportSpol.Spol
             Dim fails = spol.ApplyAll(AdmxWorkspace, UserPolicySource, CompPolicySource)
-            UpdateCategoryListing()
+            MoveToVisibleCategoryAndReload()
             If fails = 0 Then
                 MsgBox("Semantic Policy successfully applied.", MsgBoxStyle.Information)
             Else
@@ -674,7 +689,7 @@ Public Class Main
                 If OpenSection.PresentDialog(True, True) = DialogResult.OK Then
                     Dim section = If(OpenSection.SelectedSection = AdmxPolicySection.User, UserPolicySource, CompPolicySource)
                     pol.Apply(section)
-                    UpdateCategoryListing()
+                    MoveToVisibleCategoryAndReload()
                     MsgBox("POL import successful.", MsgBoxStyle.Information)
                 End If
             End If
