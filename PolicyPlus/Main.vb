@@ -273,7 +273,7 @@ Public Class Main
         ' Show the Edit Policy Setting dialog for a policy and reload if changes were made
         If EditSetting.PresentDialog(Policy, Section, AdmxWorkspace, CompPolicySource, UserPolicySource, CompPolicyLoader, UserPolicyLoader, CompComments, UserComments) = DialogResult.OK Then
             ' Keep the selection where it is if possible
-            If ShouldShowCategory(CurrentCategory) Then UpdateCategoryListing() Else MoveToVisibleCategoryAndReload()
+            If CurrentCategory Is Nothing OrElse ShouldShowCategory(CurrentCategory) Then UpdateCategoryListing() Else MoveToVisibleCategoryAndReload()
         End If
     End Sub
     Sub ClearSelections()
