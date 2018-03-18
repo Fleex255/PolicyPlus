@@ -1,6 +1,7 @@
 ﻿Imports System.IO
 Public Class AdmxBundle
     Private SourceFiles As New Dictionary(Of AdmxFile, AdmlFile)
+    Private Namespaces As New Dictionary(Of String, AdmxFile)
     ' Temporary lists from ADMX files that haven't been integrated yet
     Private RawCategories As New List(Of AdmxCategory)
     Private RawProducts As New List(Of AdmxProduct)
@@ -14,30 +15,53 @@ Public Class AdmxBundle
     Public Products As New Dictionary(Of String, PolicyPlusProduct)
     Public Policies As New Dictionary(Of String, PolicyPlusPolicy)
     Public SupportDefinitions As New Dictionary(Of String, PolicyPlusSupport)
-    Public Sub LoadFolder(Path As String, LanguageCode As String)
+    Public Function LoadFolder(Path As String, LanguageCode As String) As IEnumerable(Of AdmxLoadFailure)
+        Dim fails As New List(Of AdmxLoadFailure)
         For Each file In Directory.EnumerateFiles(Path)
-            If file.ToLowerInvariant.EndsWith(".admx") Then AddSingleAdmx(file, LanguageCode)
+            If file.ToLowerInvariant.EndsWith(".admx") Then
+                Dim fail = AddSingleAdmx(file, LanguageCode)
+                If fail IsNot Nothing Then fails.Add(fail)
+            End If
         Next
         BuildStructures()
-    End Sub
-    Public Sub LoadFile(Path As String, LanguageCode As String)
-        AddSingleAdmx(Path, LanguageCode)
+        Return fails
+    End Function
+    Public Function LoadFile(Path As String, LanguageCode As String) As IEnumerable(Of AdmxLoadFailure)
+        Dim fail = AddSingleAdmx(Path, LanguageCode)
         BuildStructures()
-    End Sub
-    Private Sub AddSingleAdmx(AdmxPath As String, LanguageCode As String)
+        Return If(fail Is Nothing, {}, {fail})
+    End Function
+    Private Function AddSingleAdmx(AdmxPath As String, LanguageCode As String) As AdmxLoadFailure
         ' Load XML files
-        Dim admx = AdmxFile.Load(AdmxPath)
+        Dim admx As AdmxFile, adml As AdmlFile
+        Try
+            admx = AdmxFile.Load(AdmxPath)
+        Catch ex As Xml.XmlException
+            Return New AdmxLoadFailure(AdmxLoadFailType.BadAdmxParse, AdmxPath, ex.Message)
+        Catch ex As Exception
+            Return New AdmxLoadFailure(AdmxLoadFailType.BadAdmx, AdmxPath, ex.Message)
+        End Try
+        If Namespaces.ContainsKey(admx.AdmxNamespace) Then Return New AdmxLoadFailure(AdmxLoadFailType.DuplicateNamespace, AdmxPath, admx.AdmxNamespace)
         Dim fileTitle = Path.GetFileName(AdmxPath)
         Dim admlPath = Path.ChangeExtension(AdmxPath.Replace(fileTitle, LanguageCode & "\" & fileTitle), "adml")
         If Not File.Exists(admlPath) Then admlPath = Path.ChangeExtension(AdmxPath.Replace(fileTitle, "en-US\" & fileTitle), "adml")
-        Dim adml = AdmlFile.Load(admlPath)
+        If Not File.Exists(admlPath) Then Return New AdmxLoadFailure(AdmxLoadFailType.NoAdml, AdmxPath)
+        Try
+            adml = AdmlFile.Load(admlPath)
+        Catch ex As Xml.XmlException
+            Return New AdmxLoadFailure(AdmxLoadFailType.BadAdmlParse, AdmxPath, ex.Message)
+        Catch ex As Exception
+            Return New AdmxLoadFailure(AdmxLoadFailType.BadAdml, AdmxPath, ex.Message)
+        End Try
         ' Stage the raw ADMX info for BuildStructures
         RawCategories.AddRange(admx.Categories)
         RawProducts.AddRange(admx.Products)
         RawPolicies.AddRange(admx.Policies)
         RawSupport.AddRange(admx.SupportedOnDefinitions)
         SourceFiles.Add(admx, adml)
-    End Sub
+        Namespaces.Add(admx.AdmxNamespace, admx)
+        Return Nothing
+    End Function
     Private Sub BuildStructures()
         Dim catIds As New Dictionary(Of String, PolicyPlusCategory)
         Dim productIds As New Dictionary(Of String, PolicyPlusProduct)
@@ -188,4 +212,45 @@ Public Class AdmxBundle
             Return SourceFiles
         End Get
     End Property
+End Class
+Public Enum AdmxLoadFailType
+    BadAdmxParse
+    BadAdmx
+    NoAdml
+    BadAdmlParse
+    BadAdml
+    DuplicateNamespace
+End Enum
+Public Class AdmxLoadFailure
+    Public FailType As AdmxLoadFailType
+    Public AdmxPath As String
+    Public Info As String
+    Public Sub New(FailType As AdmxLoadFailType, AdmxPath As String, Info As String)
+        Me.FailType = FailType
+        Me.AdmxPath = AdmxPath
+        Me.Info = Info
+    End Sub
+    Public Sub New(FailType As AdmxLoadFailType, AdmxPath As String)
+        MyClass.New(FailType, AdmxPath, "")
+    End Sub
+    Public Overrides Function ToString() As String
+        Return "Couldn't load " & AdmxPath & ": " & GetFailMessage(FailType, Info) & "."
+    End Function
+    Private Shared Function GetFailMessage(FailType As AdmxLoadFailType, Info As String) As String
+        Select Case FailType
+            Case AdmxLoadFailType.BadAdmxParse
+                Return "The ADMX XML couldn't be parsed: " & Info
+            Case AdmxLoadFailType.BadAdmx
+                Return "The ADMX is invalid: " & Info
+            Case AdmxLoadFailType.NoAdml
+                Return "The corresponding ADML is missing"
+            Case AdmxLoadFailType.BadAdmlParse
+                Return "The ADML XML couldn't be parsed: " & Info
+            Case AdmxLoadFailType.BadAdml
+                Return "The ADML is invalid: " & Info
+            Case AdmxLoadFailType.DuplicateNamespace
+                Return "The " & Info & " namespace is already owned by a different ADMX file"
+        End Select
+        Return If(Info = "", "An unknown error occurred", Info)
+    End Function
 End Class

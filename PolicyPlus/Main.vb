@@ -21,8 +21,10 @@ Public Class Main
         Dim defaultAdmxSource = Environment.ExpandEnvironmentVariables("%windir%\PolicyDefinitions")
         Dim admxSource As String = Configuration.GetValue("AdmxSource", defaultAdmxSource)
         Try
-            AdmxWorkspace.LoadFolder(admxSource, Globalization.CultureInfo.CurrentCulture.Name)
+            Dim fails = AdmxWorkspace.LoadFolder(admxSource, Globalization.CultureInfo.CurrentCulture.Name)
+            If DisplayAdmxLoadErrorReport(fails, True) = MsgBoxResult.No Then Throw New Exception("You decided to not use the problematic ADMX bundle.")
         Catch ex As Exception
+            AdmxWorkspace = New AdmxBundle
             Dim loadFailReason As String = ""
             If admxSource <> defaultAdmxSource Then
                 If MsgBox("Policy definitions could not be loaded from """ & admxSource & """: " & ex.Message & vbCrLf & vbCrLf &
@@ -30,7 +32,7 @@ Public Class Main
                     Try
                         Configuration.SetValue("AdmxSource", defaultAdmxSource)
                         AdmxWorkspace = New AdmxBundle
-                        AdmxWorkspace.LoadFolder(defaultAdmxSource, Globalization.CultureInfo.CurrentCulture.Name)
+                        DisplayAdmxLoadErrorReport(AdmxWorkspace.LoadFolder(defaultAdmxSource, Globalization.CultureInfo.CurrentCulture.Name))
                     Catch ex2 As Exception
                         loadFailReason = ex2.Message
                     End Try
@@ -441,6 +443,13 @@ Public Class Main
             Throw New InvalidOperationException("Policy source type not supported")
         End If
     End Function
+    Function DisplayAdmxLoadErrorReport(Failures As IEnumerable(Of AdmxLoadFailure), Optional AskContinue As Boolean = False) As MsgBoxResult
+        If Failures.Count = 0 Then Return MsgBoxResult.Ok
+        Dim boxStyle = If(AskContinue, MsgBoxStyle.Exclamation Or MsgBoxStyle.YesNo, MsgBoxStyle.Exclamation)
+        Dim header = "Errors were encountered while adding administrative templates to the workspace."
+        Return MsgBox(header & If(AskContinue, " Continue trying to use this workspace?", "") & vbCrLf & vbCrLf &
+               String.Join(vbCrLf & vbCrLf, Failures.Select(Function(f) f.ToString)), boxStyle)
+    End Function
     Private Sub CategoriesTree_AfterSelect(sender As Object, e As TreeViewEventArgs) Handles CategoriesTree.AfterSelect
         ' When the user selects a new category in the left pane
         CurrentCategory = e.Node.Tag
@@ -476,7 +485,7 @@ Public Class Main
         If OpenAdmxFolder.ShowDialog = DialogResult.OK Then
             Try
                 If OpenAdmxFolder.ClearWorkspace Then ClearAdmxWorkspace()
-                AdmxWorkspace.LoadFolder(OpenAdmxFolder.SelectedFolder, Globalization.CultureInfo.CurrentCulture.Name)
+                DisplayAdmxLoadErrorReport(AdmxWorkspace.LoadFolder(OpenAdmxFolder.SelectedFolder, Globalization.CultureInfo.CurrentCulture.Name))
                 ' Only update the last source when successfully opening a complete source
                 If OpenAdmxFolder.ClearWorkspace Then Configuration.SetValue("AdmxSource", OpenAdmxFolder.SelectedFolder)
             Catch ex As Exception
@@ -491,7 +500,11 @@ Public Class Main
             ofd.Filter = "Policy definitions files|*.admx"
             ofd.Title = "Open ADMX file"
             If ofd.ShowDialog <> DialogResult.OK Then Exit Sub
-            AdmxWorkspace.LoadFile(ofd.FileName, Globalization.CultureInfo.CurrentCulture.Name)
+            Try
+                DisplayAdmxLoadErrorReport(AdmxWorkspace.LoadFile(ofd.FileName, Globalization.CultureInfo.CurrentCulture.Name))
+            Catch ex As Exception
+                MsgBox("The ADMX file could not be added to the workspace. " & ex.Message, MsgBoxStyle.Exclamation)
+            End Try
             PopulateAdmxUi()
         End Using
     End Sub
@@ -715,7 +728,7 @@ Public Class Main
         If DownloadAdmx.ShowDialog = DialogResult.OK Then
             If DownloadAdmx.NewPolicySourceFolder <> "" Then
                 ClearAdmxWorkspace()
-                AdmxWorkspace.LoadFolder(DownloadAdmx.NewPolicySourceFolder, Globalization.CultureInfo.CurrentCulture.Name)
+                DisplayAdmxLoadErrorReport(AdmxWorkspace.LoadFolder(DownloadAdmx.NewPolicySourceFolder, Globalization.CultureInfo.CurrentCulture.Name))
                 Configuration.SetValue("AdmxSource", DownloadAdmx.NewPolicySourceFolder)
                 PopulateAdmxUi()
             End If
