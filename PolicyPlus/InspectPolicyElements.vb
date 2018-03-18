@@ -85,7 +85,7 @@
                         Dim checkPres As CheckBoxPresentationElement = presElem
                         presPartNode.ImageIndex = 25 ' Tickmark
                         presPartNode.Nodes.Add("Text: """ & checkPres.Text & """").ImageIndex = 14
-                        presPartNode.Nodes.Add("Default: " & If(checkPres.DefaultState, "unchecked", "checked")).ImageIndex = 23
+                        presPartNode.Nodes.Add("Default: " & If(checkPres.DefaultState, "checked", "unchecked")).ImageIndex = 23
                     Case "comboBox"
                         Dim comboPres As ComboBoxPresentationElement = presElem
                         presPartNode.ImageIndex = 26 ' Bar with text
