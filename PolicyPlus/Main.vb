@@ -678,7 +678,7 @@ Public Class Main
         ' Open the SPOL import dialog and apply the data
         If ImportSpol.ShowDialog() = DialogResult.OK Then
             Dim spol = ImportSpol.Spol
-            Dim fails = spol.ApplyAll(AdmxWorkspace, UserPolicySource, CompPolicySource)
+            Dim fails = spol.ApplyAll(AdmxWorkspace, UserPolicySource, CompPolicySource, UserComments, CompComments)
             MoveToVisibleCategoryAndReload()
             If fails = 0 Then
                 MsgBox("Semantic Policy successfully applied.", MsgBoxStyle.Information)
@@ -813,7 +813,7 @@ Public Class Main
         ElseIf e.ClickedItem Is CmePolInspectElements Then
             InspectPolicyElements.PresentDialog(polObject, PolicyIcons, AdmxWorkspace)
         ElseIf e.ClickedItem Is CmePolSpolFragment Then
-            InspectSpolFragment.PresentDialog(polObject, AdmxWorkspace, CompPolicySource, UserPolicySource)
+            InspectSpolFragment.PresentDialog(polObject, AdmxWorkspace, CompPolicySource, UserPolicySource, CompComments, UserComments)
         End If
     End Sub
     Private Sub CategoriesTree_NodeMouseClick(sender As Object, e As TreeNodeMouseClickEventArgs) Handles CategoriesTree.NodeMouseClick

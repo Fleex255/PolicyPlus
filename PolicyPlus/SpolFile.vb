@@ -53,6 +53,28 @@
             Dim policyHeaderParts = Split(line, " ", 2) ' Section and policy ID
             Dim singlePolicy As New SpolPolicyState With {.UniqueID = policyHeaderParts(1)}
             singlePolicy.Section = If(policyHeaderParts(1) = "0", AdmxPolicySection.User, AdmxPolicySection.Machine)
+            Const commentPrefix As String = "comment: "
+            If LTrim(peekLine()).ToLowerInvariant().StartsWith(commentPrefix) Then
+                Dim escapedCommentText = LTrim(nextLine()).Substring(commentPrefix.Length)
+                Dim commentText As New Text.StringBuilder
+                For n = 0 To escapedCommentText.Length - 1
+                    If escapedCommentText(n) = "\"c Then
+                        If n = escapedCommentText.Length - 1 Then Throw New Exception("Escape sequence started at end of comment.")
+                        Select Case escapedCommentText(n + 1)
+                            Case "\"c
+                                commentText.Append("\"c)
+                            Case "n"
+                                commentText.Append(vbCrLf)
+                            Case Else
+                                Throw New Exception("Unknown comment escape sequence \" & escapedCommentText(n + 1) & ".")
+                        End Select
+                        n += 1
+                    Else
+                        commentText.Append(escapedCommentText(n))
+                    End If
+                Next
+                singlePolicy.Comment = commentText.ToString
+            End If
             Select Case Trim(nextLine()).ToLowerInvariant
                 Case "not configured"
                     singlePolicy.BasicState = PolicyState.NotConfigured
@@ -107,6 +129,10 @@
         Dim sb As New Text.StringBuilder
         sb.Append(If(State.Section = AdmxPolicySection.Machine, "C ", "U "))
         sb.AppendLine(State.UniqueID)
+        If State.Comment <> "" Then
+            ' Escape newlines and backslashes in the comment so it can fit on one SPOL line
+            sb.AppendLine(" Comment: " & State.Comment.Replace("\", "\\").Replace(vbCrLf, "\n"))
+        End If
         Select Case State.BasicState
             Case PolicyState.NotConfigured
                 sb.AppendLine(" Not Configured")
@@ -157,12 +183,16 @@
         End If
         Return sb.ToString
     End Function
-    Public Function ApplyAll(AdmxWorkspace As AdmxBundle, UserSource As IPolicySource, CompSource As IPolicySource) As Integer
+    Public Function ApplyAll(AdmxWorkspace As AdmxBundle, UserSource As IPolicySource, CompSource As IPolicySource, UserComments As Dictionary(Of String, String), CompComments As Dictionary(Of String, String)) As Integer
         ' Write the policy states to the policy sources
         Dim failures As Integer = 0
         For Each policy In Policies
             Try
-                policy.Apply(If(policy.Section = AdmxPolicySection.Machine, CompSource, UserSource), AdmxWorkspace)
+                If policy.Section = AdmxPolicySection.Machine Then
+                    policy.Apply(CompSource, AdmxWorkspace, CompComments)
+                Else
+                    policy.Apply(UserSource, AdmxWorkspace, UserComments)
+                End If
             Catch ex As Exception
                 failures += 1
             End Try
@@ -174,9 +204,11 @@ Public Class SpolPolicyState
     Public UniqueID As String
     Public Section As AdmxPolicySection
     Public BasicState As PolicyState
+    Public Comment As String
     Public ExtraOptions As New Dictionary(Of String, Object)
-    Public Sub Apply(PolicySource As IPolicySource, AdmxWorkspace As AdmxBundle)
+    Public Sub Apply(PolicySource As IPolicySource, AdmxWorkspace As AdmxBundle, CommentsMap As Dictionary(Of String, String))
         Dim pol = AdmxWorkspace.Policies(UniqueID)
+        If CommentsMap IsNot Nothing And Comment <> "" Then CommentsMap(UniqueID) = Comment
         PolicyProcessing.ForgetPolicy(PolicySource, pol)
         PolicyProcessing.SetPolicyState(PolicySource, pol, BasicState, ExtraOptions)
     End Sub

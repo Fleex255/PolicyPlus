@@ -1,6 +1,6 @@
 ﻿Public Class InspectSpolFragment
     Dim SpolFragment As String
-    Public Function PresentDialog(Policy As PolicyPlusPolicy, AdmxWorkspace As AdmxBundle, CompSource As IPolicySource, UserSource As IPolicySource) As DialogResult
+    Public Function PresentDialog(Policy As PolicyPlusPolicy, AdmxWorkspace As AdmxBundle, CompSource As IPolicySource, UserSource As IPolicySource, CompComments As Dictionary(Of String, String), UserComments As Dictionary(Of String, String)) As DialogResult
         ' Show the SPOL text for all the policy's sections
         TextPolicyName.Text = Policy.DisplayName
         Dim sb As New Text.StringBuilder
@@ -8,8 +8,10 @@
                              ' Create SPOL info for one section of the policy
                              If (Policy.RawPolicy.Section And Section) = 0 Then Return False
                              Dim polSource = If(Section = AdmxPolicySection.Machine, CompSource, UserSource)
+                             Dim commentsMap = If(Section = AdmxPolicySection.Machine, CompComments, UserComments)
                              Dim spolState As New SpolPolicyState With {.UniqueID = Policy.UniqueID}
                              spolState.Section = Section
+                             If commentsMap IsNot Nothing AndAlso commentsMap.ContainsKey(Policy.UniqueID) Then spolState.Comment = commentsMap(Policy.UniqueID)
                              spolState.BasicState = PolicyProcessing.GetPolicyState(polSource, Policy)
                              If spolState.BasicState = PolicyState.Enabled Then spolState.ExtraOptions = PolicyProcessing.GetPolicyOptionStates(polSource, Policy)
                              sb.AppendLine(SpolFile.GetFragment(spolState))
