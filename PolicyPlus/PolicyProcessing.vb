@@ -233,6 +233,8 @@
                         If Forget Then
                             PolicySource.ClearKey(elemKey) ' Delete all the values
                             PolicySource.ForgetKeyClearance(elemKey)
+                        Else
+                            addReg(elemKey, "")
                         End If
                 End Select
             Next

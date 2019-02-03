@@ -4,7 +4,7 @@
         If e.KeyCode = Keys.Escape Then DialogResult = DialogResult.Cancel
     End Sub
     Private Sub SearchButton_Click(sender As Object, e As EventArgs) Handles SearchButton.Click
-        Dim keyName = KeyTextbox.Text
+        Dim keyName = KeyTextbox.Text.ToLowerInvariant
         Dim valName = ValueTextbox.Text.ToLowerInvariant
         If keyName = "" And valName = "" Then
             MsgBox("Please enter search terms.", MsgBoxStyle.Exclamation)
