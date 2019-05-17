@@ -249,7 +249,9 @@ Public Class AdmxLoadFailure
         MyClass.New(FailType, AdmxPath, "")
     End Sub
     Public Overrides Function ToString() As String
-        Return "Couldn't load " & AdmxPath & ": " & GetFailMessage(FailType, Info) & "."
+        Dim failMsg = "Couldn't load " & AdmxPath & ": " & GetFailMessage(FailType, Info)
+        If Not failMsg.EndsWith(".") Then failMsg &= "."
+        Return failMsg
     End Function
     Private Shared Function GetFailMessage(FailType As AdmxLoadFailType, Info As String) As String
         Select Case FailType
