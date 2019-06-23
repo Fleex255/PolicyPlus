@@ -60,7 +60,9 @@ Partial Class Main
         Me.ShareToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.ImportSemanticPolicyToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.ImportPOLToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.ImportREGToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.ExportPOLToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.ExportREGToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.HelpToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.AboutToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.AcquireADMXFilesToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
@@ -85,8 +87,7 @@ Partial Class Main
         Me.InfoStrip = New System.Windows.Forms.StatusStrip()
         Me.ComputerSourceLabel = New System.Windows.Forms.ToolStripStatusLabel()
         Me.UserSourceLabel = New System.Windows.Forms.ToolStripStatusLabel()
-        Me.ExportREGToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.ImportREGToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.SetADMLLanguageToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         ChSettingEnabled = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
         ChSettingCommented = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
         ToolStripSeparator1 = New System.Windows.Forms.ToolStripSeparator()
@@ -173,7 +174,7 @@ Partial Class Main
         '
         'FileToolStripMenuItem
         '
-        Me.FileToolStripMenuItem.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.OpenADMXFolderToolStripMenuItem, Me.OpenADMXFileToolStripMenuItem, Me.CloseADMXWorkspaceToolStripMenuItem, ToolStripSeparator2, Me.OpenPolicyResourcesToolStripMenuItem, Me.SavePoliciesToolStripMenuItem, Me.EditRawPOLToolStripMenuItem, ToolStripSeparator3, Me.ExitToolStripMenuItem})
+        Me.FileToolStripMenuItem.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.OpenADMXFolderToolStripMenuItem, Me.OpenADMXFileToolStripMenuItem, Me.SetADMLLanguageToolStripMenuItem, Me.CloseADMXWorkspaceToolStripMenuItem, ToolStripSeparator2, Me.OpenPolicyResourcesToolStripMenuItem, Me.SavePoliciesToolStripMenuItem, Me.EditRawPOLToolStripMenuItem, ToolStripSeparator3, Me.ExitToolStripMenuItem})
         Me.FileToolStripMenuItem.Name = "FileToolStripMenuItem"
         Me.FileToolStripMenuItem.Size = New System.Drawing.Size(37, 20)
         Me.FileToolStripMenuItem.Text = "File"
@@ -333,11 +334,23 @@ Partial Class Main
         Me.ImportPOLToolStripMenuItem.Size = New System.Drawing.Size(197, 22)
         Me.ImportPOLToolStripMenuItem.Text = "Import POL"
         '
+        'ImportREGToolStripMenuItem
+        '
+        Me.ImportREGToolStripMenuItem.Name = "ImportREGToolStripMenuItem"
+        Me.ImportREGToolStripMenuItem.Size = New System.Drawing.Size(197, 22)
+        Me.ImportREGToolStripMenuItem.Text = "Import REG"
+        '
         'ExportPOLToolStripMenuItem
         '
         Me.ExportPOLToolStripMenuItem.Name = "ExportPOLToolStripMenuItem"
         Me.ExportPOLToolStripMenuItem.Size = New System.Drawing.Size(197, 22)
         Me.ExportPOLToolStripMenuItem.Text = "Export POL"
+        '
+        'ExportREGToolStripMenuItem
+        '
+        Me.ExportREGToolStripMenuItem.Name = "ExportREGToolStripMenuItem"
+        Me.ExportREGToolStripMenuItem.Size = New System.Drawing.Size(197, 22)
+        Me.ExportREGToolStripMenuItem.Text = "Export REG"
         '
         'HelpToolStripMenuItem
         '
@@ -616,17 +629,11 @@ Partial Class Main
         Me.UserSourceLabel.Size = New System.Drawing.Size(54, 17)
         Me.UserSourceLabel.Text = "User info"
         '
-        'ExportREGToolStripMenuItem
+        'SetADMLLanguageToolStripMenuItem
         '
-        Me.ExportREGToolStripMenuItem.Name = "ExportREGToolStripMenuItem"
-        Me.ExportREGToolStripMenuItem.Size = New System.Drawing.Size(197, 22)
-        Me.ExportREGToolStripMenuItem.Text = "Export REG"
-        '
-        'ImportREGToolStripMenuItem
-        '
-        Me.ImportREGToolStripMenuItem.Name = "ImportREGToolStripMenuItem"
-        Me.ImportREGToolStripMenuItem.Size = New System.Drawing.Size(197, 22)
-        Me.ImportREGToolStripMenuItem.Text = "Import REG"
+        Me.SetADMLLanguageToolStripMenuItem.Name = "SetADMLLanguageToolStripMenuItem"
+        Me.SetADMLLanguageToolStripMenuItem.Size = New System.Drawing.Size(237, 22)
+        Me.SetADMLLanguageToolStripMenuItem.Text = "Set ADML Language"
         '
         'Main
         '
@@ -712,4 +719,5 @@ Partial Class Main
     Friend WithEvents EditRawPOLToolStripMenuItem As ToolStripMenuItem
     Friend WithEvents ExportREGToolStripMenuItem As ToolStripMenuItem
     Friend WithEvents ImportREGToolStripMenuItem As ToolStripMenuItem
+    Friend WithEvents SetADMLLanguageToolStripMenuItem As ToolStripMenuItem
 End Class

@@ -33,6 +33,7 @@ This list shows which code files are responsible for which parts of Policy Plus'
 * `ImportSpol.vb`: Defines the *Import Semantic Policy* window, which allows the user to type, paste, or load a Semantic Policy script. The user may then apply it to the current policy sources or only validate it.
 * `InspectPolicyElements.vb`: Defines the *Element Inspector* window, which displays the details of how the selected policy applies to the Registry.
 * `InspectSpolFragment.vb`: Defines the *Semantic Policy Fragment* window, which displays Semantic Policy text that represents the current state of the selected policy.
+* `LanguageOptions.vb`: Defines the *Language Options* window, which allows the user to change the preferred ADML language. This form is launched by the *File | Set ADML Language* menu item.
 * `ListEditor.vb`: Defines the *Edit List* window, which allows the user to configure a list policy element. This form is launched by the setting editor.
 * `LoadedAdmx.vb`: Defines the *Loaded ADMX Files* window, which displays the filename, path, and namespace of all loaded ADMX files. Double-clicking an entry opens the selected ADMX file in *ADMX Details*.
 * `LoadedProducts.vb`: Defines the *All Products* window, which allows the user to explore the hierarchy of defined products. Double-clicking an entry opens the *Product Details* window.
