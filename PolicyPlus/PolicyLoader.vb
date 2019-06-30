@@ -133,6 +133,7 @@ Public Class PolicyLoader
                     Return "saved to disk and invoked policy refresh"
                 Else
                     pol.ApplyDifference(oldPol, RegistryPolicyProxy.EncapsulateKey(If(User, RegistryHive.CurrentUser, RegistryHive.LocalMachine)))
+                    PInvoke.SendNotifyMessageW(New IntPtr(&HFFFF), &H1A, UIntPtr.Zero, IntPtr.Zero) ' Broadcast WM_SETTINGCHANGE
                     Return "saved to disk and applied diff to Registry"
                 End If
             Case PolicyLoaderSource.LocalRegistry

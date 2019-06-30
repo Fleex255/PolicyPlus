@@ -32,8 +32,9 @@ changes to it will not be committed to disk until you use *File | Save Policies*
 Some administrative templates are present by default on these editions, but many are missing. 
 The newest full package can be downloaded from Microsoft and installed with *Help | Acquire ADMX Files*.
 
-The `RefreshPolicyEx` native function does nothing on editions without full Group Policy infrastructure, so while Policy Plus can edit the local GPO and apply the changes to the Registry, 
-a reboot or logon/logoff cycle is required for most policy changes to take effect.
+The `RefreshPolicyEx` native function has reduced functionality on editions without full Group Policy infrastructure,
+so while Policy Plus can edit the local GPO and apply the changes to the Registry, 
+a reboot or logon/logoff cycle is required for some policy changes to take effect.
 
 While the UI allows the creation and editing of per-user GPOs, their settings are ignored by these limited editions of Windows. Edit per-user Registry hives instead.
 
