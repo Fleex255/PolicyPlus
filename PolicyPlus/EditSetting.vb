@@ -335,6 +335,9 @@
         SupportedLabel.Left = SupportedTextbox.Left - 77
         OptionsTableResized()
     End Sub
+    Private Sub EditSetting_FormClosed(sender As Object, e As FormClosedEventArgs) Handles Me.FormClosed
+        If ChangesMade Then DialogResult = DialogResult.OK
+    End Sub
     Private Class DropdownPresentationMap ' Used for keeping the ID with an option in dropdown boxes
         Public ID As Integer
         Public DisplayName As String
