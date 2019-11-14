@@ -38,6 +38,7 @@ Partial Class Main
         Me.FileToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.OpenADMXFolderToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.OpenADMXFileToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.SetADMLLanguageToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.CloseADMXWorkspaceToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.OpenPolicyResourcesToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.SavePoliciesToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
@@ -173,7 +174,7 @@ Partial Class Main
         '
         'FileToolStripMenuItem
         '
-        Me.FileToolStripMenuItem.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.OpenADMXFolderToolStripMenuItem, Me.OpenADMXFileToolStripMenuItem, Me.CloseADMXWorkspaceToolStripMenuItem, ToolStripSeparator2, Me.OpenPolicyResourcesToolStripMenuItem, Me.SavePoliciesToolStripMenuItem, Me.EditRawPOLToolStripMenuItem, ToolStripSeparator3, Me.ExitToolStripMenuItem})
+        Me.FileToolStripMenuItem.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.OpenADMXFolderToolStripMenuItem, Me.OpenADMXFileToolStripMenuItem, Me.SetADMLLanguageToolStripMenuItem, Me.CloseADMXWorkspaceToolStripMenuItem, ToolStripSeparator2, Me.OpenPolicyResourcesToolStripMenuItem, Me.SavePoliciesToolStripMenuItem, Me.EditRawPOLToolStripMenuItem, ToolStripSeparator3, Me.ExitToolStripMenuItem})
         Me.FileToolStripMenuItem.Name = "FileToolStripMenuItem"
         Me.FileToolStripMenuItem.Size = New System.Drawing.Size(37, 20)
         Me.FileToolStripMenuItem.Text = "File"
@@ -189,6 +190,12 @@ Partial Class Main
         Me.OpenADMXFileToolStripMenuItem.Name = "OpenADMXFileToolStripMenuItem"
         Me.OpenADMXFileToolStripMenuItem.Size = New System.Drawing.Size(237, 22)
         Me.OpenADMXFileToolStripMenuItem.Text = "Open ADMX File"
+        '
+        'SetADMLLanguageToolStripMenuItem
+        '
+        Me.SetADMLLanguageToolStripMenuItem.Name = "SetADMLLanguageToolStripMenuItem"
+        Me.SetADMLLanguageToolStripMenuItem.Size = New System.Drawing.Size(237, 22)
+        Me.SetADMLLanguageToolStripMenuItem.Text = "Set ADML Language"
         '
         'CloseADMXWorkspaceToolStripMenuItem
         '
@@ -716,4 +723,5 @@ Partial Class Main
     Friend WithEvents EditRawPOLToolStripMenuItem As ToolStripMenuItem
     Friend WithEvents ExportREGToolStripMenuItem As ToolStripMenuItem
     Friend WithEvents ImportREGToolStripMenuItem As ToolStripMenuItem
+    Friend WithEvents SetADMLLanguageToolStripMenuItem As ToolStripMenuItem
 End Class

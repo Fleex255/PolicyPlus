@@ -76,7 +76,7 @@ Public Class PolFile
         Writer.Write(1)
         For Each kv In Entries
             Writer.Write("["c)
-            Dim pathparts = Split(CasePreservation(kv.Key), "\\")
+            Dim pathparts = Split(CasePreservation(kv.Key), "\\", 2)
             writeSz(pathparts(0)) ' Key name
             Writer.Write(";"c)
             writeSz(pathparts(1)) ' Value name

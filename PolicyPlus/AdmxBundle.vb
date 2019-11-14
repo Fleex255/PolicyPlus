@@ -32,7 +32,7 @@ Public Class AdmxBundle
         Return If(fail Is Nothing, {}, {fail})
     End Function
     Private Function AddSingleAdmx(AdmxPath As String, LanguageCode As String) As AdmxLoadFailure
-        ' Load XML files
+        ' Load ADMX file
         Dim admx As AdmxFile, adml As AdmlFile
         Try
             admx = AdmxFile.Load(AdmxPath)
@@ -42,10 +42,25 @@ Public Class AdmxBundle
             Return New AdmxLoadFailure(AdmxLoadFailType.BadAdmx, AdmxPath, ex.Message)
         End Try
         If Namespaces.ContainsKey(admx.AdmxNamespace) Then Return New AdmxLoadFailure(AdmxLoadFailType.DuplicateNamespace, AdmxPath, admx.AdmxNamespace)
+        ' Find the ADML file
         Dim fileTitle = Path.GetFileName(AdmxPath)
         Dim admlPath = Path.ChangeExtension(AdmxPath.Replace(fileTitle, LanguageCode & "\" & fileTitle), "adml")
+        If Not File.Exists(admlPath) Then
+            Dim language = LanguageCode.Split("-"c)(0)
+            For Each langSubdir In Directory.EnumerateDirectories(Path.GetDirectoryName(AdmxPath))
+                Dim langSubdirTitle = Path.GetFileName(langSubdir)
+                If langSubdirTitle.Split("-"c)(0) = language Then
+                    Dim similarLanguagePath = Path.ChangeExtension(AdmxPath.Replace(fileTitle, langSubdirTitle & "\" & fileTitle), "adml")
+                    If File.Exists(similarLanguagePath) Then
+                        admlPath = similarLanguagePath
+                        Exit For
+                    End If
+                End If
+            Next
+        End If
         If Not File.Exists(admlPath) Then admlPath = Path.ChangeExtension(AdmxPath.Replace(fileTitle, "en-US\" & fileTitle), "adml")
         If Not File.Exists(admlPath) Then Return New AdmxLoadFailure(AdmxLoadFailType.NoAdml, AdmxPath)
+        ' Load the ADML
         Try
             adml = AdmlFile.Load(admlPath)
         Catch ex As Xml.XmlException
@@ -234,7 +249,9 @@ Public Class AdmxLoadFailure
         MyClass.New(FailType, AdmxPath, "")
     End Sub
     Public Overrides Function ToString() As String
-        Return "Couldn't load " & AdmxPath & ": " & GetFailMessage(FailType, Info) & "."
+        Dim failMsg = "Couldn't load " & AdmxPath & ": " & GetFailMessage(FailType, Info)
+        If Not failMsg.EndsWith(".") Then failMsg &= "."
+        Return failMsg
     End Function
     Private Shared Function GetFailMessage(FailType As AdmxLoadFailType, Info As String) As String
         Select Case FailType

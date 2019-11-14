@@ -58,16 +58,11 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
-    <Reference Include="System.Data" />
-    <Reference Include="System.Deployment" />
     <Reference Include="System.DirectoryServices" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
     <Reference Include="System.Core" />
-    <Reference Include="System.Xml.Linq" />
-    <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="System.Net.Http" />
   </ItemGroup>
   <ItemGroup>
     <Import Include="Microsoft.VisualBasic" />
@@ -234,6 +229,12 @@
     <Compile Include="InspectSpolFragment.vb">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="LanguageOptions.Designer.vb">
+      <DependentUpon>LanguageOptions.vb</DependentUpon>
+    </Compile>
+    <Compile Include="LanguageOptions.vb">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="ListEditor.Designer.vb">
       <DependentUpon>ListEditor.vb</DependentUpon>
     </Compile>
@@ -393,6 +394,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="InspectSpolFragment.resx">
       <DependentUpon>InspectSpolFragment.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="LanguageOptions.resx">
+      <DependentUpon>LanguageOptions.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="ListEditor.resx">
       <DependentUpon>ListEditor.vb</DependentUpon>

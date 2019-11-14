@@ -10,6 +10,7 @@ Class PInvoke
     Declare Unicode Function LookupPrivilegeValueW Lib "advapi32.dll" (SystemName As String, Name As String, ByRef LUID As PInvokeLuid) As Boolean
     Declare Function CloseHandle Lib "kernel32.dll" (Handle As IntPtr) As Boolean
     Declare Function GetProductInfo Lib "kernel32.dll" (MajorVersion As Integer, MinorVersion As Integer, SPMajor As Integer, SPMinor As Integer, ByRef EditionCode As Integer) As Boolean
+    Declare Unicode Function SendNotifyMessageW Lib "user32.dll" (Handle As IntPtr, Message As Integer, WParam As UIntPtr, LParam As IntPtr) As Boolean
 End Class
 <StructLayout(LayoutKind.Sequential)> Structure PInvokeTokenPrivileges
     Public PrivilegeCount As UInteger

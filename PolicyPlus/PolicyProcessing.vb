@@ -35,12 +35,20 @@
         If rawpol.Elements IsNot Nothing Then
             Dim deletedElements As Integer = 0
             Dim presentElements As Integer = 0
-            For Each elem In rawpol.Elements.Where(Function(e) e.ElementType <> "list")
+            For Each elem In rawpol.Elements
                 Dim elemKey = If(elem.RegistryKey = "", rawpol.RegistryKey, elem.RegistryKey)
-                If PolicySource.WillDeleteValue(elemKey, elem.RegistryValue) And elem.ElementType <> "boolean" Then ' Implicit check boxes are deleted when unchecked
-                    deletedElements += 1
-                ElseIf PolicySource.ContainsValue(elemKey, elem.RegistryValue) Then
-                    presentElements += 1
+                If elem.ElementType = "list" Then
+                    If PolicySource.WillDeleteValue(elemKey, "") Then
+                        deletedElements += 1
+                    ElseIf PolicySource.GetValueNames(elemKey).Count > 0 Then
+                        presentElements += 1
+                    End If
+                Else
+                    If PolicySource.WillDeleteValue(elemKey, elem.RegistryValue) And elem.ElementType <> "boolean" Then ' Implicit check boxes are deleted when unchecked
+                        deletedElements += 1
+                    ElseIf PolicySource.ContainsValue(elemKey, elem.RegistryValue) Then
+                        presentElements += 1
+                    End If
                 End If
             Next
             If presentElements > 0 Then
@@ -225,6 +233,8 @@
                         If Forget Then
                             PolicySource.ClearKey(elemKey) ' Delete all the values
                             PolicySource.ForgetKeyClearance(elemKey)
+                        Else
+                            addReg(elemKey, "")
                         End If
                 End Select
             Next
@@ -332,9 +342,13 @@
                 If rawpol.AffectedValues.OffValue Is Nothing And rawpol.RegistryValue <> "" Then PolicySource.DeleteValue(rawpol.RegistryKey, rawpol.RegistryValue)
                 setList(rawpol.AffectedValues, rawpol.RegistryKey, rawpol.RegistryValue, False)
                 If rawpol.Elements IsNot Nothing Then ' Mark all the elements deleted
-                    For Each elem In rawpol.Elements.Where(Function(e) e.ElementType <> "list")
+                    For Each elem In rawpol.Elements
                         Dim elemKey = If(elem.RegistryKey = "", rawpol.RegistryKey, elem.RegistryKey)
-                        PolicySource.DeleteValue(elemKey, elem.RegistryValue)
+                        If elem.ElementType = "list" Then
+                            PolicySource.ClearKey(elemKey)
+                        Else
+                            PolicySource.DeleteValue(elemKey, elem.RegistryValue)
+                        End If
                     Next
                 End If
         End Select

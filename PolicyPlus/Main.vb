@@ -17,32 +17,8 @@ Public Class Main
     Private Sub Main_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         ' Create the configuration manager (for the Registry)
         Configuration = New ConfigurationStorage(RegistryHive.CurrentUser, "Software\Policy Plus")
-        ' Open the last policy definitions folder
-        Dim defaultAdmxSource = Environment.ExpandEnvironmentVariables("%windir%\PolicyDefinitions")
-        Dim admxSource As String = Configuration.GetValue("AdmxSource", defaultAdmxSource)
-        Try
-            Dim fails = AdmxWorkspace.LoadFolder(admxSource, Globalization.CultureInfo.CurrentCulture.Name)
-            If DisplayAdmxLoadErrorReport(fails, True) = MsgBoxResult.No Then Throw New Exception("You decided to not use the problematic ADMX bundle.")
-        Catch ex As Exception
-            AdmxWorkspace = New AdmxBundle
-            Dim loadFailReason As String = ""
-            If admxSource <> defaultAdmxSource Then
-                If MsgBox("Policy definitions could not be loaded from """ & admxSource & """: " & ex.Message & vbCrLf & vbCrLf &
-                          "Load from the default location?", MsgBoxStyle.YesNo Or MsgBoxStyle.Question) = MsgBoxResult.Yes Then
-                    Try
-                        Configuration.SetValue("AdmxSource", defaultAdmxSource)
-                        AdmxWorkspace = New AdmxBundle
-                        DisplayAdmxLoadErrorReport(AdmxWorkspace.LoadFolder(defaultAdmxSource, Globalization.CultureInfo.CurrentCulture.Name))
-                    Catch ex2 As Exception
-                        loadFailReason = ex2.Message
-                    End Try
-                End If
-            Else
-                loadFailReason = ex.Message
-            End If
-            If loadFailReason <> "" Then MsgBox("Policy definitions could not be loaded: " & loadFailReason, MsgBoxStyle.Exclamation)
-        End Try
-        ' Open the last policy loaders
+        ' Restore the last ADMX source and policy loaders
+        OpenLastAdmxSource()
         Dim compLoaderType As PolicyLoaderSource = Configuration.GetValue("CompSourceType", 0)
         Dim compLoaderData = Configuration.GetValue("CompSourceData", "")
         Dim userLoaderType As PolicyLoaderSource = Configuration.GetValue("UserSourceType", 0)
@@ -63,6 +39,32 @@ Public Class Main
         PoliciesList.Height -= InfoStrip.ClientSize.Height
         InfoStrip.Items.Insert(2, New ToolStripSeparator)
         PopulateAdmxUi()
+    End Sub
+    Sub OpenLastAdmxSource()
+        Dim defaultAdmxSource = Environment.ExpandEnvironmentVariables("%windir%\PolicyDefinitions")
+        Dim admxSource As String = Configuration.GetValue("AdmxSource", defaultAdmxSource)
+        Try
+            Dim fails = AdmxWorkspace.LoadFolder(admxSource, GetPreferredLanguageCode())
+            If DisplayAdmxLoadErrorReport(fails, True) = MsgBoxResult.No Then Throw New Exception("You decided to not use the problematic ADMX bundle.")
+        Catch ex As Exception
+            AdmxWorkspace = New AdmxBundle
+            Dim loadFailReason As String = ""
+            If admxSource <> defaultAdmxSource Then
+                If MsgBox("Policy definitions could not be loaded from """ & admxSource & """: " & ex.Message & vbCrLf & vbCrLf &
+                          "Load from the default location?", MsgBoxStyle.YesNo Or MsgBoxStyle.Question) = MsgBoxResult.Yes Then
+                    Try
+                        Configuration.SetValue("AdmxSource", defaultAdmxSource)
+                        AdmxWorkspace = New AdmxBundle
+                        DisplayAdmxLoadErrorReport(AdmxWorkspace.LoadFolder(defaultAdmxSource, GetPreferredLanguageCode()))
+                    Catch ex2 As Exception
+                        loadFailReason = ex2.Message
+                    End Try
+                End If
+            Else
+                loadFailReason = ex.Message
+            End If
+            If loadFailReason <> "" Then MsgBox("Policy definitions could not be loaded: " & loadFailReason, MsgBoxStyle.Exclamation)
+        End Try
     End Sub
     Sub PopulateAdmxUi()
         ' Populate the left categories tree
@@ -450,6 +452,9 @@ Public Class Main
         Return MsgBox(header & If(AskContinue, " Continue trying to use this workspace?", "") & vbCrLf & vbCrLf &
                String.Join(vbCrLf & vbCrLf, Failures.Select(Function(f) f.ToString)), boxStyle)
     End Function
+    Function GetPreferredLanguageCode() As String
+        Return Configuration.GetValue("LanguageCode", Globalization.CultureInfo.CurrentCulture.Name)
+    End Function
     Private Sub CategoriesTree_AfterSelect(sender As Object, e As TreeViewEventArgs) Handles CategoriesTree.AfterSelect
         ' When the user selects a new category in the left pane
         CurrentCategory = e.Node.Tag
@@ -485,7 +490,7 @@ Public Class Main
         If OpenAdmxFolder.ShowDialog = DialogResult.OK Then
             Try
                 If OpenAdmxFolder.ClearWorkspace Then ClearAdmxWorkspace()
-                DisplayAdmxLoadErrorReport(AdmxWorkspace.LoadFolder(OpenAdmxFolder.SelectedFolder, Globalization.CultureInfo.CurrentCulture.Name))
+                DisplayAdmxLoadErrorReport(AdmxWorkspace.LoadFolder(OpenAdmxFolder.SelectedFolder, GetPreferredLanguageCode()))
                 ' Only update the last source when successfully opening a complete source
                 If OpenAdmxFolder.ClearWorkspace Then Configuration.SetValue("AdmxSource", OpenAdmxFolder.SelectedFolder)
             Catch ex As Exception
@@ -501,7 +506,7 @@ Public Class Main
             ofd.Title = "Open ADMX file"
             If ofd.ShowDialog <> DialogResult.OK Then Exit Sub
             Try
-                DisplayAdmxLoadErrorReport(AdmxWorkspace.LoadFile(ofd.FileName, Globalization.CultureInfo.CurrentCulture.Name))
+                DisplayAdmxLoadErrorReport(AdmxWorkspace.LoadFile(ofd.FileName, GetPreferredLanguageCode()))
             Catch ex As Exception
                 MsgBox("The ADMX file could not be added to the workspace. " & ex.Message, MsgBoxStyle.Exclamation)
             End Try
@@ -728,7 +733,7 @@ Public Class Main
         If DownloadAdmx.ShowDialog = DialogResult.OK Then
             If DownloadAdmx.NewPolicySourceFolder <> "" Then
                 ClearAdmxWorkspace()
-                DisplayAdmxLoadErrorReport(AdmxWorkspace.LoadFolder(DownloadAdmx.NewPolicySourceFolder, Globalization.CultureInfo.CurrentCulture.Name))
+                DisplayAdmxLoadErrorReport(AdmxWorkspace.LoadFolder(DownloadAdmx.NewPolicySourceFolder, GetPreferredLanguageCode()))
                 Configuration.SetValue("AdmxSource", DownloadAdmx.NewPolicySourceFolder)
                 PopulateAdmxUi()
             End If
@@ -772,6 +777,16 @@ Public Class Main
         If OpenSection.PresentDialog(True, True) = DialogResult.OK Then
             Dim source = If(OpenSection.SelectedSection = AdmxPolicySection.Machine, CompPolicySource, UserPolicySource)
             If ImportReg.PresentDialog(source) = DialogResult.OK Then MoveToVisibleCategoryAndReload()
+        End If
+    End Sub
+    Private Sub SetADMLLanguageToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles SetADMLLanguageToolStripMenuItem.Click
+        If LanguageOptions.PresentDialog(GetPreferredLanguageCode()) = DialogResult.OK Then
+            Configuration.SetValue("LanguageCode", LanguageOptions.NewLanguage)
+            If MsgBox("Language changes will take effect when ADML files are next loaded. Would you like to reload the workspace now?", MsgBoxStyle.YesNo Or MsgBoxStyle.Question) = MsgBoxResult.Yes Then
+                ClearAdmxWorkspace()
+                OpenLastAdmxSource()
+                PopulateAdmxUi()
+            End If
         End If
     End Sub
     Private Sub PolicyObjectContext_Opening(sender As Object, e As CancelEventArgs) Handles PolicyObjectContext.Opening
