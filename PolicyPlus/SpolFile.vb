@@ -52,7 +52,7 @@
             If Trim(nextLine()) = "" Then Continue Do
             Dim policyHeaderParts = Split(line, " ", 2) ' Section and policy ID
             Dim singlePolicy As New SpolPolicyState With {.UniqueID = policyHeaderParts(1)}
-            singlePolicy.Section = If(policyHeaderParts(1) = "0", AdmxPolicySection.User, AdmxPolicySection.Machine)
+            singlePolicy.Section = If(policyHeaderParts(0) = "U", AdmxPolicySection.User, AdmxPolicySection.Machine)
             Const commentPrefix As String = "comment: "
             If LTrim(peekLine()).ToLowerInvariant().StartsWith(commentPrefix) Then
                 Dim escapedCommentText = LTrim(nextLine()).Substring(commentPrefix.Length)
