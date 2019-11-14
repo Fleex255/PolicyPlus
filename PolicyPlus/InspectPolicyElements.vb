@@ -75,7 +75,7 @@
                         presPartNode.ImageIndex = 22 ' Calculator with pencil
                         If decTextPres.Label <> "" Then presPartNode.Nodes.Add("Label: """ & decTextPres.Label & """").ImageIndex = 14
                         presPartNode.Nodes.Add("Default: " & decTextPres.DefaultValue).ImageIndex = 23 ' Wrench
-                        presPartNode.Nodes.Add(If(decTextPres.HasSpinner, "Spinner incremenent: " & decTextPres.SpinnerIncrement, "No spinner")).ImageIndex = 6
+                        presPartNode.Nodes.Add(If(decTextPres.HasSpinner, "Spinner increment: " & decTextPres.SpinnerIncrement, "No spinner")).ImageIndex = 6
                     Case "textBox"
                         Dim textPres As TextBoxPresentationElement = presElem
                         presPartNode.ImageIndex = 24 ' Text field
@@ -110,7 +110,9 @@
                         presPartNode.ImageIndex = 27 ' Table window
                         presPartNode.Nodes.Add("Label: """ & listPres.Label & """").ImageIndex = 14
                     Case "multiTextBox"
+                        Dim multiTextPres As MultiTextPresentationElement = presElem
                         presPartNode.ImageIndex = 38 ' Cascading boxes
+                        presPartNode.Nodes.Add("Label: """ & multiTextPres.Label & """").ImageIndex = 14
                 End Select
                 If presElem.ID = "" Then Continue For
                 Dim elem = Policy.RawPolicy.Elements.First(Function(e) e.ID = presElem.ID)

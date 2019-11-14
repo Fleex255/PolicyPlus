@@ -168,6 +168,7 @@
                                                  End Sub
                         addControl(pres.ID, button, listPres.Label)
                     Case "multiTextBox" ' Multiline text box
+                        Dim multiTextPres As MultiTextPresentationElement = pres
                         Dim bigTextbox As New TextBox
                         bigTextbox.AutoSize = False
                         bigTextbox.Width = ExtraOptionsPanel.Width * 0.8
@@ -176,7 +177,7 @@
                         bigTextbox.ScrollBars = ScrollBars.Both
                         bigTextbox.WordWrap = False
                         bigTextbox.AcceptsReturn = True
-                        addControl(pres.ID, bigTextbox, "")
+                        addControl(pres.ID, bigTextbox, multiTextPres.Label)
                 End Select
             Next
             OptionsTableResized()
