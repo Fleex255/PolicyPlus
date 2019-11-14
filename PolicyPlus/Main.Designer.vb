@@ -60,7 +60,9 @@ Partial Class Main
         Me.ShareToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.ImportSemanticPolicyToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.ImportPOLToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.ImportREGToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.ExportPOLToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.ExportREGToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.HelpToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.AboutToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.AcquireADMXFilesToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
@@ -85,8 +87,6 @@ Partial Class Main
         Me.InfoStrip = New System.Windows.Forms.StatusStrip()
         Me.ComputerSourceLabel = New System.Windows.Forms.ToolStripStatusLabel()
         Me.UserSourceLabel = New System.Windows.Forms.ToolStripStatusLabel()
-        Me.ExportREGToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.ImportREGToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         ChSettingEnabled = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
         ChSettingCommented = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
         ToolStripSeparator1 = New System.Windows.Forms.ToolStripSeparator()
@@ -333,11 +333,23 @@ Partial Class Main
         Me.ImportPOLToolStripMenuItem.Size = New System.Drawing.Size(197, 22)
         Me.ImportPOLToolStripMenuItem.Text = "Import POL"
         '
+        'ImportREGToolStripMenuItem
+        '
+        Me.ImportREGToolStripMenuItem.Name = "ImportREGToolStripMenuItem"
+        Me.ImportREGToolStripMenuItem.Size = New System.Drawing.Size(197, 22)
+        Me.ImportREGToolStripMenuItem.Text = "Import REG"
+        '
         'ExportPOLToolStripMenuItem
         '
         Me.ExportPOLToolStripMenuItem.Name = "ExportPOLToolStripMenuItem"
         Me.ExportPOLToolStripMenuItem.Size = New System.Drawing.Size(197, 22)
         Me.ExportPOLToolStripMenuItem.Text = "Export POL"
+        '
+        'ExportREGToolStripMenuItem
+        '
+        Me.ExportREGToolStripMenuItem.Name = "ExportREGToolStripMenuItem"
+        Me.ExportREGToolStripMenuItem.Size = New System.Drawing.Size(197, 22)
+        Me.ExportREGToolStripMenuItem.Text = "Export REG"
         '
         'HelpToolStripMenuItem
         '
@@ -563,6 +575,7 @@ Partial Class Main
         Me.PolicyTitleLabel.Size = New System.Drawing.Size(66, 13)
         Me.PolicyTitleLabel.TabIndex = 0
         Me.PolicyTitleLabel.Text = "Policy title"
+        Me.PolicyTitleLabel.UseMnemonic = False
         '
         'PolicySupportedLabel
         '
@@ -573,6 +586,7 @@ Partial Class Main
         Me.PolicySupportedLabel.Size = New System.Drawing.Size(72, 13)
         Me.PolicySupportedLabel.TabIndex = 1
         Me.PolicySupportedLabel.Text = "Requirements"
+        Me.PolicySupportedLabel.UseMnemonic = False
         '
         'PolicyDescLabel
         '
@@ -582,6 +596,7 @@ Partial Class Main
         Me.PolicyDescLabel.Size = New System.Drawing.Size(89, 13)
         Me.PolicyDescLabel.TabIndex = 2
         Me.PolicyDescLabel.Text = "Policy description"
+        Me.PolicyDescLabel.UseMnemonic = False
         '
         'PolicyIsPrefLabel
         '
@@ -594,6 +609,7 @@ Partial Class Main
         Me.PolicyIsPrefLabel.TabIndex = 3
         Me.PolicyIsPrefLabel.Text = "Because it is not stored in a Policies section of the Registry, this policy is a " &
     "preference and will not be automatically undone if the setting is removed."
+        Me.PolicyIsPrefLabel.UseMnemonic = False
         '
         'InfoStrip
         '
@@ -615,18 +631,6 @@ Partial Class Main
         Me.UserSourceLabel.Name = "UserSourceLabel"
         Me.UserSourceLabel.Size = New System.Drawing.Size(54, 17)
         Me.UserSourceLabel.Text = "User info"
-        '
-        'ExportREGToolStripMenuItem
-        '
-        Me.ExportREGToolStripMenuItem.Name = "ExportREGToolStripMenuItem"
-        Me.ExportREGToolStripMenuItem.Size = New System.Drawing.Size(197, 22)
-        Me.ExportREGToolStripMenuItem.Text = "Export REG"
-        '
-        'ImportREGToolStripMenuItem
-        '
-        Me.ImportREGToolStripMenuItem.Name = "ImportREGToolStripMenuItem"
-        Me.ImportREGToolStripMenuItem.Size = New System.Drawing.Size(197, 22)
-        Me.ImportREGToolStripMenuItem.Text = "Import REG"
         '
         'Main
         '
