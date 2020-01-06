@@ -48,6 +48,16 @@ Public Class FindResults
         Dim results As Integer = 0
         Dim stoppedByCancel As Boolean = False
         Dim pendingInsertions As New List(Of PolicyPlusPolicy)
+        Dim addPendingInsertions = Sub()
+                                       ResultsListview.BeginUpdate()
+                                       For Each insert In pendingInsertions
+                                           Dim lsvi = ResultsListview.Items.Add(insert.DisplayName)
+                                           lsvi.Tag = insert
+                                           lsvi.SubItems.Add(insert.Category.DisplayName)
+                                       Next
+                                       ResultsListview.EndUpdate()
+                                       pendingInsertions.Clear()
+                                   End Sub
         For Each policy In Workspace.Policies
             If Threading.Thread.VolatileRead(CancelingSearch) Then
                 stoppedByCancel = True
@@ -61,14 +71,7 @@ Public Class FindResults
             End If
             If searchedSoFar Mod 20 = 0 Then ' UI updating is costly
                 Invoke(Sub()
-                           ResultsListview.BeginUpdate()
-                           For Each insert In pendingInsertions
-                               Dim lsvi = ResultsListview.Items.Add(insert.DisplayName)
-                               lsvi.Tag = insert
-                               lsvi.SubItems.Add(insert.Category.DisplayName)
-                           Next
-                           ResultsListview.EndUpdate()
-                           pendingInsertions.Clear()
+                           addPendingInsertions()
                            SearchProgress.Value = searchedSoFar
                            ProgressLabel.Text = "Searching: checked " & searchedSoFar & " policies so far, found " & results & " hits"
                        End Sub)
@@ -76,6 +79,7 @@ Public Class FindResults
         Next
         If stoppedByCancel AndAlso Threading.Thread.VolatileRead(CancelDueToFormClose) Then Exit Sub ' Avoid accessing a disposed object
         Invoke(Sub()
+                   addPendingInsertions()
                    Dim status As String = If(stoppedByCancel, "Search canceled", "Finished searching")
                    ProgressLabel.Text = status & ": checked " & searchedSoFar & " policies, found " & results & " hits"
                    SearchProgress.Value = SearchProgress.Maximum
