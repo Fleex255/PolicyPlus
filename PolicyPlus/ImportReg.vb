@@ -15,6 +15,7 @@
                 Try
                     Dim reg = RegFile.Load(ofd.FileName, "")
                     TextRoot.Text = reg.GuessPrefix()
+                    If reg.HasDefaultValues Then MsgBox("This REG file contains data for default values, which cannot be applied to all policy sources.", MsgBoxStyle.Exclamation)
                 Catch ex As Exception
                     MsgBox("An error occurred while trying to guess the prefix.", MsgBoxStyle.Exclamation)
                 End Try

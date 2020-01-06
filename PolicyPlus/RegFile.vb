@@ -34,25 +34,32 @@ Public Class RegFile
         Next
         Return sb.ToString
     End Function
+    Private Shared Function ReadNonCommentingLine(Reader As StreamReader, Optional StopAt As Char? = Nothing) As String
+        Do
+            If Reader.EndOfStream Then Return Nothing
+            If StopAt.HasValue AndAlso Reader.Peek = Asc(StopAt.Value) Then Return Nothing
+            Dim line = Reader.ReadLine
+            If String.IsNullOrWhiteSpace(line) OrElse Trim(line).StartsWith(";") Then Continue Do
+            Return line
+        Loop
+    End Function
     Public Shared Function Load(Reader As StreamReader, Prefix As String) As RegFile
         If Reader.ReadLine() <> RegSignature Then Throw New InvalidDataException("Incorrect REG signature")
-        Reader.ReadLine() ' Skip a blank line
         Dim reg As New RegFile
         reg.SetPrefix(Prefix)
         Do ' Read all the keys
-            Dim keyHeader = Reader.ReadLine
-            If keyHeader = "" Then Exit Do
+            Dim keyHeader = ReadNonCommentingLine(Reader)
+            If keyHeader Is Nothing Then Exit Do
             Dim keyName = keyHeader.Substring(1, keyHeader.Length - 2) ' Remove the brackets
             If keyName.StartsWith("-") Then
                 ' It's a deleter
                 Dim deleterKey As New RegFileKey With {.Name = keyName.Substring(1), .IsDeleter = True}
                 reg.Keys.Add(deleterKey)
-                Reader.ReadLine() ' Skip a blank line
             Else
                 Dim key As New RegFileKey With {.Name = keyName}
                 Do ' Read all the values
-                    Dim valueLine = Reader.ReadLine
-                    If valueLine = "" Then Exit Do
+                    Dim valueLine = ReadNonCommentingLine(Reader, "["c)
+                    If valueLine Is Nothing Then Exit Do
                     Dim valueName As String = ""
                     Dim data As String
                     If valueLine.StartsWith("@") Then
@@ -283,6 +290,9 @@ Public Class RegFile
             Dim firstSlashPos = firstKeyName.IndexOf("\")
             Return firstKeyName.Substring(0, firstSlashPos + 1)
         End If
+    End Function
+    Public Function HasDefaultValues() As Boolean
+        Return Keys.Any(Function(k) k.Values.Any(Function(v) v.Name = ""))
     End Function
     Private Class RegFileKey
         Public Name As String
