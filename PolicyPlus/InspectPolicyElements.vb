@@ -143,9 +143,9 @@
                         If listElem.UserProvidesNames Then
                             elemNode.Nodes.Add("User provides value names").ImageIndex = 13
                         ElseIf listElem.HasPrefix Then
-                            elemNode.Nodes.Add("No prefix (values named for their data)").ImageIndex = 13
-                        Else
                             elemNode.Nodes.Add("Value prefix: """ & listElem.RegistryValue & """").ImageIndex = 13
+                        Else
+                            elemNode.Nodes.Add("No prefix (values named for their data)").ImageIndex = 13
                         End If
                         If listElem.RegExpandSz Then elemNode.Nodes.Add("Stored as expandable strings").ImageIndex = 36
                         elemNode.Nodes.Add("Preserve existing values: " & If(listElem.NoPurgeOthers, "yes", "no")).ImageIndex = 34
