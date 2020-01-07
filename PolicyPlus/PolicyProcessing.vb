@@ -38,9 +38,13 @@
             For Each elem In rawpol.Elements
                 Dim elemKey = If(elem.RegistryKey = "", rawpol.RegistryKey, elem.RegistryKey)
                 If elem.ElementType = "list" Then
+                    Dim neededValues = 0
                     If PolicySource.WillDeleteValue(elemKey, "") Then
                         deletedElements += 1
-                    ElseIf PolicySource.GetValueNames(elemKey).Count > 0 Then
+                        neededValues = 1
+                    End If
+                    If PolicySource.GetValueNames(elemKey).Count > neededValues Then
+                        deletedElements -= neededValues
                         presentElements += 1
                     End If
                 Else
