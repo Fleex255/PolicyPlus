@@ -28,6 +28,13 @@ you can switch sections with the "Editing for" drop-down. Click OK to keep the c
 **Notice:** If a policy source is backed by a POL file (like Local GPO),
 changes to it will not be committed to disk until you use *File | Save Policies* (Ctrl+S).
 
+## System requirements
+Policy Plus requires .NET Framework 4.5 or newer. That can be installed on Windows Vista or newer,
+and comes preinstalled on Windows 8 or newer.
+Policy Plus should also work on the corresponding server OSes: Windows Server 2008 or newer.
+The standard [.NET Framework hardware requirements](https://docs.microsoft.com/en-us/dotnet/framework/get-started/system-requirements)
+are sufficient for Policy Plus.
+
 ## Special considerations for use on Home editions
 Some administrative templates are present by default on these editions, but many are missing. 
 The newest full package can be downloaded from Microsoft and installed with *Help | Acquire ADMX Files*.
