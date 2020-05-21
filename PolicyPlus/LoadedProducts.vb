@@ -57,7 +57,8 @@
     Sub OpenProductDetails(sender As Object, e As EventArgs) Handles LsvTopLevelProducts.DoubleClick, LsvMajorVersions.DoubleClick, LsvMinorVersions.DoubleClick
         Dim lsv As ListView = sender
         If lsv.SelectedItems.Count = 0 Then Exit Sub
-        DetailProduct.PresentDialog(sender.SelectedItems(0).Tag)
+        Dim product As PolicyPlusProduct = lsv.SelectedItems(0).Tag
+        DetailProduct.PresentDialog(product)
     End Sub
     Sub ListKeyPressed(sender As Object, e As KeyEventArgs) Handles LsvTopLevelProducts.KeyDown, LsvMajorVersions.KeyDown, LsvMinorVersions.KeyDown
         If e.KeyCode = Keys.Enter Then

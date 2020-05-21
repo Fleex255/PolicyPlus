@@ -81,12 +81,12 @@
                 If Not Source.ContainsValue(Key, ValueName) Then Return False
                 Dim sourceVal = Source.GetValue(Key, ValueName)
                 If TypeOf sourceVal IsNot UInteger And TypeOf sourceVal IsNot Integer Then Return False
-                Return sourceVal = Value.NumberValue
+                Return CLng(sourceVal) = Value.NumberValue
             Case PolicyRegistryValueType.Text
                 If Not Source.ContainsValue(Key, ValueName) Then Return False
                 Dim sourceVal = Source.GetValue(Key, ValueName)
                 If TypeOf sourceVal IsNot String Then Return False
-                Return sourceVal = Value.StringValue
+                Return CStr(sourceVal) = Value.StringValue
             Case Else
                 Throw New InvalidOperationException("Illegal value type")
         End Select
@@ -183,7 +183,7 @@
         ElseIf RegList.OnValueList IsNot Nothing Then
             If isListAllPresent(RegList.OnValueList) Then Return True
         Else
-            If PolicySource.GetValue(DefaultKey, DefaultValueName) = 1UI Then Return True
+            If CUInt(PolicySource.GetValue(DefaultKey, DefaultValueName)) = 1UI Then Return True
         End If
         If RegList.OffValue IsNot Nothing Then
             If ValuePresent(RegList.OffValue, PolicySource, DefaultKey, DefaultValueName) Then Return False

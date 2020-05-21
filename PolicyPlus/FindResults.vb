@@ -77,7 +77,7 @@ Public Class FindResults
                        End Sub)
             End If
         Next
-        If stoppedByCancel AndAlso Threading.Thread.VolatileRead(CancelDueToFormClose) Then Exit Sub ' Avoid accessing a disposed object
+        If stoppedByCancel AndAlso CBool(Threading.Thread.VolatileRead(CancelDueToFormClose)) Then Exit Sub ' Avoid accessing a disposed object
         Invoke(Sub()
                    addPendingInsertions()
                    Dim status As String = If(stoppedByCancel, "Search canceled", "Finished searching")

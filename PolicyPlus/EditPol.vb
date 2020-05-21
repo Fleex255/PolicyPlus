@@ -40,7 +40,7 @@ Public Class EditPol
                                             Return lsvItem
                                         End Function
                          If value.Equals("**deletevalues", StringComparison.InvariantCultureIgnoreCase) Then
-                             addToLsv("Delete values", 8, True).SubItems.Add(data)
+                             addToLsv("Delete values", 8, True).SubItems.Add(data.ToString())
                          ElseIf value.StartsWith("**del.", StringComparison.InvariantCultureIgnoreCase) Then
                              addToLsv("Delete value", 8, True).SubItems.Add(value.Substring(6))
                          ElseIf value.StartsWith("**delvals", StringComparison.InvariantCultureIgnoreCase) Then
@@ -117,7 +117,7 @@ Public Class EditPol
             MsgBox("The key name is not valid.", MsgBoxStyle.Exclamation)
             Exit Sub
         End If
-        Dim containerKey = If(LsvPol.SelectedItems.Count > 0, LsvPol.SelectedItems(0).Tag, "")
+        Dim containerKey As String = If(LsvPol.SelectedItems.Count > 0, LsvPol.SelectedItems(0).Tag, "")
         If Not IsKeyNameAvailable(containerKey, keyName) Then
             MsgBox("The key name is already taken.", MsgBoxStyle.Exclamation)
             Exit Sub

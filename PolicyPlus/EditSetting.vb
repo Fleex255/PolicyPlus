@@ -86,12 +86,12 @@
                         Dim numeric As DecimalPolicyElement = elemDict(pres.ID)
                         Dim newControl As Control
                         If decimalTextPres.HasSpinner Then
-                            Dim nud As New NumericUpDown
-                            nud.Minimum = numeric.Minimum
-                            nud.Maximum = numeric.Maximum
-                            nud.Increment = decimalTextPres.SpinnerIncrement
-                            nud.Value = decimalTextPres.DefaultValue
-                            newControl = nud
+                            newControl = New NumericUpDown With {
+                                .Minimum = numeric.Minimum,
+                                .Maximum = numeric.Maximum,
+                                .Increment = decimalTextPres.SpinnerIncrement,
+                                .Value = decimalTextPres.DefaultValue
+                            }
                         Else
                             Dim text As New TextBox
                             AddHandler text.TextChanged, Sub()
@@ -110,10 +110,11 @@
                     Case "textBox" ' Simple text box
                         Dim textboxPres As TextBoxPresentationElement = pres
                         Dim text As TextPolicyElement = elemDict(pres.ID)
-                        Dim textbox As New TextBox
-                        textbox.Width = ExtraOptionsTable.Width * 0.75
-                        textbox.Text = textboxPres.DefaultValue
-                        textbox.MaxLength = text.MaxLength
+                        Dim textbox As New TextBox With {
+                            .Width = ExtraOptionsTable.Width * 0.75,
+                            .Text = textboxPres.DefaultValue,
+                            .MaxLength = text.MaxLength
+                        }
                         addControl(pres.ID, textbox, textboxPres.Label)
                     Case "checkBox" ' Check box
                         Dim checkPres As CheckBoxPresentationElement = pres
@@ -160,23 +161,25 @@
                     Case "listBox" ' Button to launch a grid view editor
                         Dim listPres As ListPresentationElement = pres
                         Dim list As ListPolicyElement = elemDict(pres.ID)
-                        Dim button As New Button
-                        button.UseVisualStyleBackColor = True
-                        button.Text = "Edit..."
+                        Dim button As New Button With {
+                            .UseVisualStyleBackColor = True,
+                            .Text = "Edit..."
+                        }
                         AddHandler button.Click, Sub()
                                                      If ListEditor.PresentDialog(listPres.Label, button.Tag, list.UserProvidesNames) = DialogResult.OK Then button.Tag = ListEditor.FinalData
                                                  End Sub
                         addControl(pres.ID, button, listPres.Label)
                     Case "multiTextBox" ' Multiline text box
                         Dim multiTextPres As MultiTextPresentationElement = pres
-                        Dim bigTextbox As New TextBox
-                        bigTextbox.AutoSize = False
-                        bigTextbox.Width = ExtraOptionsPanel.Width * 0.8
-                        bigTextbox.Multiline = True
+                        Dim bigTextbox As New TextBox With {
+                            .AutoSize = False,
+                            .Width = ExtraOptionsPanel.Width * 0.8,
+                            .Multiline = True,
+                            .ScrollBars = ScrollBars.Both,
+                            .WordWrap = False,
+                            .AcceptsReturn = True
+                        }
                         bigTextbox.Height *= 4
-                        bigTextbox.ScrollBars = ScrollBars.Both
-                        bigTextbox.WordWrap = False
-                        bigTextbox.AcceptsReturn = True
                         addControl(pres.ID, bigTextbox, multiTextPres.Label)
                 End Select
             Next
@@ -207,7 +210,7 @@
                         End If
                     ElseIf TypeOf kv.Value Is Integer Then ' Dropdown list
                         Dim combobox As ComboBox = uiControl
-                        combobox.SelectedItem = combobox.Items.OfType(Of DropdownPresentationMap).First(Function(i) i.ID = kv.Value)
+                        combobox.SelectedItem = combobox.Items.OfType(Of DropdownPresentationMap).First(Function(i) i.ID = CInt(kv.Value))
                     ElseIf TypeOf kv.Value Is Boolean Then ' Check box
                         CType(uiControl, CheckBox).Checked = kv.Value
                     ElseIf TypeOf kv.Value Is String() Then ' Multiline text box

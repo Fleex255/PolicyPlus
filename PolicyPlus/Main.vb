@@ -755,7 +755,7 @@ Public Class Main
             MsgBox("Neither loaded source is backed by a POL file.", MsgBoxStyle.Exclamation)
             Exit Sub
         End If
-        If Configuration.GetValue("EditPolDangerAcknowledged", 0) = 0 Then
+        If CInt(Configuration.GetValue("EditPolDangerAcknowledged", 0)) = 0 Then
             If MsgBox("Caution! This tool is for very advanced users. Improper modifications may result in inconsistencies in policies' states." & vbCrLf & vbCrLf &
                       "Changes operate directly on the policy source, though they will not be committed to disk until you save. Are you sure you want to continue?",
                       MsgBoxStyle.Exclamation Or MsgBoxStyle.YesNo) = MsgBoxResult.No Then Exit Sub

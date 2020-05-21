@@ -15,8 +15,8 @@ Public Class PolFile
     Implements IPolicySource
     ' The sortedness is important because key clearances need to be processed before the addition of their values
     ' Fortunately, clearing entries start with **, which sorts before normal values
-    Private Entries As New SortedDictionary(Of String, PolEntryData) ' Keys are lowercase Registry keys and values, separated by "\\"
-    Private CasePreservation As New Dictionary(Of String, String) ' Keep track of the original cases
+    Private ReadOnly Entries As New SortedDictionary(Of String, PolEntryData) ' Keys are lowercase Registry keys and values, separated by "\\"
+    Private ReadOnly CasePreservation As New Dictionary(Of String, String) ' Keep track of the original cases
     Private Function GetDictKey(Key As String, Value As String) As String
         Dim origCase = Key & "\\" & Value
         Dim lowerCase = origCase.ToLowerInvariant
