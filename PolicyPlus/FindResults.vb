@@ -30,6 +30,8 @@ Public Class FindResults
             MsgBox("No search has been run yet, so there are no results to display.", MsgBoxStyle.Information)
             Return DialogResult.Cancel
         End If
+        CancelingSearch = False
+        CancelDueToFormClose = False
         SearchPending = False
         Return ShowDialog()
     End Function
@@ -109,6 +111,11 @@ Public Class FindResults
     End Sub
     Private Sub FindResults_Closing(sender As Object, e As CancelEventArgs) Handles Me.Closing
         StopSearch(True)
+        If SearchProgress.Value <> SearchProgress.Maximum Then
+            ProgressLabel.Text = "Search canceled"
+            SearchProgress.Maximum = 100
+            SearchProgress.Value = SearchProgress.Maximum
+        End If
     End Sub
     Private Sub GoClicked(sender As Object, e As EventArgs) Handles GoButton.Click, ResultsListview.DoubleClick
         If ResultsListview.SelectedItems.Count = 0 Then Exit Sub
