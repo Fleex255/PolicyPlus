@@ -18,7 +18,7 @@
     Private Sub EditSetting_Shown(sender As Object, e As EventArgs) Handles Me.Shown
         SettingNameLabel.Text = CurrentSetting.DisplayName
         If CurrentSetting.SupportedOn Is Nothing Then SupportedTextbox.Text = "" Else SupportedTextbox.Text = CurrentSetting.SupportedOn.DisplayName
-        HelpTextbox.Text = CurrentSetting.DisplayExplanation
+        HelpTextbox.Text = Main.PrettifyDescription(CurrentSetting.DisplayExplanation)
         If CurrentSetting.RawPolicy.Section = AdmxPolicySection.Both Then
             SectionDropdown.Enabled = True
             CurrentSection = If(CurrentSection = AdmxPolicySection.Both, AdmxPolicySection.Machine, CurrentSection)

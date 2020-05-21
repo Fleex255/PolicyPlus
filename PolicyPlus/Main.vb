@@ -1,4 +1,5 @@
 ﻿Imports System.ComponentModel
+Imports System.Text
 Imports Microsoft.Win32
 Public Class Main
     Dim Configuration As ConfigurationStorage
@@ -138,17 +139,17 @@ Public Class Main
             Else
                 PolicySupportedLabel.Text = "Requirements:" & vbCrLf & CurrentSetting.SupportedOn.DisplayName
             End If
-            PolicyDescLabel.Text = CurrentSetting.DisplayExplanation.Trim()
-            PolicyIsPrefLabel.Visible = IsPreference(CurrentSetting)
+            PolicyDescLabel.Text = PrettifyDescription(CurrentSetting.DisplayExplanation)
+            PolicyIsPrefTable.Visible = IsPreference(CurrentSetting)
         ElseIf HighlightCategory IsNot Nothing Or CurrentCategory IsNot Nothing Then
             Dim shownCategory = If(HighlightCategory, CurrentCategory)
             PolicyTitleLabel.Text = shownCategory.DisplayName
             PolicySupportedLabel.Text = If(HighlightCategory Is Nothing, "This", "The selected") & " category contains " & shownCategory.Policies.Count & " policies and " & shownCategory.Children.Count & " subcategories."
-            PolicyDescLabel.Text = shownCategory.DisplayExplanation.Trim()
-            PolicyIsPrefLabel.Visible = False
+            PolicyDescLabel.Text = PrettifyDescription(shownCategory.DisplayExplanation)
+            PolicyIsPrefTable.Visible = False
         Else
             PolicyDescLabel.Text = "Select an item to see its description."
-            PolicyIsPrefLabel.Visible = False
+            PolicyIsPrefTable.Visible = False
         End If
         SettingInfoPanel_ClientSizeChanged(Nothing, Nothing)
     End Sub
@@ -650,7 +651,7 @@ Public Class Main
         PolicyTitleLabel.MaximumSize = New Size(PolicyInfoTable.Width, 0)
         PolicySupportedLabel.MaximumSize = New Size(PolicyInfoTable.Width, 0)
         PolicyDescLabel.MaximumSize = New Size(PolicyInfoTable.Width, 0)
-        PolicyIsPrefLabel.MaximumSize = New Size(PolicyInfoTable.Width, 0)
+        PolicyIsPrefLabel.MaximumSize = New Size(PolicyInfoTable.Width - 22, 0) ' Leave room for the exclamation icon
         PolicyInfoTable.MaximumSize = New Size(SettingInfoPanel.Width - If(SettingInfoPanel.VerticalScroll.Visible, SystemInformation.VerticalScrollBarWidth, 0), 0)
         PolicyInfoTable.Width = PolicyInfoTable.MaximumSize.Width
         If PolicyInfoTable.ColumnCount > 0 Then PolicyInfoTable.ColumnStyles(0).Width = PolicyInfoTable.ClientSize.Width ' Only once everything is initialized
@@ -835,4 +836,12 @@ Public Class Main
         ' Right-clicking doesn't actually select the node by default
         If e.Button = MouseButtons.Right Then CategoriesTree.SelectedNode = e.Node
     End Sub
+    Shared Function PrettifyDescription(Description As String) As String
+        ' Remove extra indentation from paragraphs
+        Dim sb As New StringBuilder
+        For Each line In Description.Split(vbCrLf)
+            sb.AppendLine(line.Trim())
+        Next
+        Return sb.ToString().TrimEnd()
+    End Function
 End Class

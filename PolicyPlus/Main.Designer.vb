@@ -84,10 +84,12 @@ Partial Class Main
         Me.PolicyTitleLabel = New System.Windows.Forms.Label()
         Me.PolicySupportedLabel = New System.Windows.Forms.Label()
         Me.PolicyDescLabel = New System.Windows.Forms.Label()
-        Me.PolicyIsPrefLabel = New System.Windows.Forms.Label()
         Me.InfoStrip = New System.Windows.Forms.StatusStrip()
         Me.ComputerSourceLabel = New System.Windows.Forms.ToolStripStatusLabel()
         Me.UserSourceLabel = New System.Windows.Forms.ToolStripStatusLabel()
+        Me.PolicyIsPrefTable = New System.Windows.Forms.TableLayoutPanel()
+        Me.PictureBox1 = New System.Windows.Forms.PictureBox()
+        Me.PolicyIsPrefLabel = New System.Windows.Forms.Label()
         ChSettingEnabled = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
         ChSettingCommented = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
         ToolStripSeparator1 = New System.Windows.Forms.ToolStripSeparator()
@@ -107,6 +109,8 @@ Partial Class Main
         Me.SettingInfoPanel.SuspendLayout()
         Me.PolicyInfoTable.SuspendLayout()
         Me.InfoStrip.SuspendLayout()
+        Me.PolicyIsPrefTable.SuspendLayout()
+        CType(Me.PictureBox1, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
         '
         'ChSettingEnabled
@@ -561,15 +565,16 @@ Partial Class Main
         Me.PolicyInfoTable.Controls.Add(Me.PolicyTitleLabel, 0, 0)
         Me.PolicyInfoTable.Controls.Add(Me.PolicySupportedLabel, 0, 1)
         Me.PolicyInfoTable.Controls.Add(Me.PolicyDescLabel, 0, 3)
-        Me.PolicyInfoTable.Controls.Add(Me.PolicyIsPrefLabel, 0, 2)
+        Me.PolicyInfoTable.Controls.Add(Me.PolicyIsPrefTable, 0, 2)
         Me.PolicyInfoTable.Location = New System.Drawing.Point(0, 0)
         Me.PolicyInfoTable.Name = "PolicyInfoTable"
-        Me.PolicyInfoTable.RowCount = 4
+        Me.PolicyInfoTable.RowCount = 5
         Me.PolicyInfoTable.RowStyles.Add(New System.Windows.Forms.RowStyle())
         Me.PolicyInfoTable.RowStyles.Add(New System.Windows.Forms.RowStyle())
         Me.PolicyInfoTable.RowStyles.Add(New System.Windows.Forms.RowStyle())
         Me.PolicyInfoTable.RowStyles.Add(New System.Windows.Forms.RowStyle())
-        Me.PolicyInfoTable.Size = New System.Drawing.Size(706, 124)
+        Me.PolicyInfoTable.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20.0!))
+        Me.PolicyInfoTable.Size = New System.Drawing.Size(706, 156)
         Me.PolicyInfoTable.TabIndex = 0
         '
         'PolicyTitleLabel
@@ -598,25 +603,12 @@ Partial Class Main
         'PolicyDescLabel
         '
         Me.PolicyDescLabel.AutoSize = True
-        Me.PolicyDescLabel.Location = New System.Drawing.Point(3, 111)
+        Me.PolicyDescLabel.Location = New System.Drawing.Point(3, 123)
         Me.PolicyDescLabel.Name = "PolicyDescLabel"
         Me.PolicyDescLabel.Size = New System.Drawing.Size(89, 13)
         Me.PolicyDescLabel.TabIndex = 2
         Me.PolicyDescLabel.Text = "Policy description"
         Me.PolicyDescLabel.UseMnemonic = False
-        '
-        'PolicyIsPrefLabel
-        '
-        Me.PolicyIsPrefLabel.AutoSize = True
-        Me.PolicyIsPrefLabel.ImageAlign = System.Drawing.ContentAlignment.TopLeft
-        Me.PolicyIsPrefLabel.Location = New System.Drawing.Point(3, 74)
-        Me.PolicyIsPrefLabel.Margin = New System.Windows.Forms.Padding(3, 0, 3, 24)
-        Me.PolicyIsPrefLabel.Name = "PolicyIsPrefLabel"
-        Me.PolicyIsPrefLabel.Size = New System.Drawing.Size(700, 13)
-        Me.PolicyIsPrefLabel.TabIndex = 3
-        Me.PolicyIsPrefLabel.Text = "Because it is not stored in a Policies section of the Registry, this policy is a " &
-    "preference and will not be automatically undone if the setting is removed."
-        Me.PolicyIsPrefLabel.UseMnemonic = False
         '
         'InfoStrip
         '
@@ -638,6 +630,44 @@ Partial Class Main
         Me.UserSourceLabel.Name = "UserSourceLabel"
         Me.UserSourceLabel.Size = New System.Drawing.Size(54, 17)
         Me.UserSourceLabel.Text = "User info"
+        '
+        'PolicyIsPrefTable
+        '
+        Me.PolicyIsPrefTable.AutoSize = True
+        Me.PolicyIsPrefTable.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink
+        Me.PolicyIsPrefTable.ColumnCount = 2
+        Me.PolicyIsPrefTable.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle())
+        Me.PolicyIsPrefTable.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle())
+        Me.PolicyIsPrefTable.Controls.Add(Me.PictureBox1, 0, 0)
+        Me.PolicyIsPrefTable.Controls.Add(Me.PolicyIsPrefLabel, 1, 0)
+        Me.PolicyIsPrefTable.Location = New System.Drawing.Point(3, 77)
+        Me.PolicyIsPrefTable.Margin = New System.Windows.Forms.Padding(3, 3, 0, 24)
+        Me.PolicyIsPrefTable.Name = "PolicyIsPrefTable"
+        Me.PolicyIsPrefTable.RowCount = 1
+        Me.PolicyIsPrefTable.RowStyles.Add(New System.Windows.Forms.RowStyle())
+        Me.PolicyIsPrefTable.Size = New System.Drawing.Size(703, 22)
+        Me.PolicyIsPrefTable.TabIndex = 4
+        '
+        'PictureBox1
+        '
+        Me.PictureBox1.Image = CType(resources.GetObject("PictureBox1.Image"), System.Drawing.Image)
+        Me.PictureBox1.Location = New System.Drawing.Point(3, 3)
+        Me.PictureBox1.Margin = New System.Windows.Forms.Padding(3, 3, 0, 3)
+        Me.PictureBox1.Name = "PictureBox1"
+        Me.PictureBox1.Size = New System.Drawing.Size(16, 16)
+        Me.PictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize
+        Me.PictureBox1.TabIndex = 0
+        Me.PictureBox1.TabStop = False
+        '
+        'PolicyIsPrefLabel
+        '
+        Me.PolicyIsPrefLabel.AutoSize = True
+        Me.PolicyIsPrefLabel.Location = New System.Drawing.Point(22, 0)
+        Me.PolicyIsPrefLabel.Name = "PolicyIsPrefLabel"
+        Me.PolicyIsPrefLabel.Size = New System.Drawing.Size(700, 13)
+        Me.PolicyIsPrefLabel.TabIndex = 1
+        Me.PolicyIsPrefLabel.Text = "Because it is not stored in a Policies section of the Registry, this policy is a " &
+    "preference and will not be automatically undone if the setting is removed."
         '
         'Main
         '
@@ -665,6 +695,9 @@ Partial Class Main
         Me.PolicyInfoTable.PerformLayout()
         Me.InfoStrip.ResumeLayout(False)
         Me.InfoStrip.PerformLayout()
+        Me.PolicyIsPrefTable.ResumeLayout(False)
+        Me.PolicyIsPrefTable.PerformLayout()
+        CType(Me.PictureBox1, System.ComponentModel.ISupportInitialize).EndInit()
         Me.ResumeLayout(False)
         Me.PerformLayout()
 
@@ -689,7 +722,6 @@ Partial Class Main
     Friend WithEvents ViewToolStripMenuItem As ToolStripMenuItem
     Friend WithEvents EmptyCategoriesToolStripMenuItem As ToolStripMenuItem
     Friend WithEvents ComboAppliesTo As ComboBox
-    Friend WithEvents PolicyIsPrefLabel As Label
     Friend WithEvents DeduplicatePoliciesToolStripMenuItem As ToolStripMenuItem
     Friend WithEvents FindToolStripMenuItem As ToolStripMenuItem
     Friend WithEvents ByIDToolStripMenuItem As ToolStripMenuItem
@@ -724,4 +756,7 @@ Partial Class Main
     Friend WithEvents ExportREGToolStripMenuItem As ToolStripMenuItem
     Friend WithEvents ImportREGToolStripMenuItem As ToolStripMenuItem
     Friend WithEvents SetADMLLanguageToolStripMenuItem As ToolStripMenuItem
+    Friend WithEvents PolicyIsPrefTable As TableLayoutPanel
+    Friend WithEvents PictureBox1 As PictureBox
+    Friend WithEvents PolicyIsPrefLabel As Label
 End Class
