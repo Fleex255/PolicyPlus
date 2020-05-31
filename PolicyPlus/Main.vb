@@ -616,7 +616,10 @@ Public Class Main
         End Try
     End Sub
     Private Sub AboutToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles AboutToolStripMenuItem.Click
-        MsgBox("Policy Plus by Ben Nordick. Available on GitHub: Fleex255/PolicyPlus. Still in early development (no version number).", MsgBoxStyle.Information)
+        ' Show author and version information if it was compiled into the program
+        Dim about = $"Policy Plus by Ben Nordick.{vbCrLf}{vbCrLf}Available on GitHub: Fleex255/PolicyPlus."
+        If Version.Trim() <> "" Then about &= $" Version: {Version.Trim()}."
+        MsgBox(about, MsgBoxStyle.Information)
     End Sub
     Private Sub ByTextToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles ByTextToolStripMenuItem.Click
         ' Show the Find By Text window and start the search

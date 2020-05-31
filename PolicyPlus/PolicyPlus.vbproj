@@ -316,6 +316,7 @@
     <Compile Include="Privilege.vb" />
     <Compile Include="RegFile.vb" />
     <Compile Include="SpolFile.vb" />
+    <Compile Include="Version.vb" />
     <Compile Include="XmlExtensions.vb" />
   </ItemGroup>
   <ItemGroup>
