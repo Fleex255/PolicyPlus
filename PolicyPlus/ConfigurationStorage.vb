@@ -15,6 +15,6 @@ Public Class ConfigurationStorage
         If ConfigKey IsNot Nothing Then ConfigKey.SetValue(ValueName, Data)
     End Sub
     Public Function HasValue(ValueName As String) As Boolean
-        Return ConfigKey.GetValue(ValueName) IsNot Nothing
+        Return ConfigKey IsNot Nothing AndAlso ConfigKey.GetValue(ValueName) IsNot Nothing
     End Function
 End Class

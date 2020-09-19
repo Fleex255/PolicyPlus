@@ -41,6 +41,18 @@ Public Class Main
         InfoStrip.Items.Insert(2, New ToolStripSeparator)
         PopulateAdmxUi()
     End Sub
+    Private Sub Main_Shown(sender As Object, e As EventArgs) Handles Me.Shown
+        ' Check whether ADMX files probably need to be downloaded
+        If CInt(Configuration.GetValue("CheckedPolicyDefinitions", 0)) = 0 Then
+            Configuration.SetValue("CheckedPolicyDefinitions", 1)
+            If (Not HasGroupPolicyInfrastructure()) AndAlso AdmxWorkspace.Categories.Values.Where(Function(c) IsOrphanCategory(c) And Not IsEmptyCategory(c)).Count() > 2 Then
+                If MsgBox($"Welcome to Policy Plus!{vbCrLf}{vbCrLf}Home editions do not come with the full set of policy definitions. Would you like to download them now? " +
+                       "This can also be done later with Help | Acquire ADMX Files.", MsgBoxStyle.Information Or MsgBoxStyle.YesNo) = MsgBoxResult.Yes Then
+                    AcquireADMXFilesToolStripMenuItem_Click(Nothing, Nothing)
+                End If
+            End If
+        End If
+    End Sub
     Sub OpenLastAdmxSource()
         Dim defaultAdmxSource = Environment.ExpandEnvironmentVariables("%windir%\PolicyDefinitions")
         Dim admxSource As String = Configuration.GetValue("AdmxSource", defaultAdmxSource)
@@ -153,10 +165,16 @@ Public Class Main
         End If
         SettingInfoPanel_ClientSizeChanged(Nothing, Nothing)
     End Sub
+    Function IsOrphanCategory(Category As PolicyPlusCategory) As Boolean
+        Return Category.Parent Is Nothing And Category.RawCategory.ParentID <> ""
+    End Function
+    Function IsEmptyCategory(Category As PolicyPlusCategory) As Boolean
+        Return Category.Children.Count = 0 And Category.Policies.Count = 0
+    End Function
     Function GetImageIndexForCategory(Category As PolicyPlusCategory) As Integer
-        If Category.Parent Is Nothing And Category.RawCategory.ParentID <> "" Then
+        If IsOrphanCategory(Category) Then
             Return 1 ' Orphaned
-        ElseIf Category.Children.Count = 0 And Category.Policies.Count = 0 Then
+        ElseIf IsEmptyCategory(Category) Then
             Return 2 ' Empty
         Else
             Return 0 ' Normal
