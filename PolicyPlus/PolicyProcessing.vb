@@ -43,7 +43,7 @@
                         deletedElements += 1
                         neededValues = 1
                     End If
-                    If PolicySource.GetValueNames(elemKey).Count > neededValues Then
+                    If PolicySource.GetValueNames(elemKey).Count > 0 Then
                         deletedElements -= neededValues
                         presentElements += 1
                     End If
@@ -149,7 +149,7 @@
                                 n += 1
                             Loop
                         Else
-                            For Each value In PolicySource.GetValueNames(elem.RegistryKey)
+                            For Each value In PolicySource.GetValueNames(elemKey)
                                 entries.Add(value)
                             Next
                         End If

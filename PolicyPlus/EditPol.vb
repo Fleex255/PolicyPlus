@@ -20,7 +20,7 @@ Public Class EditPol
                          lsvi.Tag = keypath
                          addKey(keypath, Depth + 1)
                      Next
-                     Dim values = EditingPol.GetValueNames(Prefix)
+                     Dim values = EditingPol.GetValueNames(Prefix, False)
                      values.Sort(StringComparer.InvariantCultureIgnoreCase)
                      For Each value In values
                          If value = "" Then Continue For
@@ -183,7 +183,7 @@ Public Class EditPol
                 ' Add the existing values back
                 Dim index = LsvPol.SelectedIndices(0) + 1
                 Do
-                    If index > LsvPol.Items.Count Then Exit Do
+                    If index >= LsvPol.Items.Count Then Exit Do
                     Dim subItem = LsvPol.Items(index)
                     If subItem.IndentCount <= LsvPol.SelectedItems(0).IndentCount Then Exit Do
                     If subItem.IndentCount = LsvPol.SelectedItems(0).IndentCount + 1 And TypeOf subItem.Tag Is PolValueInfo Then

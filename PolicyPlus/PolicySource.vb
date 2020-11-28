@@ -134,10 +134,16 @@ Public Class PolFile
         Return willDelete
     End Function
     Public Function GetValueNames(Key As String) As List(Of String) Implements IPolicySource.GetValueNames
+        Return GetValueNames(Key, True)
+    End Function
+    Public Function GetValueNames(Key As String, OnlyValues As Boolean) As List(Of String)
         Dim prefix = GetDictKey(Key, "")
         Dim valNames As New List(Of String)
         For Each k In Entries.Keys
-            If k.StartsWith(prefix) Then valNames.Add(Split(CasePreservation(k), "\\", 2)(1))
+            If k.StartsWith(prefix) Then
+                Dim valName = Split(CasePreservation(k), "\\", 2)(1)
+                If Not (OnlyValues And valName.StartsWith("**")) Then valNames.Add(valName)
+            End If
         Next
         Return valNames
     End Function
@@ -151,9 +157,7 @@ Public Class PolFile
             If parts(1).StartsWith("**del.") Then
                 Target.DeleteValue(parts(0), Split(parts(1), ".", 2)(1))
             ElseIf parts(1).StartsWith("**delvals") Then
-                For Each entry In Target.GetValueNames(parts(0))
-                    Target.DeleteValue(parts(0), entry)
-                Next
+                Target.ClearKey(parts(0))
             ElseIf parts(1) = "**deletevalues" Then
                 For Each entry In Split(kv.Value.AsString, ";")
                     Target.DeleteValue(parts(0), entry)
@@ -177,7 +181,7 @@ Public Class PolFile
         ApplyDifference(Nothing, Target)
     End Sub
     Public Sub ClearKey(Key As String) Implements IPolicySource.ClearKey
-        For Each value In GetValueNames(Key)
+        For Each value In GetValueNames(Key, False)
             ForgetValue(Key, value)
         Next
         Dim ped = PolEntryData.FromString(" ")
@@ -193,9 +197,9 @@ Public Class PolFile
         Dim subkeyNames As New List(Of String)
         Dim prefix = If(Key = "", "", Key & "\") ' Let an empty key name mean the root
         For Each entry In Entries.Keys.Where(Function(e) e.StartsWith(prefix, StringComparison.InvariantCultureIgnoreCase))
-            If entry.StartsWith(prefix & "\", StringComparison.InvariantCultureIgnoreCase) Then Continue For
+            If entry.StartsWith(prefix & "\", StringComparison.InvariantCultureIgnoreCase) Then Continue For ' Values are delimited by an extra slash
             Dim properCased = Split(CasePreservation(entry), "\\", 2)(0)
-            If prefix.Length >= properCased.Length Then Continue For
+            If prefix.Length >= properCased.Length Then Continue For ' Do not return the requested key itself
             Dim localKeyName = Split(properCased.Substring(prefix.Length), "\", 2)(0)
             If Not subkeyNames.Contains(localKeyName, StringComparer.InvariantCultureIgnoreCase) Then subkeyNames.Add(localKeyName)
         Next
