@@ -1,14 +1,14 @@
 ﻿Public Class PolicyProcessing
     Public Shared Function GetPolicyState(PolicySource As IPolicySource, Policy As PolicyPlusPolicy) As PolicyState
         ' Determine the basic state of a policy
-        Dim enabledEvidence As Integer = 0
-        Dim disabledEvidence As Integer = 0
+        Dim enabledEvidence As Decimal = 0
+        Dim disabledEvidence As Decimal = 0
         Dim rawpol = Policy.RawPolicy
-        Dim checkOneVal = Sub(Value As PolicyRegistryValue, Key As String, ValueName As String, ByRef EvidenceVar As Integer)
+        Dim checkOneVal = Sub(Value As PolicyRegistryValue, Key As String, ValueName As String, ByRef EvidenceVar As Decimal)
                               If Value Is Nothing Then Exit Sub
                               If ValuePresent(Value, PolicySource, Key, ValueName) Then EvidenceVar += 1
                           End Sub
-        Dim checkValList = Sub(ValList As PolicyRegistrySingleList, DefaultKey As String, ByRef EvidenceVar As Integer)
+        Dim checkValList = Sub(ValList As PolicyRegistrySingleList, DefaultKey As String, ByRef EvidenceVar As Decimal)
                                If ValList Is Nothing Then Exit Sub
                                Dim listKey = If(ValList.DefaultRegistryKey = "", DefaultKey, ValList.DefaultRegistryKey)
                                For Each regVal In ValList.AffectedValues
@@ -33,8 +33,8 @@
         checkValList(rawpol.AffectedValues.OffValueList, rawpol.RegistryKey, disabledEvidence)
         ' Check the policy's elements
         If rawpol.Elements IsNot Nothing Then
-            Dim deletedElements As Integer = 0
-            Dim presentElements As Integer = 0
+            Dim deletedElements As Decimal = 0
+            Dim presentElements As Decimal = 0
             For Each elem In rawpol.Elements
                 Dim elemKey = If(elem.RegistryKey = "", rawpol.RegistryKey, elem.RegistryKey)
                 If elem.ElementType = "list" Then
@@ -47,8 +47,20 @@
                         deletedElements -= neededValues
                         presentElements += 1
                     End If
+                ElseIf elem.ElementType = "boolean" Then
+                    Dim booleanElem As BooleanPolicyElement = elem
+                    If PolicySource.WillDeleteValue(elemKey, elem.RegistryValue) Then
+                        deletedElements += 1 ' Implicit checkboxes are deleted when the policy is disabled
+                    Else
+                        Dim checkboxDisabled As Decimal = 0
+                        checkOneVal(booleanElem.AffectedRegistry.OffValue, elemKey, elem.RegistryValue, checkboxDisabled)
+                        checkValList(booleanElem.AffectedRegistry.OffValueList, elemKey, checkboxDisabled)
+                        deletedElements += checkboxDisabled * 0.1D ' Checkboxes in the off state are weak evidence for the policy being disabled
+                        checkOneVal(booleanElem.AffectedRegistry.OnValue, elemKey, elem.RegistryValue, presentElements)
+                        checkValList(booleanElem.AffectedRegistry.OnValueList, elemKey, presentElements)
+                    End If
                 Else
-                    If PolicySource.WillDeleteValue(elemKey, elem.RegistryValue) And elem.ElementType <> "boolean" Then ' Implicit check boxes are deleted when unchecked
+                    If PolicySource.WillDeleteValue(elemKey, elem.RegistryValue) Then
                         deletedElements += 1
                     ElseIf PolicySource.ContainsValue(elemKey, elem.RegistryValue) Then
                         presentElements += 1
@@ -350,6 +362,14 @@
                         Dim elemKey = If(elem.RegistryKey = "", rawpol.RegistryKey, elem.RegistryKey)
                         If elem.ElementType = "list" Then
                             PolicySource.ClearKey(elemKey)
+                        ElseIf elem.ElementType = "boolean" Then
+                            Dim booleanElem As BooleanPolicyElement = elem
+                            If booleanElem.AffectedRegistry.OffValue IsNot Nothing Or booleanElem.AffectedRegistry.OffValueList IsNot Nothing Then
+                                ' Non-implicit checkboxes get their "off" value set when the policy is disabled
+                                setList(booleanElem.AffectedRegistry, elemKey, elem.RegistryValue, False)
+                            Else
+                                PolicySource.DeleteValue(elemKey, elem.RegistryValue)
+                            End If
                         Else
                             PolicySource.DeleteValue(elemKey, elem.RegistryValue)
                         End If

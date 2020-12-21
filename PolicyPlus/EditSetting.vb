@@ -210,7 +210,8 @@
                         End If
                     ElseIf TypeOf kv.Value Is Integer Then ' Dropdown list
                         Dim combobox As ComboBox = uiControl
-                        combobox.SelectedItem = combobox.Items.OfType(Of DropdownPresentationMap).First(Function(i) i.ID = CInt(kv.Value))
+                        Dim matchingItem = combobox.Items.OfType(Of DropdownPresentationMap).FirstOrDefault(Function(i) i.ID = CInt(kv.Value))
+                        If matchingItem IsNot Nothing Then combobox.SelectedItem = matchingItem
                     ElseIf TypeOf kv.Value Is Boolean Then ' Check box
                         CType(uiControl, CheckBox).Checked = kv.Value
                     ElseIf TypeOf kv.Value Is String() Then ' Multiline text box
