@@ -1,6 +1,7 @@
 ﻿Imports System.ComponentModel
 Public Class DownloadAdmx
-    Const MicrosoftMsiDownloadLink As String = "https://download.microsoft.com/download/C/F/D/CFD3A078-2975-4F8D-81AB-76AED27D6EF8/Administrative%20Templates%20(.admx)%20for%20Windows%2010%20October%202018%20Update.msi"
+    Const MicrosoftMsiDownloadLink As String = "https://download.microsoft.com/download/3/0/6/30680643-987a-450c-b906-a455fff4aee8/Administrative%20Templates%20(.admx)%20for%20Windows%2010%20October%202020%20Update.msi"
+    Const PolicyDefinitionsMsiSubdirectory As String = "\Microsoft Group Policy\Windows 10 October 2020 Update (20H2)\PolicyDefinitions"
     Dim Downloading As Boolean = False
     Public NewPolicySourceFolder As String
     Private Sub ButtonBrowse_Click(sender As Object, e As EventArgs) Handles ButtonBrowse.Click
@@ -75,13 +76,14 @@ Public Class DownloadAdmx
                                       End If
                                       failPhase = "move the ADMX files"
                                       setProgress("Moving files to destination...")
+                                      Dim unpackedDefsPath = unpackPath & PolicyDefinitionsMsiSubdirectory
                                       Dim langSubfolder = Globalization.CultureInfo.CurrentCulture.Name
-                                      moveFilesInDir(unpackPath & "\PolicyDefinitions", destination)
-                                      Dim sourceAdmlPath = unpackPath & "\PolicyDefinitions\" & langSubfolder
+                                      moveFilesInDir(unpackedDefsPath, destination)
+                                      Dim sourceAdmlPath = unpackedDefsPath & "\" & langSubfolder
                                       If IO.Directory.Exists(sourceAdmlPath) Then moveFilesInDir(sourceAdmlPath, destination & "\" & langSubfolder)
                                       If langSubfolder <> "en-US" Then
                                           ' Also copy the English language files as a fallback
-                                          moveFilesInDir(unpackPath & "\PolicyDefinitions\en-US", destination & "\en-US")
+                                          moveFilesInDir(unpackedDefsPath & "\en-US", destination & "\en-US")
                                       End If
                                       failPhase = "remove temporary files"
                                       setProgress("Cleaning up...")
