@@ -35,13 +35,42 @@ Public Class DownloadAdmx
         LabelProgress.Text = ""
         SetIsBusy(True)
         Dim destination = TextDestFolder.Text
-        Dim moveFilesInDir = Sub(Source As String, Dest As String)
+        Dim isAdmin = False
+        Using identity = Security.Principal.WindowsIdentity.GetCurrent()
+            isAdmin = New Security.Principal.WindowsPrincipal(identity).IsInRole(Security.Principal.WindowsBuiltInRole.Administrator)
+        End Using
+        Dim takeOwnership = Sub(Folder As String)
+                                Dim dacl = IO.Directory.GetAccessControl(Folder)
+                                Dim adminSid As New Security.Principal.SecurityIdentifier(Security.Principal.WellKnownSidType.BuiltinAdministratorsSid, Nothing)
+                                dacl.SetOwner(adminSid)
+                                IO.Directory.SetAccessControl(Folder, dacl)
+                                dacl = IO.Directory.GetAccessControl(Folder)
+                                Dim allowRule As New Security.AccessControl.FileSystemAccessRule(adminSid, Security.AccessControl.FileSystemRights.FullControl, Security.AccessControl.AccessControlType.Allow)
+                                dacl.AddAccessRule(allowRule)
+                                IO.Directory.SetAccessControl(Folder, dacl)
+                            End Sub
+        Dim moveFilesInDir = Sub(Source As String, Dest As String, InheritAcl As Boolean)
+                                 Dim creatingNew = Not IO.Directory.Exists(Dest)
                                  IO.Directory.CreateDirectory(Dest)
+                                 If isAdmin Then
+                                     If creatingNew And InheritAcl Then
+                                         Dim dirAcl = New Security.AccessControl.DirectorySecurity()
+                                         dirAcl.SetAccessRuleProtection(False, True)
+                                         IO.Directory.SetAccessControl(Dest, dirAcl)
+                                     ElseIf Not creatingNew Then
+                                         takeOwnership(Dest)
+                                     End If
+                                 End If
                                  For Each file In IO.Directory.EnumerateFiles(Source)
                                      Dim plainFilename = IO.Path.GetFileName(file)
                                      Dim newName = IO.Path.Combine(Dest, plainFilename)
                                      If IO.File.Exists(newName) Then IO.File.Delete(newName)
                                      IO.File.Move(file, newName)
+                                     If isAdmin Then
+                                         Dim fileAcl = New Security.AccessControl.FileSecurity()
+                                         fileAcl.SetAccessRuleProtection(False, True)
+                                         IO.File.SetAccessControl(newName, fileAcl)
+                                     End If
                                  Next
                              End Sub
         Task.Factory.StartNew(Sub()
@@ -62,28 +91,23 @@ Public Class DownloadAdmx
                                       proc.WaitForExit()
                                       If proc.ExitCode <> 0 Then Throw New Exception ' msiexec failed
                                       IO.File.Delete(downloadPath)
-                                      If IO.Directory.Exists(destination) Then
+                                      If IO.Directory.Exists(destination) And isAdmin Then
                                           failPhase = "take control of the destination"
                                           setProgress("Securing destination...")
                                           Privilege.EnablePrivilege("SeTakeOwnershipPrivilege")
                                           Privilege.EnablePrivilege("SeRestorePrivilege")
-                                          Dim dacl = IO.Directory.GetAccessControl(destination)
-                                          Dim adminSid As New Security.Principal.SecurityIdentifier(Security.Principal.WellKnownSidType.BuiltinAdministratorsSid, Nothing)
-                                          dacl.SetOwner(adminSid)
-                                          Dim allowRule As New Security.AccessControl.FileSystemAccessRule(adminSid, Security.AccessControl.FileSystemRights.FullControl, Security.AccessControl.AccessControlType.Allow)
-                                          dacl.AddAccessRule(allowRule)
-                                          IO.Directory.SetAccessControl(destination, dacl)
+                                          takeOwnership(destination)
                                       End If
                                       failPhase = "move the ADMX files"
                                       setProgress("Moving files to destination...")
                                       Dim unpackedDefsPath = unpackPath & PolicyDefinitionsMsiSubdirectory
                                       Dim langSubfolder = Globalization.CultureInfo.CurrentCulture.Name
-                                      moveFilesInDir(unpackedDefsPath, destination)
+                                      moveFilesInDir(unpackedDefsPath, destination, False)
                                       Dim sourceAdmlPath = unpackedDefsPath & "\" & langSubfolder
-                                      If IO.Directory.Exists(sourceAdmlPath) Then moveFilesInDir(sourceAdmlPath, destination & "\" & langSubfolder)
+                                      If IO.Directory.Exists(sourceAdmlPath) Then moveFilesInDir(sourceAdmlPath, destination & "\" & langSubfolder, True)
                                       If langSubfolder <> "en-US" Then
                                           ' Also copy the English language files as a fallback
-                                          moveFilesInDir(unpackedDefsPath & "\en-US", destination & "\en-US")
+                                          moveFilesInDir(unpackedDefsPath & "\en-US", destination & "\en-US", True)
                                       End If
                                       failPhase = "remove temporary files"
                                       setProgress("Cleaning up...")
