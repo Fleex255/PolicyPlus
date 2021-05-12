@@ -21,7 +21,7 @@ Public Class FindResults
         ProgressLabel.Text = "Starting search"
         SearchPending = True
         HasSearched = True
-        LastSelectedIndex = 0
+        LastSelectedIndex = -1
         Return ShowDialog()
     End Function
     Public Function PresentDialog() As DialogResult
@@ -95,7 +95,7 @@ Public Class FindResults
     Private Sub FindResults_Shown(sender As Object, e As EventArgs) Handles Me.Shown
         If SearchPending Then
             Task.Factory.StartNew(Sub() SearchJob(AdmxWorkspace, SearchFunc))
-        Else
+        ElseIf LastSelectedIndex >= 0 And LastSelectedIndex < ResultsListview.Items.Count Then
             ' Restore the last selection
             Dim lastSelected = ResultsListview.Items(LastSelectedIndex)
             lastSelected.Selected = True
