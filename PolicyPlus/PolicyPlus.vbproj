@@ -78,6 +78,7 @@
     <Compile Include="AdmxBundle.vb" />
     <Compile Include="AdmxFile.vb" />
     <Compile Include="AdmxStructures.vb" />
+    <Compile Include="BitReinterpretation.vb" />
     <Compile Include="CmtxFile.vb" />
     <Compile Include="CompiledStructures.vb" />
     <Compile Include="ConfigurationStorage.vb" />

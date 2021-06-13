@@ -372,6 +372,11 @@ Public Class RegistryPolicyProxy ' Pass operations through to the real Registry
         DeleteValue(Key, Value) ' The Registry has no concept of "will delete this when I see it"
     End Sub
     Public Sub SetValue(Key As String, Value As String, Data As Object, DataType As RegistryValueKind) Implements IPolicySource.SetValue
+        If TypeOf Data Is UInteger Then
+            Data = (New ReinterpretableDword With {.Unsigned = Data}).Signed
+        ElseIf TypeOf Data Is ULong Then
+            Data = (New ReinterpretableQword With {.Unsigned = Data}).Signed
+        End If
         Using regKey = RootKey.CreateSubKey(Key)
             regKey.SetValue(Value, Data, DataType)
         End Using
@@ -386,7 +391,14 @@ Public Class RegistryPolicyProxy ' Pass operations through to the real Registry
     Public Function GetValue(Key As String, Value As String) As Object Implements IPolicySource.GetValue
         Using regKey = RootKey.OpenSubKey(Key, False)
             If regKey Is Nothing Then Return Nothing
-            Return regKey.GetValue(Value, Nothing, RegistryValueOptions.DoNotExpandEnvironmentNames)
+            Dim data = regKey.GetValue(Value, Nothing, RegistryValueOptions.DoNotExpandEnvironmentNames)
+            If TypeOf data Is Integer Then
+                Return (New ReinterpretableDword With {.Signed = data}).Unsigned
+            ElseIf TypeOf data Is Long Then
+                Return (New ReinterpretableQword With {.Signed = data}).Unsigned
+            Else
+                Return data
+            End If
         End Using
     End Function
     Public Function GetValueNames(Key As String) As List(Of String) Implements IPolicySource.GetValueNames
