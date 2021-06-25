@@ -391,7 +391,7 @@
                                   Dim subproduct = SupportEntry.Product.Children.FirstOrDefault(Function(p) p.RawProduct.Version = version)
                                   If subproduct Is Nothing Then Continue For
                                   If Products.Contains(subproduct) Then Return True
-                                  If subproduct.Children IsNot Nothing Then Return subproduct.Children.Any(Function(p) Products.Contains(p))
+                                  If subproduct.Children IsNot Nothing AndAlso subproduct.Children.Any(Function(p) Products.Contains(p)) Then Return True
                               Next
                               Return False
                           End Function
