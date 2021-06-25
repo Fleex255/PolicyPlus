@@ -31,7 +31,7 @@ Partial Class FilterOptions
         Me.OkButton = New System.Windows.Forms.Button()
         Me.ResetButton = New System.Windows.Forms.Button()
         Me.RequirementsBox = New System.Windows.Forms.GroupBox()
-        Me.AllowedProductsTreeview = New System.Windows.Forms.TreeView()
+        Me.AllowedProductsTreeview = New PolicyPlus.DoubleClickIgnoringTreeView()
         Me.MatchBlankSupportCheckbox = New System.Windows.Forms.CheckBox()
         Me.AlwaysMatchAnyCheckbox = New System.Windows.Forms.CheckBox()
         Me.SupportedCheckbox = New System.Windows.Forms.CheckBox()
