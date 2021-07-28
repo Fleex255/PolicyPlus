@@ -255,9 +255,9 @@ Public Class PolFile
         Public Shared Function FromDword(Dword As UInteger) As PolEntryData
             Dim ped As New PolEntryData With {.Kind = RegistryValueKind.DWord}
             Dim data(3) As Byte
-            data(0) = Dword And &HFF
-            data(1) = (Dword >> 8) And &HFF
-            data(2) = (Dword >> 16) And &HFF
+            data(0) = Dword And &HFFUI
+            data(1) = (Dword >> 8) And &HFFUI
+            data(2) = (Dword >> 16) And &HFFUI
             data(3) = Dword >> 24
             ped.Data = data
             Return ped
@@ -273,7 +273,7 @@ Public Class PolFile
             Dim ped As New PolEntryData With {.Kind = RegistryValueKind.QWord}
             Dim data(7) As Byte
             For n = 0 To 7
-                data(n) = (Qword >> (n * 8)) And &HFF
+                data(n) = (Qword >> (n * 8)) And &HFFUL
             Next
             ped.Data = data
             Return ped

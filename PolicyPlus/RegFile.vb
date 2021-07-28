@@ -144,7 +144,7 @@ Public Class RegFile
                                 Writer.WriteLine("""")
                             Case RegistryValueKind.DWord
                                 Writer.Write("dword:")
-                                Writer.WriteLine(Convert.ToString(CInt(value.Data), 16).PadLeft(8, "0"c))
+                                Writer.WriteLine(Convert.ToString(CUInt(value.Data), 16).PadLeft(8, "0"c))
                             Case Else
                                 Writer.Write("hex")
                                 posInRow += 3
@@ -167,7 +167,11 @@ Public Class RegFile
                                         posInRow = 2
                                     End If
                                 Next
-                                Writer.WriteLine(Convert.ToString(bytes(bytes.Length - 1), 16).PadLeft(2, "0"c))
+                                If bytes.Length > 0 Then
+                                    Writer.WriteLine(Convert.ToString(bytes(bytes.Length - 1), 16).PadLeft(2, "0"c))
+                                Else
+                                    Writer.WriteLine()
+                                End If
                         End Select
                     End If
                 Next

@@ -40,6 +40,16 @@ Friend Class WideRangeNumericUpDown
     Private Sub HexParseEditText()
         Try
             If Not String.IsNullOrEmpty(Text) Then Value = ULong.Parse(Text, Globalization.NumberStyles.HexNumber)
+        Catch ex As ArgumentOutOfRangeException
+            Value = Maximum
+        Catch ex As OverflowException
+            If Not String.IsNullOrEmpty(Text) Then
+                If Text.StartsWith("-") Then
+                    Value = Minimum
+                Else
+                    Value = Maximum
+                End If
+            End If
         Catch ex As Exception
             ' Do nothing
         Finally
