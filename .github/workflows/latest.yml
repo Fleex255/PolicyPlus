@@ -1,0 +1,37 @@
+name: Build Latest
+
+on:
+  push:
+    branches: [ master ]
+
+jobs:
+  BuildLatest:
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout master
+        uses: actions/checkout@v2
+        
+      - name: Embed version
+        run: |
+          cd $env:GITHUB_WORKSPACE
+          cmd /c version.bat
+
+      - name: Set up MSBuild
+        uses: microsoft/setup-msbuild@v1.0.2
+        
+      - name: Compile
+        run: msbuild.exe $env:GITHUB_WORKSPACE\PolicyPlus\PolicyPlus.sln /p:platform="Any CPU" /p:configuration="Release"
+
+      - name: Compute hash
+        run: Get-FileHash "$env:GITHUB_WORKSPACE\PolicyPlus\bin\Release\Policy Plus.exe"
+        
+      - name: Upload to S3
+        uses: stcalica/s3-upload@0.0.1
+        with:
+          bucket: ${{ secrets.AWS_S3_BUCKET }}
+          package: PolicyPlus\bin\Release\Policy Plus.exe
+          key: PolicyPlusLatest.exe
+          AWS_REGION: ${{ secrets.AWS_REGION }}
+          AWS_SECRET_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}

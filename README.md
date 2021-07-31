@@ -43,21 +43,26 @@ The `RefreshPolicyEx` native function has reduced functionality on editions with
 so while Policy Plus can edit the local GPO and apply the changes to the Registry, 
 a reboot or logon/logoff cycle is required for some policy changes to take effect.
 
-While the UI allows the creation and editing of per-user GPOs, their settings are ignored by these limited editions of Windows. Edit per-user Registry hives instead.
+While the UI allows the creation and editing of per-user GPOs, their settings cannot be applied on these limited editions of Windows.
+If you need to change a policy setting for only one user, open the "user hive" source instead.
+Per-user local GPOs, a fairly arcane Windows feature, are not to be confused with policies that apply to the User section.
+Policy Plus supports user policies on Home editions just as well as computer policies.
 
 ## Status
 Policy Plus is usable on all editions. It can load and save all policy sources successfully. More features may be still to come, though.
 
 ## Download
-[Download a Release build.](https://s3-us-west-2.amazonaws.com/policy-plus/Policy%20Plus.exe)
-This link will be updated for new commits after it is verified that they are fit for public use.
+[Download a release build from the Releases page.](https://github.com/Fleex255/PolicyPlus/releases)
+Updates are published as GitHub releases after it is verified that they are fit for public use.
 Note that Policy Plus is still pre-release software, so there may be bugs; please submit any problems to the issue tracker.
 
-[Download a Debug build.](https://s3-us-west-2.amazonaws.com/policy-plus/PolicyPlusDev.exe)
-This link will be updated more frequently than the previous.
+[Download the latest build.](https://s3-us-west-2.amazonaws.com/policy-plus/PolicyPlusLatest.exe)
+This link is updated automatically by GitHub Actions after *every commit*.
 It may include more features, but those features will be less tested and could have unintended effects.
 Please be careful.
 
 **N.B.** A few antivirus programs incorrectly flag Policy Plus as malware. 
 Policy Plus is a powerful tool and so may cause problems if used recklessly, but it is not malicious.
 If you would prefer to not trust binaries, feel free to read the code and [compile Policy Plus from source](https://github.com/Fleex255/PolicyPlus/blob/master/COMPILE.md).
+You can also verify that a build was created from the published code by examining the output of a GitHub Actions run:
+the input commit hash can be found under "checkout master" and the output executable hash can be found under "compute hash."
