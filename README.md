@@ -1,6 +1,8 @@
 # Policy Plus
 Local Group Policy Editor plus more, for all Windows editions.
 
+[![Build Latest](https://github.com/Fleex255/PolicyPlus/actions/workflows/latest.yml/badge.svg)](https://github.com/Fleex255/PolicyPlus/actions/workflows/latest.yml)
+
 ## Goals
 Policy Plus is intended to make the power of Group Policy settings available to everyone.
 
