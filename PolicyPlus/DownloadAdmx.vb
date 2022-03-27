@@ -1,7 +1,7 @@
 ﻿Imports System.ComponentModel
 Public Class DownloadAdmx
-    Const MicrosoftMsiDownloadLink As String = "https://download.microsoft.com/download/3/0/6/30680643-987a-450c-b906-a455fff4aee8/Administrative%20Templates%20(.admx)%20for%20Windows%2010%20October%202020%20Update.msi"
-    Const PolicyDefinitionsMsiSubdirectory As String = "\Microsoft Group Policy\Windows 10 October 2020 Update (20H2)\PolicyDefinitions"
+    Const MicrosoftMsiDownloadLink As String = "https://download.microsoft.com/download/4/e/0/4e0fe8d7-ba82-4354-9cc2-18ac02cfd6b5/Administrative%20Templates%20(.admx)%20for%20Windows%2010%20November%202021%20Update.msi"
+    Const PolicyDefinitionsMsiSubdirectory As String = "\Microsoft Group Policy\Windows 10 November 2021 Update (21H2)\PolicyDefinitions"
     Dim Downloading As Boolean = False
     Public NewPolicySourceFolder As String
     Private Sub ButtonBrowse_Click(sender As Object, e As EventArgs) Handles ButtonBrowse.Click
