@@ -3,6 +3,7 @@ name: Build Latest
 on:
   push:
     branches: [ master ]
+  workflow_dispatch:
 
 jobs:
   BuildLatest:
