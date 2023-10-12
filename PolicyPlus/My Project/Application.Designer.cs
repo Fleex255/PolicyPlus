@@ -33,7 +33,7 @@ namespace PolicyPlus.My
         [DebuggerStepThrough()]
         protected override void OnCreateMainForm()
         {
-            MainForm = MyProject.Forms.Main;
+            MainForm = My_Project.MyProject.Forms.Main;
         }
 
         [DebuggerStepThrough()]

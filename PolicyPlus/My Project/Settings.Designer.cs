@@ -36,7 +36,7 @@ namespace PolicyPlus.My
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Advanced)]
         private static void AutoSaveSettings(object sender, EventArgs e)
         {
-            if (MyProject.Application.SaveMySettingsOnExit)
+            if (My_Project.MyApplication.SaveMySettingsOnExit)
             {
                 MySettingsProperty.Settings.Save();
             }
@@ -60,7 +60,7 @@ namespace PolicyPlus.My
                     {
                         if (!addedHandler)
                         {
-                            MyProject.Application.Shutdown += AutoSaveSettings;
+                            My_Project.MyApplication.Shutdown += AutoSaveSettings;
                             addedHandler = true;
                         }
                     }

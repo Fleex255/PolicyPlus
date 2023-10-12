@@ -7,6 +7,7 @@ using System.Collections;
 using System.Diagnostics;
 using System.Windows.Forms;
 using Microsoft.VisualBasic;
+using PolicyPlus.My_Project;
 
 /* TODO ERROR: Skipped IfDirectiveTrivia
 #If TARGET = "module" AndAlso _MYTYPE = "" Then
@@ -97,46 +98,6 @@ namespace PolicyPlus.My
     /* TODO ERROR: Skipped IfDirectiveTrivia
     #If _MYAPPLICATIONTYPE = "WindowsForms" OrElse _MYAPPLICATIONTYPE = "Windows" OrElse _MYAPPLICATIONTYPE = "Console" Then
     */
-    [System.CodeDom.Compiler.GeneratedCode("MyTemplate", "11.0.0.0")]
-    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-
-    /* TODO ERROR: Skipped IfDirectiveTrivia
-    #If _MYAPPLICATIONTYPE = "WindowsForms" Then
-    */
-    internal partial class MyApplication : Microsoft.VisualBasic.ApplicationServices.WindowsFormsApplicationBase
-    {
-        /* TODO ERROR: Skipped IfDirectiveTrivia
-        #If TARGET = "winexe" Then
-        */
-        [STAThread()]
-        [DebuggerHidden()]
-        [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Advanced)]
-        internal static void Main(string[] Args)
-        {
-            try
-            {
-                Application.SetCompatibleTextRenderingDefault(UseCompatibleTextRendering);
-            }
-            finally
-            {
-            }
-            MyProject.Application.Run(Args);
-        }
-        /* TODO ERROR: Skipped EndIfDirectiveTrivia
-        #End If
-        */
-        /* TODO ERROR: Skipped ElifDirectiveTrivia
-        #ElseIf _MYAPPLICATIONTYPE = "Windows" Then
-        *//* TODO ERROR: Skipped DisabledTextTrivia
-                Inherits Global.Microsoft.VisualBasic.ApplicationServices.ApplicationBase
-        *//* TODO ERROR: Skipped ElifDirectiveTrivia
-        #ElseIf _MYAPPLICATIONTYPE = "Console" Then
-        *//* TODO ERROR: Skipped DisabledTextTrivia
-                Inherits Global.Microsoft.VisualBasic.ApplicationServices.ConsoleApplicationBase	
-        *//* TODO ERROR: Skipped EndIfDirectiveTrivia
-        #End If '_MYAPPLICATIONTYPE = "WindowsForms"
-        */
-    }
 
     /* TODO ERROR: Skipped EndIfDirectiveTrivia
     #End If '#If _MYAPPLICATIONTYPE = "WindowsForms" Or _MYAPPLICATIONTYPE = "Windows" or _MYAPPLICATIONTYPE = "Console"
@@ -144,27 +105,6 @@ namespace PolicyPlus.My
     /* TODO ERROR: Skipped IfDirectiveTrivia
     #If _MYCOMPUTERTYPE <> "" Then
     */
-    [System.CodeDom.Compiler.GeneratedCode("MyTemplate", "11.0.0.0")]
-    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-
-    /* TODO ERROR: Skipped IfDirectiveTrivia
-    #If _MYCOMPUTERTYPE = "Windows" Then
-    */
-    internal partial class MyComputer : Microsoft.VisualBasic.Devices.Computer
-    {
-        /* TODO ERROR: Skipped ElifDirectiveTrivia
-        #ElseIf _MYCOMPUTERTYPE = "Web" Then
-        *//* TODO ERROR: Skipped DisabledTextTrivia
-                Inherits Global.Microsoft.VisualBasic.Devices.ServerComputer
-        *//* TODO ERROR: Skipped EndIfDirectiveTrivia
-        #End If
-        */
-        [DebuggerHidden()]
-        [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-        public MyComputer() : base()
-        {
-        }
-    }
     /* TODO ERROR: Skipped EndIfDirectiveTrivia
     #End If
     */
@@ -194,7 +134,7 @@ namespace PolicyPlus.My
         #If _MYAPPLICATIONTYPE = "Windows" Or _MYAPPLICATIONTYPE = "WindowsForms" Or _MYAPPLICATIONTYPE = "Console" Then
         */
         [System.ComponentModel.Design.HelpKeyword("My.Application")]
-        internal static MyApplication Application
+        internal static My_Project.MyApplication Application
         {
             [DebuggerHidden()]
             get
@@ -202,7 +142,7 @@ namespace PolicyPlus.My
                 return m_AppObjectProvider.GetInstance;
             }
         }
-        private readonly static ThreadSafeObjectProvider<MyApplication> m_AppObjectProvider = new ThreadSafeObjectProvider<MyApplication>();
+        private readonly static ThreadSafeObjectProvider<My_Project.MyApplication> m_AppObjectProvider = new ThreadSafeObjectProvider<My_Project.MyApplication>();
         /* TODO ERROR: Skipped EndIfDirectiveTrivia
         #End If
         */

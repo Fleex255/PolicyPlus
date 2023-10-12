@@ -1,0 +1,223 @@
+﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Threading.Tasks;
+using System.Windows.Forms;
+using Microsoft.VisualBasic;
+using Microsoft.VisualBasic.CompilerServices;
+using PolicyPlus.Models;
+
+namespace PolicyPlus.UI
+{
+    public partial class FindResults
+    {
+        private AdmxBundle _admxWorkspace;
+        private Func<PolicyPlusPolicy, bool> _searchFunc;
+        private bool _cancelingSearch = false;
+        private bool _cancelDueToFormClose = false;
+        private bool _searchPending = false;
+        private bool _hasSearched;
+        private int _lastSelectedIndex;
+        public PolicyPlusPolicy SelectedPolicy;
+
+        public FindResults()
+        {
+            InitializeComponent();
+        }
+
+        public DialogResult PresentDialogStartSearch(AdmxBundle workspace, Func<PolicyPlusPolicy, bool> searcher)
+        {
+            // Start running a search defined by one of the Find By windows
+            _admxWorkspace = workspace;
+            _searchFunc = searcher;
+            ResultsListview.Items.Clear();
+            SearchProgress.Maximum = workspace.Policies.Count;
+            SearchProgress.Value = 0;
+            StopButton.Enabled = true;
+            _cancelingSearch = false;
+            _cancelDueToFormClose = false;
+            ProgressLabel.Text = "Starting search";
+            _searchPending = true;
+            _hasSearched = true;
+            _lastSelectedIndex = -1;
+            return ShowDialog();
+        }
+
+        public DialogResult PresentDialog()
+        {
+            // Open the dialog normally, like from the main form
+            if (!_hasSearched)
+            {
+                Interaction.MsgBox("No search has been run yet, so there are no results to display.", MsgBoxStyle.Information);
+                return DialogResult.Cancel;
+            }
+            _cancelingSearch = false;
+            _cancelDueToFormClose = false;
+            _searchPending = false;
+            return ShowDialog();
+        }
+
+        public void ClearSearch()
+        {
+            _hasSearched = false;
+            ResultsListview.Items.Clear();
+        }
+
+        public PolicyPlusPolicy NextPolicy()
+        {
+            if (_lastSelectedIndex >= ResultsListview.Items.Count - 1 || !_hasSearched)
+            {
+                return null;
+            }
+
+            _lastSelectedIndex++;
+            return (PolicyPlusPolicy)ResultsListview.Items[_lastSelectedIndex].Tag;
+        }
+
+        public void SearchJob(AdmxBundle workspace, Func<PolicyPlusPolicy, bool> searcher)
+        {
+            // The long-running task that searches all the policies
+            var searchedSoFar = 0;
+            var results = 0;
+            var stoppedByCancel = false;
+            var pendingInsertions = new List<PolicyPlusPolicy>();
+
+            foreach (var policy in workspace.Policies)
+            {
+                if (Conversions.ToBoolean(LocalVolatileRead()))
+                {
+                    stoppedByCancel = true;
+                    break;
+                }
+                searchedSoFar++;
+                var isHit = searcher(policy.Value); // The potentially expensive check
+                if (isHit)
+                {
+                    results++;
+                    pendingInsertions.Add(policy.Value);
+                }
+                if (searchedSoFar % 20 == 0) // UI updating is costly
+                {
+                    Invoke(new Action(() =>
+                        {
+                            AddPendingInsertions(pendingInsertions);
+                            SearchProgress.Value = searchedSoFar;
+                            ProgressLabel.Text = "Searching: checked " + searchedSoFar + " policies so far, found " + results + " hits";
+                        }));
+                }
+            }
+
+            if (stoppedByCancel && Conversions.ToBoolean(LocalVolatileRead2()))
+            {
+                return; // Avoid accessing a disposed object
+            }
+
+            Invoke(new Action(() =>
+                {
+                    AddPendingInsertions(pendingInsertions);
+                    var status = stoppedByCancel ? "Search canceled" : "Finished searching";
+                    ProgressLabel.Text = status + ": checked " + searchedSoFar + " policies, found " + results + " hits";
+                    SearchProgress.Value = SearchProgress.Maximum;
+                    StopButton.Enabled = false;
+                }));
+        }
+
+        private object LocalVolatileRead2()
+        {
+            object argaddress2 = _cancelDueToFormClose;
+            var ret = System.Threading.Thread.VolatileRead(ref argaddress2);
+            _cancelDueToFormClose = Conversions.ToBoolean(argaddress2);
+            return ret;
+        }
+
+        //private object LocalVolatileRead1()
+        //{
+        //    object argaddress1 = _cancelDueToFormClose;
+        //    var ret = System.Threading.Thread.VolatileRead(ref argaddress1);
+        //    _cancelDueToFormClose = Conversions.ToBoolean(argaddress1);
+        //    return ret;
+        //}
+
+        private void AddPendingInsertions(List<PolicyPlusPolicy> pendingInsertions)
+        {
+            ResultsListview.BeginUpdate();
+            foreach (var insert in pendingInsertions)
+            {
+                var lsvi = ResultsListview.Items.Add(insert.DisplayName);
+                lsvi.Tag = insert;
+                lsvi.SubItems.Add(insert.Category.DisplayName);
+            }
+            ResultsListview.EndUpdate();
+            pendingInsertions.Clear();
+        }
+
+        private object LocalVolatileRead()
+        {
+            object argaddress = _cancelingSearch; var ret = System.Threading.Thread.VolatileRead(ref argaddress);
+            _cancelingSearch = Conversions.ToBoolean(argaddress);
+            return ret;
+        }
+
+        public void StopSearch(bool force)
+        {
+            object argaddress = _cancelingSearch;
+            System.Threading.Thread.VolatileWrite(ref argaddress, true);
+            _cancelingSearch = Conversions.ToBoolean(argaddress);
+            object argaddress1 = _cancelDueToFormClose;
+            System.Threading.Thread.VolatileWrite(ref argaddress1, force);
+            _cancelDueToFormClose = Conversions.ToBoolean(argaddress1);
+        }
+
+        private void FindResults_Shown(object sender, EventArgs e)
+        {
+            if (_searchPending)
+            {
+                Task.Factory.StartNew(() => SearchJob(_admxWorkspace, _searchFunc));
+            }
+            else if (_lastSelectedIndex >= 0 && _lastSelectedIndex < ResultsListview.Items.Count)
+            {
+                // Restore the last selection
+                var lastSelected = ResultsListview.Items[_lastSelectedIndex];
+                lastSelected.Selected = true;
+                lastSelected.Focused = true;
+                lastSelected.EnsureVisible();
+            }
+        }
+
+        private void StopButton_Click(object sender, EventArgs e) => StopSearch(false);
+
+        private void ResultsListview_SizeChanged(object sender, EventArgs e) => ChTitle.Width = ResultsListview.ClientSize.Width - ChCategory.Width;
+
+        private void FindResults_Closing(object sender, CancelEventArgs e)
+        {
+            StopSearch(true);
+            if (SearchProgress.Value == SearchProgress.Maximum)
+            {
+                return;
+            }
+
+            ProgressLabel.Text = "Search canceled";
+            SearchProgress.Maximum = 100;
+            SearchProgress.Value = SearchProgress.Maximum;
+        }
+
+        private void GoClicked(object sender, EventArgs e)
+        {
+            if (ResultsListview.SelectedItems.Count == 0)
+            {
+                return;
+            }
+
+            SelectedPolicy = (PolicyPlusPolicy)ResultsListview.SelectedItems[0].Tag;
+            _lastSelectedIndex = ResultsListview.SelectedIndices[0]; // Remember which item is selected
+            DialogResult = DialogResult.OK;
+        }
+
+        private void FindResults_Load(object sender, EventArgs e)
+        {
+            // Enable double-buffering for the results view
+            var doubleBufferProp = typeof(Control).GetProperty("DoubleBuffered", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
+            doubleBufferProp?.SetValue(ResultsListview, true);
+        }
+    }
+}

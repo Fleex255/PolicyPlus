@@ -27,6 +27,8 @@
     <Prefer32Bit>false</Prefer32Bit>
     <WarningsAsErrors>42017,42018,42019,42020,42021,42022,42030,42032,42036,42104,42108,42109</WarningsAsErrors>
     <DefineConstants>TRACE;DEBUG</DefineConstants>
+    <CodeAnalysisRuleSet>ExtendedDesignGuidelineRules.ruleset</CodeAnalysisRuleSet>
+    <RunCodeAnalysis>false</RunCodeAnalysis>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -75,194 +77,223 @@
     <Import Include="System.Threading.Tasks" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="My Project\MyNamespace.Dynamic.Designer.cs" />
+    <Compile Include="Models\AdmxCategory.cs" />
+    <Compile Include="Models\AdmxLoadFailType.cs" />
+    <Compile Include="Models\AdmxLoadFailure.cs" />
+    <Compile Include="Models\AdmxPolicy.cs" />
+    <Compile Include="Models\AdmxPolicySection.cs" />
+    <Compile Include="Models\AdmxProductType.cs" />
+    <Compile Include="Models\AdmxSupportDefinition.cs" />
+    <Compile Include="Models\AdmxSupportEntry.cs" />
+    <Compile Include="Models\AdmxSupportLogicType.cs" />
+    <Compile Include="UI\Elements\BooleanPolicyElement.cs" />
+    <Compile Include="UI\Elements\CheckBoxPresentationElement.cs" />
+    <Compile Include="UI\Elements\ComboBoxPresentationElement.cs" />
+    <Compile Include="UI\Elements\DecimalPolicyElement.cs" />
+    <Compile Include="UI\Elements\DoubleClickIgnoringTreeView.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="UI\Elements\DropDownPresentationElement.cs" />
+    <Compile Include="UI\Elements\EnumPolicyElement.cs" />
+    <Compile Include="UI\Elements\EnumPolicyElementItem.cs" />
+    <Compile Include="Helpers\FilterConfiguration.cs" />
+    <Compile Include="Helpers\FilterPolicyState.cs" />
+    <Compile Include="Models\IPolicySource.cs" />
+    <Compile Include="UI\Elements\LabelPresentationElement.cs" />
+    <Compile Include="UI\Elements\ListPolicyElement.cs" />
+    <Compile Include="UI\Elements\ListPresentationElement.cs" />
+    <Compile Include="UI\Elements\MultiTextPolicyElement.cs" />
+    <Compile Include="UI\Elements\MultiTextPresentationElement.cs" />
+    <Compile Include="My Project\MyApplication.cs" />
+    <Compile Include="My Project\MyComputer.cs" />
     <Compile Include="My Project\MyNamespace.Static.1.Designer.cs" />
-    <Compile Include="AdmlFile.cs" />
-    <Compile Include="AdmxBundle.cs" />
-    <Compile Include="AdmxFile.cs" />
-    <Compile Include="AdmxStructures.cs" />
-    <Compile Include="BitReinterpretation.cs" />
-    <Compile Include="CmtxFile.cs" />
-    <Compile Include="CompiledStructures.cs" />
-    <Compile Include="ConfigurationStorage.cs" />
-    <Compile Include="DetailAdmx.Designer.cs">
+    <Compile Include="Models\AdmlFile.cs" />
+    <Compile Include="Models\AdmxBundle.cs" />
+    <Compile Include="Models\AdmxFile.cs" />
+    <Compile Include="Models\AdmxProduct.cs" />
+    <Compile Include="Models\PolFile.PolEntryData.cs" />
+    <Compile Include="Models\ReinterpretableDword.cs" />
+    <Compile Include="Models\CmtxFile.cs" />
+    <Compile Include="Models\PolicyPlusCategory.cs" />
+    <Compile Include="Models\ConfigurationStorage.cs" />
+    <Compile Include="UI\DetailAdmx.Designer.cs">
       <DependentUpon>DetailAdmx.cs</DependentUpon>
     </Compile>
-    <Compile Include="DetailAdmx.cs">
+    <Compile Include="UI\DetailAdmx.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="DetailCategory.Designer.cs">
+    <Compile Include="UI\DetailCategory.Designer.cs">
       <DependentUpon>DetailCategory.cs</DependentUpon>
     </Compile>
-    <Compile Include="DetailCategory.cs">
+    <Compile Include="UI\DetailCategory.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="DetailPolicy.Designer.cs">
+    <Compile Include="UI\DetailPolicy.Designer.cs">
       <DependentUpon>DetailPolicy.cs</DependentUpon>
     </Compile>
-    <Compile Include="DetailPolicy.cs">
+    <Compile Include="UI\DetailPolicy.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="DetailProduct.Designer.cs">
+    <Compile Include="UI\DetailProduct.Designer.cs">
       <DependentUpon>DetailProduct.cs</DependentUpon>
     </Compile>
-    <Compile Include="DetailProduct.cs">
+    <Compile Include="UI\DetailProduct.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="DetailSupport.Designer.cs">
+    <Compile Include="UI\DetailSupport.Designer.cs">
       <DependentUpon>DetailSupport.cs</DependentUpon>
     </Compile>
-    <Compile Include="DetailSupport.cs">
+    <Compile Include="UI\DetailSupport.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="DownloadAdmx.Designer.cs">
+    <Compile Include="UI\DownloadAdmx.Designer.cs">
       <DependentUpon>DownloadAdmx.cs</DependentUpon>
     </Compile>
-    <Compile Include="DownloadAdmx.cs">
+    <Compile Include="UI\DownloadAdmx.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="EditPol.Designer.cs">
+    <Compile Include="UI\EditPol.Designer.cs">
       <DependentUpon>EditPol.cs</DependentUpon>
     </Compile>
-    <Compile Include="EditPol.cs">
+    <Compile Include="UI\EditPol.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="EditPolDelete.Designer.cs">
+    <Compile Include="UI\EditPolDelete.Designer.cs">
       <DependentUpon>EditPolDelete.cs</DependentUpon>
     </Compile>
-    <Compile Include="EditPolDelete.cs">
+    <Compile Include="UI\EditPolDelete.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="EditPolKey.Designer.cs">
+    <Compile Include="UI\EditPolKey.Designer.cs">
       <DependentUpon>EditPolKey.cs</DependentUpon>
     </Compile>
-    <Compile Include="EditPolKey.cs">
+    <Compile Include="UI\EditPolKey.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="EditPolMultiStringData.Designer.cs">
+    <Compile Include="UI\EditPolMultiStringData.Designer.cs">
       <DependentUpon>EditPolMultiStringData.cs</DependentUpon>
     </Compile>
-    <Compile Include="EditPolMultiStringData.cs">
+    <Compile Include="UI\EditPolMultiStringData.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="EditPolNumericData.Designer.cs">
+    <Compile Include="UI\EditPolNumericData.Designer.cs">
       <DependentUpon>EditPolNumericData.cs</DependentUpon>
     </Compile>
-    <Compile Include="EditPolNumericData.cs">
+    <Compile Include="UI\EditPolNumericData.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="EditPolStringData.Designer.cs">
+    <Compile Include="UI\EditPolStringData.Designer.cs">
       <DependentUpon>EditPolStringData.cs</DependentUpon>
     </Compile>
-    <Compile Include="EditPolStringData.cs">
+    <Compile Include="UI\EditPolStringData.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="EditPolValue.Designer.cs">
+    <Compile Include="UI\EditPolValue.Designer.cs">
       <DependentUpon>EditPolValue.cs</DependentUpon>
     </Compile>
-    <Compile Include="EditPolValue.cs">
+    <Compile Include="UI\EditPolValue.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="EditSetting.Designer.cs">
+    <Compile Include="UI\EditSetting.Designer.cs">
       <DependentUpon>EditSetting.cs</DependentUpon>
     </Compile>
-    <Compile Include="EditSetting.cs">
+    <Compile Include="UI\EditSetting.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="ExportReg.Designer.cs">
+    <Compile Include="UI\ExportReg.Designer.cs">
       <DependentUpon>ExportReg.cs</DependentUpon>
     </Compile>
-    <Compile Include="ExportReg.cs">
+    <Compile Include="UI\ExportReg.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="FilterOptions.Designer.cs">
+    <Compile Include="UI\FilterOptions.Designer.cs">
       <DependentUpon>FilterOptions.cs</DependentUpon>
     </Compile>
-    <Compile Include="FilterOptions.cs">
+    <Compile Include="UI\FilterOptions.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="FindById.Designer.cs">
+    <Compile Include="UI\FindById.Designer.cs">
       <DependentUpon>FindById.cs</DependentUpon>
     </Compile>
-    <Compile Include="FindById.cs">
+    <Compile Include="UI\FindById.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="FindByRegistry.Designer.cs">
+    <Compile Include="UI\FindByRegistry.Designer.cs">
       <DependentUpon>FindByRegistry.cs</DependentUpon>
     </Compile>
-    <Compile Include="FindByRegistry.cs">
+    <Compile Include="UI\FindByRegistry.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="FindByText.Designer.cs">
+    <Compile Include="UI\FindByText.Designer.cs">
       <DependentUpon>FindByText.cs</DependentUpon>
     </Compile>
-    <Compile Include="FindByText.cs">
+    <Compile Include="UI\FindByText.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="FindResults.Designer.cs">
+    <Compile Include="UI\FindResults.Designer.cs">
       <DependentUpon>FindResults.cs</DependentUpon>
     </Compile>
-    <Compile Include="FindResults.cs">
+    <Compile Include="UI\FindResults.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="ImportReg.Designer.cs">
+    <Compile Include="UI\ImportReg.Designer.cs">
       <DependentUpon>ImportReg.cs</DependentUpon>
     </Compile>
-    <Compile Include="ImportReg.cs">
+    <Compile Include="UI\ImportReg.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="ImportSpol.Designer.cs">
+    <Compile Include="UI\ImportSpol.Designer.cs">
       <DependentUpon>ImportSpol.cs</DependentUpon>
     </Compile>
-    <Compile Include="ImportSpol.cs">
+    <Compile Include="UI\ImportSpol.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="InspectPolicyElements.Designer.cs">
+    <Compile Include="UI\InspectPolicyElements.Designer.cs">
       <DependentUpon>InspectPolicyElements.cs</DependentUpon>
     </Compile>
-    <Compile Include="InspectPolicyElements.cs">
+    <Compile Include="UI\InspectPolicyElements.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="InspectSpolFragment.Designer.cs">
+    <Compile Include="UI\InspectSpolFragment.Designer.cs">
       <DependentUpon>InspectSpolFragment.cs</DependentUpon>
     </Compile>
-    <Compile Include="InspectSpolFragment.cs">
+    <Compile Include="UI\InspectSpolFragment.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="LanguageOptions.Designer.cs">
+    <Compile Include="UI\LanguageOptions.Designer.cs">
       <DependentUpon>LanguageOptions.cs</DependentUpon>
     </Compile>
-    <Compile Include="LanguageOptions.cs">
+    <Compile Include="UI\LanguageOptions.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="ListEditor.Designer.cs">
+    <Compile Include="UI\ListEditor.Designer.cs">
       <DependentUpon>ListEditor.cs</DependentUpon>
     </Compile>
-    <Compile Include="ListEditor.cs">
+    <Compile Include="UI\ListEditor.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="LoadedAdmx.Designer.cs">
+    <Compile Include="UI\LoadedAdmx.Designer.cs">
       <DependentUpon>LoadedAdmx.cs</DependentUpon>
     </Compile>
-    <Compile Include="LoadedAdmx.cs">
+    <Compile Include="UI\LoadedAdmx.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="LoadedProducts.Designer.cs">
+    <Compile Include="UI\LoadedProducts.Designer.cs">
       <DependentUpon>LoadedProducts.cs</DependentUpon>
     </Compile>
-    <Compile Include="LoadedProducts.cs">
+    <Compile Include="UI\LoadedProducts.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="LoadedSupportDefinitions.Designer.cs">
+    <Compile Include="UI\LoadedSupportDefinitions.Designer.cs">
       <DependentUpon>LoadedSupportDefinitions.cs</DependentUpon>
     </Compile>
-    <Compile Include="LoadedSupportDefinitions.cs">
+    <Compile Include="UI\LoadedSupportDefinitions.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Main.cs">
+    <Compile Include="UI\Main.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Main.Designer.cs">
+    <Compile Include="UI\Main.Designer.cs">
       <DependentUpon>Main.cs</DependentUpon>
       <SubType>Form</SubType>
     </Compile>
@@ -272,6 +303,25 @@
       <DependentUpon>Application.myapp</DependentUpon>
       <DesignTime>True</DesignTime>
     </Compile>
+    <Compile Include="UI\Elements\NumericBoxPresentationElement.cs" />
+    <Compile Include="Helpers\PInvokeLuid.cs" />
+    <Compile Include="Helpers\PInvokeTokenPrivileges.cs" />
+    <Compile Include="Models\PolicyElement.cs" />
+    <Compile Include="Models\PolicyLoaderSource.cs" />
+    <Compile Include="Models\PolicyPlusPolicy.cs" />
+    <Compile Include="Models\PolicyPlusProduct.cs" />
+    <Compile Include="Models\PolicyPlusSupport.cs" />
+    <Compile Include="Models\PolicyPlusSupportEntry.cs" />
+    <Compile Include="Models\PolicyRegistryListEntry.cs" />
+    <Compile Include="Models\PolicyRegistrySingleList.cs" />
+    <Compile Include="Models\PolicyRegistryValue.cs" />
+    <Compile Include="Models\PolicyRegistryValueType.cs" />
+    <Compile Include="Models\PolicySourceWritability.cs" />
+    <Compile Include="Models\PolicyState.cs" />
+    <Compile Include="UI\Elements\PresentationElement.cs" />
+    <Compile Include="Models\RegistryKeyValuePair.cs" />
+    <Compile Include="Models\RegistryPolicyProxy.cs" />
+    <Compile Include="Models\ReinterpretableQword.cs" />
     <Compile Include="Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -282,138 +332,144 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
-    <Compile Include="OpenAdmxFolder.Designer.cs">
+    <Compile Include="UI\OpenAdmxFolder.Designer.cs">
       <DependentUpon>OpenAdmxFolder.cs</DependentUpon>
     </Compile>
-    <Compile Include="OpenAdmxFolder.cs">
+    <Compile Include="UI\OpenAdmxFolder.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="OpenPol.Designer.cs">
+    <Compile Include="UI\OpenPol.Designer.cs">
       <DependentUpon>OpenPol.cs</DependentUpon>
     </Compile>
-    <Compile Include="OpenPol.cs">
+    <Compile Include="UI\OpenPol.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="OpenSection.Designer.cs">
+    <Compile Include="UI\OpenSection.Designer.cs">
       <DependentUpon>OpenSection.cs</DependentUpon>
     </Compile>
-    <Compile Include="OpenSection.cs">
+    <Compile Include="UI\OpenSection.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="OpenUserGpo.Designer.cs">
+    <Compile Include="UI\OpenUserGpo.Designer.cs">
       <DependentUpon>OpenUserGpo.cs</DependentUpon>
     </Compile>
-    <Compile Include="OpenUserGpo.cs">
+    <Compile Include="UI\OpenUserGpo.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="OpenUserRegistry.Designer.cs">
+    <Compile Include="UI\OpenUserRegistry.Designer.cs">
       <DependentUpon>OpenUserRegistry.cs</DependentUpon>
     </Compile>
-    <Compile Include="OpenUserRegistry.cs">
+    <Compile Include="UI\OpenUserRegistry.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="PInvoke.cs" />
-    <Compile Include="PolicyLoader.cs" />
-    <Compile Include="PolicyProcessing.cs" />
-    <Compile Include="PolicySource.cs" />
-    <Compile Include="PolicyStructures.cs" />
-    <Compile Include="PresentationStructures.cs" />
-    <Compile Include="Privilege.cs" />
-    <Compile Include="RegFile.cs" />
-    <Compile Include="SpolFile.cs" />
-    <Compile Include="SystemInfo.cs" />
-    <Compile Include="Version.cs" />
-    <Compile Include="XmlExtensions.cs" />
+    <Compile Include="Helpers\PInvoke.cs" />
+    <Compile Include="Models\PolicyLoader.cs" />
+    <Compile Include="Models\PolicyProcessing.cs" />
+    <Compile Include="Models\PolFile.cs" />
+    <Compile Include="Models\PolicyRegistryList.cs" />
+    <Compile Include="UI\Elements\Presentation.cs" />
+    <Compile Include="Models\Privilege.cs" />
+    <Compile Include="Models\RegFile.cs" />
+    <Compile Include="Models\SpolFile.cs" />
+    <Compile Include="Models\SpolPolicyState.cs" />
+    <Compile Include="Helpers\SystemInfo.cs" />
+    <Compile Include="UI\Elements\TextBoxPresentationElement.cs" />
+    <Compile Include="UI\Elements\TextPolicyElement.cs" />
+    <Compile Include="Helpers\VersionHolder.cs" />
+    <Compile Include="UI\Elements\WideRangeNumericUpDown.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Helpers\XmlExtensions.cs" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="DetailAdmx.resx">
+    <EmbeddedResource Include="UI\DetailAdmx.resx">
       <DependentUpon>DetailAdmx.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="DetailCategory.resx">
+    <EmbeddedResource Include="UI\DetailCategory.resx">
       <DependentUpon>DetailCategory.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="DetailPolicy.resx">
+    <EmbeddedResource Include="UI\DetailPolicy.resx">
       <DependentUpon>DetailPolicy.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="DetailProduct.resx">
+    <EmbeddedResource Include="UI\DetailProduct.resx">
       <DependentUpon>DetailProduct.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="DetailSupport.resx">
+    <EmbeddedResource Include="UI\DetailSupport.resx">
       <DependentUpon>DetailSupport.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="DownloadAdmx.resx">
+    <EmbeddedResource Include="UI\DownloadAdmx.resx">
       <DependentUpon>DownloadAdmx.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="EditPol.resx">
+    <EmbeddedResource Include="UI\EditPol.resx">
       <DependentUpon>EditPol.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="EditPolDelete.resx">
+    <EmbeddedResource Include="UI\EditPolDelete.resx">
       <DependentUpon>EditPolDelete.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="EditPolKey.resx">
+    <EmbeddedResource Include="UI\EditPolKey.resx">
       <DependentUpon>EditPolKey.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="EditPolMultiStringData.resx">
+    <EmbeddedResource Include="UI\EditPolMultiStringData.resx">
       <DependentUpon>EditPolMultiStringData.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="EditPolNumericData.resx">
+    <EmbeddedResource Include="UI\EditPolNumericData.resx">
       <DependentUpon>EditPolNumericData.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="EditPolStringData.resx">
+    <EmbeddedResource Include="UI\EditPolStringData.resx">
       <DependentUpon>EditPolStringData.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="EditPolValue.resx">
+    <EmbeddedResource Include="UI\EditPolValue.resx">
       <DependentUpon>EditPolValue.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="EditSetting.resx">
+    <EmbeddedResource Include="UI\EditSetting.resx">
       <DependentUpon>EditSetting.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="ExportReg.resx">
+    <EmbeddedResource Include="UI\ExportReg.resx">
       <DependentUpon>ExportReg.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="FilterOptions.resx">
+    <EmbeddedResource Include="UI\FilterOptions.resx">
       <DependentUpon>FilterOptions.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="FindById.resx">
+    <EmbeddedResource Include="UI\FindById.resx">
       <DependentUpon>FindById.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="FindByRegistry.resx">
+    <EmbeddedResource Include="UI\FindByRegistry.resx">
       <DependentUpon>FindByRegistry.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="FindByText.resx">
+    <EmbeddedResource Include="UI\FindByText.resx">
       <DependentUpon>FindByText.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="FindResults.resx">
+    <EmbeddedResource Include="UI\FindResults.resx">
       <DependentUpon>FindResults.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="ImportReg.resx">
+    <EmbeddedResource Include="UI\ImportReg.resx">
       <DependentUpon>ImportReg.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="ImportSpol.resx">
+    <EmbeddedResource Include="UI\ImportSpol.resx">
       <DependentUpon>ImportSpol.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="InspectPolicyElements.resx">
+    <EmbeddedResource Include="UI\InspectPolicyElements.resx">
       <DependentUpon>InspectPolicyElements.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="InspectSpolFragment.resx">
+    <EmbeddedResource Include="UI\InspectSpolFragment.resx">
       <DependentUpon>InspectSpolFragment.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="LanguageOptions.resx">
+    <EmbeddedResource Include="UI\LanguageOptions.resx">
       <DependentUpon>LanguageOptions.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="ListEditor.resx">
+    <EmbeddedResource Include="UI\ListEditor.resx">
       <DependentUpon>ListEditor.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="LoadedAdmx.resx">
+    <EmbeddedResource Include="UI\LoadedAdmx.resx">
       <DependentUpon>LoadedAdmx.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="LoadedProducts.resx">
+    <EmbeddedResource Include="UI\LoadedProducts.resx">
       <DependentUpon>LoadedProducts.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="LoadedSupportDefinitions.resx">
+    <EmbeddedResource Include="UI\LoadedSupportDefinitions.resx">
       <DependentUpon>LoadedSupportDefinitions.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Main.resx">
+    <EmbeddedResource Include="UI\Main.resx">
       <DependentUpon>Main.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Resources.resx">
@@ -422,23 +478,26 @@
       <CustomToolNamespace>PolicyPlus.My.Resources</CustomToolNamespace>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="OpenAdmxFolder.resx">
+    <EmbeddedResource Include="UI\OpenAdmxFolder.resx">
       <DependentUpon>OpenAdmxFolder.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="OpenPol.resx">
+    <EmbeddedResource Include="UI\OpenPol.resx">
       <DependentUpon>OpenPol.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="OpenSection.resx">
+    <EmbeddedResource Include="UI\OpenSection.resx">
       <DependentUpon>OpenSection.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="OpenUserGpo.resx">
+    <EmbeddedResource Include="UI\OpenUserGpo.resx">
       <DependentUpon>OpenUserGpo.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="OpenUserRegistry.resx">
+    <EmbeddedResource Include="UI\OpenUserRegistry.resx">
       <DependentUpon>OpenUserRegistry.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
+    <None Include="..\.editorconfig">
+      <Link>.editorconfig</Link>
+    </None>
     <None Include="My Project\app.manifest" />
     <None Include="My Project\Application.myapp">
       <Generator>MyApplicationCodeGenerator</Generator>
@@ -451,6 +510,7 @@
     </None>
     <None Include="App.config" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
