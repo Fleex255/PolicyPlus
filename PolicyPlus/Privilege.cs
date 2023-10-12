@@ -3,7 +3,7 @@ using System.Runtime.InteropServices;
 
 namespace PolicyPlus
 {
-    public class Privilege
+    public static class Privilege
     {
         public static void EnablePrivilege(string Name)
         {

@@ -5,7 +5,7 @@ using Microsoft.VisualBasic.CompilerServices;
 
 namespace PolicyPlus
 {
-    public class PolicyProcessing
+    public static class PolicyProcessing
     {
         public static PolicyState GetPolicyState(IPolicySource PolicySource, PolicyPlusPolicy Policy)
         {
