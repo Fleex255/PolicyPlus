@@ -1,0 +1,462 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{8C76608D-8397-0FCC-2A14-5622D27AF399}</ProjectGuid>
+    <OutputType>WinExe</OutputType>
+    <StartupObject>PolicyPlus.My.MyApplication</StartupObject>
+    <RootNamespace>PolicyPlus</RootNamespace>
+    <AssemblyName>Policy Plus</AssemblyName>
+    <FileAlignment>512</FileAlignment>
+    <MyType>WindowsForms</MyType>
+    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
+    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+    <TargetFrameworkProfile />
+    <DefaultItemExcludes>$(DefaultItemExcludes);$(ProjectDir)**\*.vb</DefaultItemExcludes>
+    <LangVersion>latest</LangVersion>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DocumentationFile>bin\Debug\Policy Plus.xml</DocumentationFile>
+    <NoWarn>41999,42016</NoWarn>
+    <Prefer32Bit>false</Prefer32Bit>
+    <WarningsAsErrors>42017,42018,42019,42020,42021,42022,42030,42032,42036,42104,42108,42109</WarningsAsErrors>
+    <DefineConstants>TRACE;DEBUG</DefineConstants>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DocumentationFile>bin\Release\Policy Plus.xml</DocumentationFile>
+    <NoWarn>41999,42016</NoWarn>
+    <Prefer32Bit>false</Prefer32Bit>
+    <WarningsAsErrors>42017,42018,42019,42020,42021,42022,42030,42032,42036,42104,42108,42109</WarningsAsErrors>
+    <DefineConstants>TRACE</DefineConstants>
+  </PropertyGroup>
+  <PropertyGroup>
+    <OptionExplicit>On</OptionExplicit>
+  </PropertyGroup>
+  <PropertyGroup>
+    <OptionCompare>Binary</OptionCompare>
+  </PropertyGroup>
+  <PropertyGroup>
+    <OptionStrict>Off</OptionStrict>
+  </PropertyGroup>
+  <PropertyGroup>
+    <OptionInfer>On</OptionInfer>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationManifest>My Project\app.manifest</ApplicationManifest>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Microsoft.VisualBasic" />
+    <Reference Include="System" />
+    <Reference Include="System.DirectoryServices" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Core" />
+  </ItemGroup>
+  <ItemGroup>
+    <Import Include="Microsoft.VisualBasic" />
+    <Import Include="System" />
+    <Import Include="System.Collections" />
+    <Import Include="System.Collections.Generic" />
+    <Import Include="System.Drawing" />
+    <Import Include="System.Diagnostics" />
+    <Import Include="System.Windows.Forms" />
+    <Import Include="System.Linq" />
+    <Import Include="System.Threading.Tasks" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="My Project\MyNamespace.Dynamic.Designer.cs" />
+    <Compile Include="My Project\MyNamespace.Static.1.Designer.cs" />
+    <Compile Include="AdmlFile.cs" />
+    <Compile Include="AdmxBundle.cs" />
+    <Compile Include="AdmxFile.cs" />
+    <Compile Include="AdmxStructures.cs" />
+    <Compile Include="BitReinterpretation.cs" />
+    <Compile Include="CmtxFile.cs" />
+    <Compile Include="CompiledStructures.cs" />
+    <Compile Include="ConfigurationStorage.cs" />
+    <Compile Include="DetailAdmx.Designer.cs">
+      <DependentUpon>DetailAdmx.cs</DependentUpon>
+    </Compile>
+    <Compile Include="DetailAdmx.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="DetailCategory.Designer.cs">
+      <DependentUpon>DetailCategory.cs</DependentUpon>
+    </Compile>
+    <Compile Include="DetailCategory.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="DetailPolicy.Designer.cs">
+      <DependentUpon>DetailPolicy.cs</DependentUpon>
+    </Compile>
+    <Compile Include="DetailPolicy.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="DetailProduct.Designer.cs">
+      <DependentUpon>DetailProduct.cs</DependentUpon>
+    </Compile>
+    <Compile Include="DetailProduct.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="DetailSupport.Designer.cs">
+      <DependentUpon>DetailSupport.cs</DependentUpon>
+    </Compile>
+    <Compile Include="DetailSupport.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="DownloadAdmx.Designer.cs">
+      <DependentUpon>DownloadAdmx.cs</DependentUpon>
+    </Compile>
+    <Compile Include="DownloadAdmx.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="EditPol.Designer.cs">
+      <DependentUpon>EditPol.cs</DependentUpon>
+    </Compile>
+    <Compile Include="EditPol.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="EditPolDelete.Designer.cs">
+      <DependentUpon>EditPolDelete.cs</DependentUpon>
+    </Compile>
+    <Compile Include="EditPolDelete.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="EditPolKey.Designer.cs">
+      <DependentUpon>EditPolKey.cs</DependentUpon>
+    </Compile>
+    <Compile Include="EditPolKey.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="EditPolMultiStringData.Designer.cs">
+      <DependentUpon>EditPolMultiStringData.cs</DependentUpon>
+    </Compile>
+    <Compile Include="EditPolMultiStringData.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="EditPolNumericData.Designer.cs">
+      <DependentUpon>EditPolNumericData.cs</DependentUpon>
+    </Compile>
+    <Compile Include="EditPolNumericData.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="EditPolStringData.Designer.cs">
+      <DependentUpon>EditPolStringData.cs</DependentUpon>
+    </Compile>
+    <Compile Include="EditPolStringData.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="EditPolValue.Designer.cs">
+      <DependentUpon>EditPolValue.cs</DependentUpon>
+    </Compile>
+    <Compile Include="EditPolValue.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="EditSetting.Designer.cs">
+      <DependentUpon>EditSetting.cs</DependentUpon>
+    </Compile>
+    <Compile Include="EditSetting.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ExportReg.Designer.cs">
+      <DependentUpon>ExportReg.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ExportReg.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FilterOptions.Designer.cs">
+      <DependentUpon>FilterOptions.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FilterOptions.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FindById.Designer.cs">
+      <DependentUpon>FindById.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FindById.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FindByRegistry.Designer.cs">
+      <DependentUpon>FindByRegistry.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FindByRegistry.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FindByText.Designer.cs">
+      <DependentUpon>FindByText.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FindByText.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FindResults.Designer.cs">
+      <DependentUpon>FindResults.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FindResults.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ImportReg.Designer.cs">
+      <DependentUpon>ImportReg.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ImportReg.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ImportSpol.Designer.cs">
+      <DependentUpon>ImportSpol.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ImportSpol.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="InspectPolicyElements.Designer.cs">
+      <DependentUpon>InspectPolicyElements.cs</DependentUpon>
+    </Compile>
+    <Compile Include="InspectPolicyElements.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="InspectSpolFragment.Designer.cs">
+      <DependentUpon>InspectSpolFragment.cs</DependentUpon>
+    </Compile>
+    <Compile Include="InspectSpolFragment.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="LanguageOptions.Designer.cs">
+      <DependentUpon>LanguageOptions.cs</DependentUpon>
+    </Compile>
+    <Compile Include="LanguageOptions.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ListEditor.Designer.cs">
+      <DependentUpon>ListEditor.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ListEditor.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="LoadedAdmx.Designer.cs">
+      <DependentUpon>LoadedAdmx.cs</DependentUpon>
+    </Compile>
+    <Compile Include="LoadedAdmx.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="LoadedProducts.Designer.cs">
+      <DependentUpon>LoadedProducts.cs</DependentUpon>
+    </Compile>
+    <Compile Include="LoadedProducts.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="LoadedSupportDefinitions.Designer.cs">
+      <DependentUpon>LoadedSupportDefinitions.cs</DependentUpon>
+    </Compile>
+    <Compile Include="LoadedSupportDefinitions.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Main.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Main.Designer.cs">
+      <DependentUpon>Main.cs</DependentUpon>
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="My Project\AssemblyInfo.cs" />
+    <Compile Include="My Project\Application.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Application.myapp</DependentUpon>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <Compile Include="Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <Compile Include="My Project\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Settings.settings</DependentUpon>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+    </Compile>
+    <Compile Include="OpenAdmxFolder.Designer.cs">
+      <DependentUpon>OpenAdmxFolder.cs</DependentUpon>
+    </Compile>
+    <Compile Include="OpenAdmxFolder.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="OpenPol.Designer.cs">
+      <DependentUpon>OpenPol.cs</DependentUpon>
+    </Compile>
+    <Compile Include="OpenPol.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="OpenSection.Designer.cs">
+      <DependentUpon>OpenSection.cs</DependentUpon>
+    </Compile>
+    <Compile Include="OpenSection.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="OpenUserGpo.Designer.cs">
+      <DependentUpon>OpenUserGpo.cs</DependentUpon>
+    </Compile>
+    <Compile Include="OpenUserGpo.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="OpenUserRegistry.Designer.cs">
+      <DependentUpon>OpenUserRegistry.cs</DependentUpon>
+    </Compile>
+    <Compile Include="OpenUserRegistry.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="PInvoke.cs" />
+    <Compile Include="PolicyLoader.cs" />
+    <Compile Include="PolicyProcessing.cs" />
+    <Compile Include="PolicySource.cs" />
+    <Compile Include="PolicyStructures.cs" />
+    <Compile Include="PresentationStructures.cs" />
+    <Compile Include="Privilege.cs" />
+    <Compile Include="RegFile.cs" />
+    <Compile Include="SpolFile.cs" />
+    <Compile Include="SystemInfo.cs" />
+    <Compile Include="Version.cs" />
+    <Compile Include="XmlExtensions.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="DetailAdmx.resx">
+      <DependentUpon>DetailAdmx.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="DetailCategory.resx">
+      <DependentUpon>DetailCategory.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="DetailPolicy.resx">
+      <DependentUpon>DetailPolicy.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="DetailProduct.resx">
+      <DependentUpon>DetailProduct.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="DetailSupport.resx">
+      <DependentUpon>DetailSupport.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="DownloadAdmx.resx">
+      <DependentUpon>DownloadAdmx.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="EditPol.resx">
+      <DependentUpon>EditPol.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="EditPolDelete.resx">
+      <DependentUpon>EditPolDelete.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="EditPolKey.resx">
+      <DependentUpon>EditPolKey.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="EditPolMultiStringData.resx">
+      <DependentUpon>EditPolMultiStringData.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="EditPolNumericData.resx">
+      <DependentUpon>EditPolNumericData.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="EditPolStringData.resx">
+      <DependentUpon>EditPolStringData.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="EditPolValue.resx">
+      <DependentUpon>EditPolValue.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="EditSetting.resx">
+      <DependentUpon>EditSetting.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ExportReg.resx">
+      <DependentUpon>ExportReg.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FilterOptions.resx">
+      <DependentUpon>FilterOptions.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FindById.resx">
+      <DependentUpon>FindById.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FindByRegistry.resx">
+      <DependentUpon>FindByRegistry.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FindByText.resx">
+      <DependentUpon>FindByText.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FindResults.resx">
+      <DependentUpon>FindResults.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ImportReg.resx">
+      <DependentUpon>ImportReg.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ImportSpol.resx">
+      <DependentUpon>ImportSpol.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="InspectPolicyElements.resx">
+      <DependentUpon>InspectPolicyElements.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="InspectSpolFragment.resx">
+      <DependentUpon>InspectSpolFragment.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="LanguageOptions.resx">
+      <DependentUpon>LanguageOptions.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ListEditor.resx">
+      <DependentUpon>ListEditor.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="LoadedAdmx.resx">
+      <DependentUpon>LoadedAdmx.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="LoadedProducts.resx">
+      <DependentUpon>LoadedProducts.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="LoadedSupportDefinitions.resx">
+      <DependentUpon>LoadedSupportDefinitions.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Main.resx">
+      <DependentUpon>Main.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+      <CustomToolNamespace>PolicyPlus.My.Resources</CustomToolNamespace>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="OpenAdmxFolder.resx">
+      <DependentUpon>OpenAdmxFolder.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="OpenPol.resx">
+      <DependentUpon>OpenPol.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="OpenSection.resx">
+      <DependentUpon>OpenSection.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="OpenUserGpo.resx">
+      <DependentUpon>OpenUserGpo.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="OpenUserRegistry.resx">
+      <DependentUpon>OpenUserRegistry.cs</DependentUpon>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="My Project\app.manifest" />
+    <None Include="My Project\Application.myapp">
+      <Generator>MyApplicationCodeGenerator</Generator>
+      <LastGenOutput>Application.Designer.cs</LastGenOutput>
+    </None>
+    <None Include="My Project\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <CustomToolNamespace>PolicyPlus.My</CustomToolNamespace>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+    <None Include="App.config" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>
