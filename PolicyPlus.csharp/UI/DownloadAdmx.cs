@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using PolicyPlus.csharp.Helpers;
 using PolicyPlus.csharp.Models;
 
 namespace PolicyPlus.csharp.UI
@@ -77,14 +78,12 @@ namespace PolicyPlus.csharp.UI
                         _ = Directory.CreateDirectory(tempPath);
                         failPhase = "download the package";
                         SetProgress("Downloading MSI from Microsoft...");
-                        var downloadPath = tempPath + "W10Admx.msi";
-                        using (var webcli = new System.Net.WebClient())
-                        {
-                            webcli.DownloadFile(MicrosoftMsiDownloadLink, downloadPath);
-                        }
+                        _ = Download.DownloadAndSave(MicrosoftMsiDownloadLink, tempPath, "W10Admx.msi");
                         failPhase = "extract the package";
                         SetProgress("Unpacking MSI...");
                         var unpackPath = tempPath + "MsiUnpack";
+
+                        var downloadPath = tempPath + "W10Admx.msi";
                         var proc = Process.Start("msiexec", "/a \"" + downloadPath + "\" /quiet /qn TARGETDIR=\"" + unpackPath + "\"");
                         proc.WaitForExit();
                         if (proc.ExitCode != 0)
@@ -141,7 +140,6 @@ namespace PolicyPlus.csharp.UI
                         }));
                     }
                 });
-            return;
         }
 
         private static void MoveFilesInDir(string source, string dest, bool inheritAcl, bool isAdmin)
