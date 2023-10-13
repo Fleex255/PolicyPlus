@@ -1,0 +1,55 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net6.0-windows</TargetFramework>
+    <Nullable>enable</Nullable>
+    <UseWindowsForms>true</UseWindowsForms>
+    <ImplicitUsings>disable</ImplicitUsings>
+    <StartupObject>PolicyPlus.csharp.Program</StartupObject>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Update="UI\DetailAdmx.cs" />
+    <Compile Update="UI\DetailCategory.cs" />
+    <Compile Update="UI\DetailPolicy.cs" />
+    <Compile Update="UI\DetailProduct.cs" />
+    <Compile Update="UI\DetailSupport.cs" />
+    <Compile Update="UI\DownloadAdmx.cs" />
+    <Compile Update="UI\EditPol.cs" />
+    <Compile Update="UI\EditPolDelete.cs" />
+    <Compile Update="UI\EditPolKey.cs" />
+    <Compile Update="UI\EditPolMultiStringData.cs" />
+    <Compile Update="UI\EditPolNumericData.cs" />
+    <Compile Update="UI\EditPolStringData.cs" />
+    <Compile Update="UI\EditPolValue.cs" />
+    <Compile Update="UI\EditSetting.cs" />
+    <Compile Update="UI\Elements\DoubleClickIgnoringTreeView.cs" />
+    <Compile Update="UI\Elements\WideRangeNumericUpDown.cs" />
+    <Compile Update="UI\ExportReg.cs" />
+    <Compile Update="UI\FilterOptions.cs" />
+    <Compile Update="UI\FindById.cs" />
+    <Compile Update="UI\FindByRegistry.cs" />
+    <Compile Update="UI\FindByText.cs" />
+    <Compile Update="UI\FindResults.cs" />
+    <Compile Update="UI\ImportReg.cs" />
+    <Compile Update="UI\ImportSpol.cs" />
+    <Compile Update="UI\InspectPolicyElements.cs" />
+    <Compile Update="UI\InspectSpolFragment.cs" />
+    <Compile Update="UI\LanguageOptions.cs" />
+    <Compile Update="UI\ListEditor.cs" />
+    <Compile Update="UI\LoadedAdmx.cs" />
+    <Compile Update="UI\LoadedProducts.cs" />
+    <Compile Update="UI\LoadedSupportDefinitions.cs" />
+    <Compile Update="UI\Main.cs" />
+    <Compile Update="UI\Main.Designer.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="UI\OpenAdmxFolder.cs" />
+    <Compile Update="UI\OpenPol.cs" />
+    <Compile Update="UI\OpenSection.cs" />
+    <Compile Update="UI\OpenUserGpo.cs" />
+    <Compile Update="UI\OpenUserRegistry.cs" />
+  </ItemGroup>
+
+</Project>
