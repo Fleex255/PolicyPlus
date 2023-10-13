@@ -1043,7 +1043,9 @@ namespace PolicyPlus.csharp.UI
         {
             // Show author and version information if it was compiled into the program
             var about =
-                $"Policy Plus by Ben Nordick.{Environment.NewLine}{Environment.NewLine}Available on GitHub: Fleex255/PolicyPlus.";
+                $"Policy Plus by Ben Nordick.{Environment.NewLine}{Environment.NewLine}Available on GitHub: Fleex255/PolicyPlus." +
+                Environment.NewLine +
+                "C# version by Zafer Balkan. Available on Github: zbalkan/PolicyPlus";
             if (!string.IsNullOrEmpty(VersionHolder.Version.Trim()))
             {
                 about += $" Version: {VersionHolder.Version.Trim()}.";
