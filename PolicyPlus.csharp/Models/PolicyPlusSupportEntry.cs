@@ -1,4 +1,6 @@
-﻿namespace PolicyPlus.csharp.Models
+﻿using PolicyPlus.csharp.Models.Sources.Admx;
+
+namespace PolicyPlus.csharp.Models
 {
     public class PolicyPlusSupportEntry
     {

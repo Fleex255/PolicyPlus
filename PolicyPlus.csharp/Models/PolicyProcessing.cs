@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using PolicyPlus.csharp.UI.Elements;
+using PolicyPlus.csharp.Elements;
+using PolicyPlus.csharp.Models.Sources;
+using PolicyPlus.csharp.Models.Sources.Admx;
 
 namespace PolicyPlus.csharp.Models
 {

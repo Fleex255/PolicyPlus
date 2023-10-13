@@ -3,6 +3,7 @@ using System.IO;
 using System.Linq;
 using Microsoft.Win32;
 using PolicyPlus.csharp.Helpers;
+using PolicyPlus.csharp.Models.Sources;
 
 namespace PolicyPlus.csharp.Models
 {

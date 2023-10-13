@@ -1,4 +1,5 @@
-﻿using PolicyPlus.csharp.UI.Elements;
+﻿using PolicyPlus.csharp.Elements;
+using PolicyPlus.csharp.Models.Sources.Admx;
 
 namespace PolicyPlus.csharp.Models
 {

@@ -10,46 +10,46 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Update="UI\DetailAdmx.cs" />
-    <Compile Update="UI\DetailCategory.cs" />
-    <Compile Update="UI\DetailPolicy.cs" />
-    <Compile Update="UI\DetailProduct.cs" />
-    <Compile Update="UI\DetailSupport.cs" />
-    <Compile Update="UI\DownloadAdmx.cs" />
-    <Compile Update="UI\EditPol.cs" />
-    <Compile Update="UI\EditPolDelete.cs" />
-    <Compile Update="UI\EditPolKey.cs" />
-    <Compile Update="UI\EditPolMultiStringData.cs" />
-    <Compile Update="UI\EditPolNumericData.cs" />
-    <Compile Update="UI\EditPolStringData.cs" />
-    <Compile Update="UI\EditPolValue.cs" />
-    <Compile Update="UI\EditSetting.cs" />
-    <Compile Update="UI\Elements\DoubleClickIgnoringTreeView.cs" />
-    <Compile Update="UI\Elements\WideRangeNumericUpDown.cs" />
-    <Compile Update="UI\ExportReg.cs" />
-    <Compile Update="UI\FilterOptions.cs" />
-    <Compile Update="UI\FindById.cs" />
-    <Compile Update="UI\FindByRegistry.cs" />
-    <Compile Update="UI\FindByText.cs" />
-    <Compile Update="UI\FindResults.cs" />
-    <Compile Update="UI\ImportReg.cs" />
-    <Compile Update="UI\ImportSpol.cs" />
-    <Compile Update="UI\InspectPolicyElements.cs" />
-    <Compile Update="UI\InspectSpolFragment.cs" />
-    <Compile Update="UI\LanguageOptions.cs" />
-    <Compile Update="UI\ListEditor.cs" />
-    <Compile Update="UI\LoadedAdmx.cs" />
-    <Compile Update="UI\LoadedProducts.cs" />
-    <Compile Update="UI\LoadedSupportDefinitions.cs" />
-    <Compile Update="UI\Main.cs" />
-    <Compile Update="UI\Main.Designer.cs">
+    <Compile Update="Forms\DetailAdmx.cs" />
+    <Compile Update="Forms\DetailCategory.cs" />
+    <Compile Update="Forms\DetailPolicy.cs" />
+    <Compile Update="Forms\DetailProduct.cs" />
+    <Compile Update="Forms\DetailSupport.cs" />
+    <Compile Update="Forms\DownloadAdmx.cs" />
+    <Compile Update="Forms\EditPol.cs" />
+    <Compile Update="Forms\EditPolDelete.cs" />
+    <Compile Update="Forms\EditPolKey.cs" />
+    <Compile Update="Forms\EditPolMultiStringData.cs" />
+    <Compile Update="Forms\EditPolNumericData.cs" />
+    <Compile Update="Forms\EditPolStringData.cs" />
+    <Compile Update="Forms\EditPolValue.cs" />
+    <Compile Update="Forms\EditSetting.cs" />
+    <Compile Update="Forms\Components\DoubleClickIgnoringTreeView.cs" />
+    <Compile Update="Forms\Components\WideRangeNumericUpDown.cs" />
+    <Compile Update="Forms\ExportReg.cs" />
+    <Compile Update="Forms\FilterOptions.cs" />
+    <Compile Update="Forms\FindById.cs" />
+    <Compile Update="Forms\FindByRegistry.cs" />
+    <Compile Update="Forms\FindByText.cs" />
+    <Compile Update="Forms\FindResults.cs" />
+    <Compile Update="Forms\ImportReg.cs" />
+    <Compile Update="Forms\ImportSpol.cs" />
+    <Compile Update="Forms\InspectPolicyElements.cs" />
+    <Compile Update="Forms\InspectSpolFragment.cs" />
+    <Compile Update="Forms\LanguageOptions.cs" />
+    <Compile Update="Forms\ListEditor.cs" />
+    <Compile Update="Forms\LoadedAdmx.cs" />
+    <Compile Update="Forms\LoadedProducts.cs" />
+    <Compile Update="Forms\LoadedSupportDefinitions.cs" />
+    <Compile Update="Forms\Main.cs" />
+    <Compile Update="Forms\Main.Designer.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Update="UI\OpenAdmxFolder.cs" />
-    <Compile Update="UI\OpenPol.cs" />
-    <Compile Update="UI\OpenSection.cs" />
-    <Compile Update="UI\OpenUserGpo.cs" />
-    <Compile Update="UI\OpenUserRegistry.cs" />
+    <Compile Update="Forms\OpenAdmxFolder.cs" />
+    <Compile Update="Forms\OpenPol.cs" />
+    <Compile Update="Forms\OpenSection.cs" />
+    <Compile Update="Forms\OpenUserGpo.cs" />
+    <Compile Update="Forms\OpenUserRegistry.cs" />
   </ItemGroup>
 
 </Project>
