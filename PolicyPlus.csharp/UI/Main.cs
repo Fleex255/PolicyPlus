@@ -19,7 +19,7 @@ namespace PolicyPlus.csharp.UI
         private AdmxBundle _admxWorkspace = new();
         private ConfigurationStorage _configuration;
         private PolicyPlusCategory? _currentCategory;
-        private FilterConfiguration _currentFilter = new();
+        private FilterConfiguration? _currentFilter = new();
         private PolicyPlusPolicy? _currentSetting;
         private PolicyPlusCategory? _highlightCategory;
         private Dictionary<string, string>? _userComments;
@@ -44,10 +44,10 @@ namespace PolicyPlus.csharp.UI
             // Restore the last ADMX source and policy loaders
             OpenLastAdmxSource();
             var compLoaderType =
-                (PolicyLoaderSource)(int)_configuration.GetValue("CompSourceType", 0);
+                (PolicyLoaderSource)(int)_configuration.GetValue("CompSourceType", 0)!;
             var compLoaderData = _configuration.GetValue("CompSourceData", "");
             var userLoaderType =
-                (PolicyLoaderSource)(int)_configuration.GetValue("UserSourceType", 0);
+                (PolicyLoaderSource)(int)_configuration.GetValue("UserSourceType", 0)!;
             var userLoaderData = _configuration.GetValue("UserSourceData", "");
             try
             {
@@ -121,9 +121,9 @@ namespace PolicyPlus.csharp.UI
                     {
                         try
                         {
-                            _configuration.SetValue("AdmxSource", defaultAdmxSource);
+                            _configuration.SetValue("AdmxSource", defaultAdmxSource!);
                             _admxWorkspace = new AdmxBundle();
-                            _ = DisplayAdmxLoadErrorReport(_admxWorkspace.LoadFolder(defaultAdmxSource,
+                            _ = DisplayAdmxLoadErrorReport(_admxWorkspace.LoadFolder(defaultAdmxSource!,
                                 GetPreferredLanguageCode()));
                         }
                         catch (Exception ex2)
@@ -462,7 +462,7 @@ namespace PolicyPlus.csharp.UI
         {
             // Show the Edit Policy Setting dialog for a policy and reload if changes were made
             if (new EditSetting().PresentDialog(policy, section, _admxWorkspace, _compPolicySource,
-                    _userPolicySource, _compPolicyLoader, _userPolicyLoader, _compComments, _userComments) !=
+                    _userPolicySource, _compPolicyLoader, _userPolicyLoader, _compComments!, _userComments!) !=
                 DialogResult.OK)
             {
                 return;
@@ -717,7 +717,7 @@ namespace PolicyPlus.csharp.UI
                         foreach (var policyPath in RegistryPolicyProxy.PolicyKeys)
                         {
                             using var policyKey = regRoot.OpenSubKey(policyPath, false);
-                            AddSubtree(pol, policyPath, policyKey);
+                            AddSubtree(pol, policyPath, policyKey!);
                         }
 
                         return pol;
@@ -732,13 +732,13 @@ namespace PolicyPlus.csharp.UI
             foreach (var valName in key.GetValueNames())
             {
                 var valData = key.GetValue(valName, null, RegistryValueOptions.DoNotExpandEnvironmentNames);
-                pol.SetValue(pathRoot, valName, valData, key.GetValueKind(valName));
+                pol.SetValue(pathRoot, valName, valData!, key.GetValueKind(valName));
             }
 
             foreach (var subkeyName in key.GetSubKeyNames())
             {
                 using var subkey = key.OpenSubKey(subkeyName, false);
-                AddSubtree(pol, pathRoot + @"\" + subkeyName, subkey);
+                AddSubtree(pol, pathRoot + @"\" + subkeyName, subkey!);
             }
         }
 
@@ -991,8 +991,8 @@ namespace PolicyPlus.csharp.UI
         private void SavePoliciesToolStripMenuItem_Click(object sender, EventArgs e)
         {
             // Save policy state and comments to disk Doesn't matter, it's just comments
-            SaveComments(_userComments, _userPolicyLoader);
-            SaveComments(_compComments, _compPolicyLoader);
+            SaveComments(_userComments!, _userPolicyLoader);
+            SaveComments(_compComments!, _compPolicyLoader);
             try
             {
                 var compStatus = "not writable";
@@ -1054,7 +1054,7 @@ namespace PolicyPlus.csharp.UI
         {
             // Show the Find By Text window and start the search
             var dialog = new FindByText();
-            if (dialog.PresentDialog(_userComments, _compComments) == DialogResult.OK)
+            if (dialog.PresentDialog(_userComments!, _compComments!) == DialogResult.OK)
             {
                 ShowSearchDialog(dialog.Searcher);
             }
@@ -1097,7 +1097,7 @@ namespace PolicyPlus.csharp.UI
             }
         }
 
-        private void SettingInfoPanel_ClientSizeChanged(object sender, EventArgs e)
+        private void SettingInfoPanel_ClientSizeChanged(object? sender, EventArgs? e)
         {
             // Finagle the middle pane's UI elements
             SettingInfoPanel.AutoScrollMinSize = SettingInfoPanel.Size;
@@ -1138,7 +1138,7 @@ namespace PolicyPlus.csharp.UI
         {
             var dialog = new FilterOptions();
             // Show the Filter Options dialog and refresh if the filter changes
-            if (dialog.PresentDialog(_currentFilter, _admxWorkspace) != DialogResult.OK)
+            if (dialog.PresentDialog(_currentFilter!, _admxWorkspace) != DialogResult.OK)
             {
                 return;
             }
@@ -1166,9 +1166,9 @@ namespace PolicyPlus.csharp.UI
             }
 
             // Open the SPOL import dialog and apply the data
-            var spol = dialog.Spol;
-            var fails = spol.ApplyAll(_admxWorkspace, _userPolicySource, _compPolicySource, _userComments,
-                _compComments);
+            var spol = dialog.Spol ?? throw new Exception("SPOL cannot be null.");
+            var fails = spol.ApplyAll(_admxWorkspace, _userPolicySource, _compPolicySource, _userComments!,
+                _compComments!);
             MoveToVisibleCategoryAndReload();
             if (fails == 0)
             {
@@ -1426,7 +1426,7 @@ namespace PolicyPlus.csharp.UI
             else if (ReferenceEquals(e.ClickedItem, CmePolSpolFragment))
             {
                 new InspectSpolFragment().PresentDialog((PolicyPlusPolicy)polObject, _compPolicySource,
-                    _userPolicySource, _compComments, _userComments);
+                    _userPolicySource, _compComments!, _userComments!);
             }
         }
 

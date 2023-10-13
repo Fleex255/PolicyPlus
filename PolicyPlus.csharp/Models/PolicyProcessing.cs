@@ -491,7 +491,7 @@ namespace PolicyPlus.csharp.Models
             }
         }
 
-        public static void SetPolicyState(IPolicySource policySource, PolicyPlusPolicy policy, PolicyState state, Dictionary<string, object> options)
+        public static void SetPolicyState(IPolicySource policySource, PolicyPlusPolicy policy, PolicyState state, Dictionary<string, object>? options)
         {
             var rawpol = policy.RawPolicy;
             switch (state)
@@ -509,12 +509,14 @@ namespace PolicyPlus.csharp.Models
                             foreach (var elem in rawpol.Elements)
                             {
                                 var elemKey = string.IsNullOrEmpty(elem.RegistryKey) ? rawpol.RegistryKey : elem.RegistryKey;
-                                if (!options.ContainsKey(elem.Id))
+                                if (options?.ContainsKey(elem.Id) == false)
                                 {
                                     continue;
                                 }
 
+#pragma warning disable CS8602 // Dereference of a possibly null reference.
                                 var optionData = options[elem.Id];
+#pragma warning restore CS8602 // Dereference of a possibly null reference.
                                 switch (elem.ElementType ?? "")
                                 {
                                     case "decimal":

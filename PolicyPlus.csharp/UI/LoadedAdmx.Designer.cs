@@ -29,7 +29,9 @@ namespace PolicyPlus.csharp.UI
         }
 
         // Required by the Windows Form Designer
+#pragma warning disable CS0649 // Field 'LoadedAdmx.components' is never assigned to, and will always have its default value null
         private System.ComponentModel.IContainer components;
+#pragma warning restore CS0649 // Field 'LoadedAdmx.components' is never assigned to, and will always have its default value null
 
         // NOTE: The following procedure is required by the Windows Form Designer
         // It can be modified using the Windows Form Designer.  

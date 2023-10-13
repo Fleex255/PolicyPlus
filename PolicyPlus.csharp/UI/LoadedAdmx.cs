@@ -32,7 +32,7 @@ namespace PolicyPlus.csharp.UI
 
         private void LsvAdmx_DoubleClick(object sender, EventArgs e) => new DetailAdmx().PresentDialog((AdmxFile)LsvAdmx.SelectedItems[0].Tag, _bundle);
 
-        private void LoadedAdmx_SizeChanged(object sender, EventArgs e) => ChNamespace.Width = Math.Max(30, LsvAdmx.ClientRectangle.Width - ChFolder.Width - ChFileTitle.Width);
+        private void LoadedAdmx_SizeChanged(object? sender, EventArgs? e) => ChNamespace.Width = Math.Max(30, LsvAdmx.ClientRectangle.Width - ChFolder.Width - ChFileTitle.Width);
 
         private void LsvAdmx_KeyDown(object sender, KeyEventArgs e)
         {

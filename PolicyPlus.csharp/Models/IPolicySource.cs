@@ -7,7 +7,7 @@ namespace PolicyPlus.csharp.Models
     {
         bool ContainsValue(string key, string value);
 
-        object GetValue(string key, string value);
+        object? GetValue(string key, string value);
 
         bool WillDeleteValue(string key, string value);
 

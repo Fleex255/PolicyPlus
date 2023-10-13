@@ -132,8 +132,6 @@ namespace PolicyPlus.csharp.Models
                 writer.Write(']');
             }
 
-            return;
-
             void WriteSz(string text)
             {
                 foreach (var c in text)

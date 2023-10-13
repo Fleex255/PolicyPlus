@@ -64,15 +64,15 @@ namespace PolicyPlus.csharp.UI
 
                 if (value.Equals("**deletevalues", StringComparison.InvariantCultureIgnoreCase))
                 {
-                    _ = AddToLsv("Delete values", 8, true, depth, value, prefix, kind, data).SubItems.Add(data.ToString());
+                    _ = AddToLsv("Delete values", 8, true, depth, value, prefix, kind, data!).SubItems.Add(data.ToString());
                 }
                 else if (value.StartsWith("**del.", StringComparison.InvariantCultureIgnoreCase))
                 {
-                    _ = AddToLsv("Delete value", 8, true, depth, value, prefix, kind, data).SubItems.Add(value.Substring(6));
+                    _ = AddToLsv("Delete value", 8, true, depth, value, prefix, kind, data!).SubItems.Add(value.Substring(6));
                 }
                 else if (value.StartsWith("**delvals", StringComparison.InvariantCultureIgnoreCase))
                 {
-                    _ = AddToLsv("Delete all values", 8, true, depth, value, prefix, kind, data);
+                    _ = AddToLsv("Delete all values", 8, true, depth, value, prefix, kind, data!);
                 }
                 else
                 {
@@ -104,7 +104,7 @@ namespace PolicyPlus.csharp.UI
                             iconIndex = 13; // Gear
                             break;
                     }
-                    _ = AddToLsv(value, iconIndex, false, depth, value, prefix, kind, data).SubItems.Add(text);
+                    _ = AddToLsv(value, iconIndex, false, depth, value, prefix, kind, data!).SubItems.Add(text);
                 }
             }
         }
@@ -200,7 +200,7 @@ namespace PolicyPlus.csharp.UI
                 return;
             }
             var containerKey = (LsvPol.SelectedItems.Count > 0 ? LsvPol.SelectedItems[0].Tag : "").ToString();
-            if (!IsKeyNameAvailable(containerKey, keyName))
+            if (!IsKeyNameAvailable(containerKey!, keyName))
             {
                 _ = MessageBox.Show("The key name is already taken.", "Warning", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                 return;
@@ -216,7 +216,7 @@ namespace PolicyPlus.csharp.UI
             if (kind is RegistryValueKind.String or RegistryValueKind.ExpandString)
             {
                 var dialog = new EditPolStringData();
-                if (dialog.PresentDialog(valueName, currentData.ToString()) == DialogResult.OK)
+                if (dialog.PresentDialog(valueName, currentData!.ToString()) == DialogResult.OK)
                 {
                     return dialog.TextData.Text;
                 }
@@ -277,7 +277,7 @@ namespace PolicyPlus.csharp.UI
 
             if (PromptForNewValueData(value, defaultData, kind) is { } newData)
             {
-                EditingPol.SetValue(keyPath, value, newData, kind);
+                EditingPol.SetValue(keyPath!, value, newData, kind);
                 UpdateTree();
                 SelectValue(keyPath, value);
             }
@@ -461,7 +461,7 @@ namespace PolicyPlus.csharp.UI
                 branch = LsvPol.SelectedItems[0].Tag.ToString();
             }
 
-            dialog.PresentDialog(branch, EditingPol, _editingUserSource);
+            dialog.PresentDialog(branch!, EditingPol, _editingUserSource);
         }
 
         private class PolValueInfo

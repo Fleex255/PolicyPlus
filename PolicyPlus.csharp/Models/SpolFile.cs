@@ -156,7 +156,7 @@ namespace PolicyPlus.csharp.Models
                         {
                             throw new Exception("Unknown option data format.");
                         }
-                        singlePolicy.ExtraOptions.Add(optionParts[0], newObj);
+                        singlePolicy.ExtraOptions.Add(optionParts[0], newObj!);
                     }
                 }
                 Policies.Add(singlePolicy);

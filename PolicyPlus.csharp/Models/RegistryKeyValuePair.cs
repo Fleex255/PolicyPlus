@@ -7,11 +7,11 @@ namespace PolicyPlus.csharp.Models
         public string Key;
         public string Value;
 
-        public bool EqualsRkvp(RegistryKeyValuePair other) => other.Key.Equals(Key, StringComparison.InvariantCultureIgnoreCase) && other.Value.Equals(Value, StringComparison.InvariantCultureIgnoreCase);
+        public bool EqualsRkvp(RegistryKeyValuePair? other) => other?.Key.Equals(Key, StringComparison.InvariantCultureIgnoreCase) == true && other.Value.Equals(Value, StringComparison.InvariantCultureIgnoreCase);
 
-        bool IEquatable<RegistryKeyValuePair>.Equals(RegistryKeyValuePair other) => EqualsRkvp(other);
+        bool IEquatable<RegistryKeyValuePair>.Equals(RegistryKeyValuePair? other) => EqualsRkvp(other);
 
-        public override bool Equals(object obj)
+        public override bool Equals(object? obj)
         {
             if (obj is not RegistryKeyValuePair pair)
             {

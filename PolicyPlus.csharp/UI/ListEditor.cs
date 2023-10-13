@@ -2,13 +2,12 @@
 using System.Collections.Generic;
 using System.Windows.Forms;
 
-
 namespace PolicyPlus.csharp.UI
 {
     public partial class ListEditor
     {
         private bool _userProvidesNames;
-        public object FinalData;
+        public object? FinalData;
 
         public ListEditor()
         {
@@ -55,14 +54,14 @@ namespace PolicyPlus.csharp.UI
                         continue;
                     }
 
-                    var key = row.Cells[0].Value.ToString();
-                    if (dict.ContainsKey(key))
+                    var key = row.Cells[0].Value.ToString()!;
+                    if (dict.ContainsKey(key!))
                     {
                         _ = MessageBox.Show("Multiple entries are named \"" + key + "\"! Remove or rename all but one.", "Warning", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                         return;
                     }
 
-                    dict.Add(key, row.Cells[1].Value.ToString());
+                    dict.Add(key!, row!.Cells[1].Value.ToString()!);
                 }
                 FinalData = dict;
             }
@@ -73,7 +72,7 @@ namespace PolicyPlus.csharp.UI
                 {
                     if (!row.IsNewRow)
                     {
-                        list.Add(row.Cells[1].Value.ToString());
+                        list.Add(row!.Cells[1].Value.ToString()!);
                     }
                 }
                 FinalData = list;

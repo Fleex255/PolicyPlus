@@ -36,7 +36,7 @@ namespace PolicyPlus.csharp.Models
 
                                 var prefix = usingElement.AttributeOrNull("prefix");
                                 var ns = usingElement.AttributeOrNull("namespace");
-                                cmtx.Prefixes.Add(prefix, ns);
+                                cmtx.Prefixes.Add(prefix!, ns!);
                             }
 
                             break;
@@ -59,7 +59,7 @@ namespace PolicyPlus.csharp.Models
 
                                     var policy = commentElement.AttributeOrNull("policyRef");
                                     var text = commentElement.AttributeOrNull("commentText");
-                                    cmtx.Comments.Add(policy, text);
+                                    cmtx.Comments.Add(policy!, text!);
                                 }
                             }
 
@@ -83,7 +83,7 @@ namespace PolicyPlus.csharp.Models
 
                                     var id = stringElement.AttributeOrNull("id");
                                     var text = stringElement.InnerText;
-                                    cmtx.Strings.Add(id, text);
+                                    cmtx.Strings.Add(id!, text);
                                 }
                             }
 

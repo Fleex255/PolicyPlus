@@ -173,7 +173,7 @@ namespace PolicyPlus.csharp.Models
                                 presPart = new DropDownPresentationElement
                                 {
                                     NoSort = (bool)uiElement.AttributeOrDefault("noSort", false),
-                                    DefaultItemId = uiElement.AttributeOrNull("defaultItem") != null ? int.Parse(uiElement.AttributeOrNull("defaultItem")) : null,
+                                    DefaultItemId = uiElement.AttributeOrNull("defaultItem") != null ? int.Parse(uiElement!.AttributeOrNull("defaultItem")) : null,
                                     Label = uiElement.InnerText
                                 };
                                 break;

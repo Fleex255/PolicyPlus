@@ -286,8 +286,6 @@ namespace PolicyPlus.csharp.UI
             }
 
             OptionsTableResized();
-
-            return;
         }
 
         private void AddControl(string id, Control control, string label, ref int curTabIndex)
@@ -534,7 +532,7 @@ namespace PolicyPlus.csharp.UI
             return ShowDialog();
         }
 
-        private void StateRadiosChanged(object sender, EventArgs e)
+        private void StateRadiosChanged(object? sender, EventArgs? e)
         {
             if (_elementControls is null)
             {
@@ -548,7 +546,7 @@ namespace PolicyPlus.csharp.UI
             }
         }
 
-        private void SectionDropdown_SelectedIndexChanged(object? sender, EventArgs e)
+        private void SectionDropdown_SelectedIndexChanged(object? sender, EventArgs? e)
         {
             var isUser = SectionDropdown.Text == "User";
             _currentSource = isUser ? _userPolSource : _compPolSource;

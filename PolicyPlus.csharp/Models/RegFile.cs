@@ -145,7 +145,7 @@ namespace PolicyPlus.csharp.Models
                         else if (data.StartsWith("hex"))
                         {
                             var indexOfClosingParen = data.IndexOf(')');
-                            string curHexLine;
+                            string? curHexLine;
                             if (indexOfClosingParen != -1)
                             {
                                 value.Kind = (RegistryValueKind)int.Parse(data.Substring(4, indexOfClosingParen - 4), System.Globalization.NumberStyles.HexNumber);
@@ -234,7 +234,7 @@ namespace PolicyPlus.csharp.Models
                                 case RegistryValueKind.String:
                                     {
                                         writer.Write("\"");
-                                        writer.Write(EscapeValue(value.Data.ToString()));
+                                        writer.Write(EscapeValue(value!.Data.ToString()));
                                         writer.WriteLine("\"");
                                         break;
                                     }
@@ -351,7 +351,7 @@ namespace PolicyPlus.csharp.Models
                 keyRecord = new RegFileKey { Name = fullKeyName };
                 _keys.Add(keyRecord);
             }
-            _ = keyRecord.Values.Remove(keyRecord.GetValue(value));
+            _ = keyRecord.Values.Remove(keyRecord!.GetValue(value));
             keyRecord.Values.Add(new RegFileValue { Name = value, Kind = dataType, Data = data });
         }
 
@@ -371,7 +371,7 @@ namespace PolicyPlus.csharp.Models
                 return;
             }
 
-            _ = keyRecord.Values.Remove(keyRecord.GetValue(value));
+            _ = keyRecord.Values.Remove(keyRecord!.GetValue(value));
             keyRecord.Values.Add(new RegFileValue { Name = value, IsDeleter = true });
         }
 
@@ -383,7 +383,7 @@ namespace PolicyPlus.csharp.Models
             }
 
             var fullName = PrefixKeyName(key);
-            _ = _keys.Remove(GetKey(fullName));
+            _ = _keys.Remove(GetKey(fullName)!);
             _keys.Add(new RegFileKey { Name = fullName, IsDeleter = true });
         }
 
