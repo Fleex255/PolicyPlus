@@ -8,7 +8,7 @@ namespace PolicyPlus.csharp.UI
 {
     public partial class OpenAdmxFolder
     {
-        private string _sysvolPolicyDefinitionsPath = "";
+        private string _sysvolPolicyDefinitionsPath = string.Empty;
         public string SelectedFolder;
         public bool ClearWorkspace;
 
@@ -38,12 +38,12 @@ namespace PolicyPlus.csharp.UI
             }
             if (compDomain is null)
             {
-                _sysvolPolicyDefinitionsPath = "";
+                _sysvolPolicyDefinitionsPath = string.Empty;
             }
             else
             {
                 var possiblePath = @"\\" + compDomain.Name + @"\SYSVOL\" + compDomain.Name + @"\Policies\PolicyDefinitions";
-                _sysvolPolicyDefinitionsPath = Directory.Exists(possiblePath) ? possiblePath : "";
+                _sysvolPolicyDefinitionsPath = Directory.Exists(possiblePath) ? possiblePath : string.Empty;
             }
             OptSysvol.Enabled = !string.IsNullOrEmpty(_sysvolPolicyDefinitionsPath);
         }

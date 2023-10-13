@@ -13,7 +13,7 @@
             Info = info;
         }
 
-        public AdmxLoadFailure(AdmxLoadFailType failType, string admxPath) : this(failType, admxPath, "")
+        public AdmxLoadFailure(AdmxLoadFailType failType, string admxPath) : this(failType, admxPath, string.Empty)
         {
         }
 

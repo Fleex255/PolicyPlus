@@ -19,7 +19,7 @@ namespace PolicyPlus.csharp.UI
 
         public void PresentDialog(AdmxBundle workspace)
         {
-            TextFilter.Text = "";
+            TextFilter.Text = string.Empty;
             _definitions = workspace.SupportDefinitions.Values;
             UpdateListing();
             ChName.Width = LsvSupport.ClientRectangle.Width - ChDefinedIn.Width - SystemInformation.VerticalScrollBarWidth;

@@ -29,7 +29,7 @@ namespace PolicyPlus.csharp.UI
                 }
 
                 var ntuserPath = folder + @"\ntuser.dat";
-                var access = "";
+                var access = string.Empty;
                 try
                 {
                     using var fNtuser = new System.IO.FileStream(ntuserPath, FileMode.Open, FileAccess.ReadWrite);
@@ -41,7 +41,7 @@ namespace PolicyPlus.csharp.UI
                 }
                 catch (System.IO.FileNotFoundException)
                 {
-                    access = "";
+                    access = string.Empty;
                 }
                 catch (Exception)
                 {

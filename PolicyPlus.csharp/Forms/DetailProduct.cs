@@ -33,10 +33,10 @@ namespace PolicyPlus.csharp.UI
                 AdmxProductType.Product => "Top-level product",
                 _ => KindTextbox.Text
             };
-            VersionTextbox.Text = product.RawProduct.Type == AdmxProductType.Product ? "" : product.RawProduct.Version.ToString();
+            VersionTextbox.Text = product.RawProduct.Type == AdmxProductType.Product ? string.Empty : product.RawProduct.Version.ToString();
             if (product.Parent is null)
             {
-                ParentTextbox.Text = "";
+                ParentTextbox.Text = string.Empty;
                 ParentButton.Enabled = false;
             }
             else

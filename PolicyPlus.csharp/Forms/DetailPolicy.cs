@@ -51,7 +51,7 @@ namespace PolicyPlus.csharp.UI
             }
             else
             {
-                SupportTextbox.Text = "";
+                SupportTextbox.Text = string.Empty;
             }
             CategoryButton.Enabled = policy.Category is not null;
             if (policy.Category is not null)

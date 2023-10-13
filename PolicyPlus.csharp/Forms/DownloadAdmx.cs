@@ -41,7 +41,7 @@ namespace PolicyPlus.csharp.UI
         private void DownloadAdmx_Shown(object sender, EventArgs e)
         {
             TextDestFolder.Text = Environment.ExpandEnvironmentVariables(@"%windir%\PolicyDefinitions");
-            NewPolicySourceFolder = "";
+            NewPolicySourceFolder = string.Empty;
             SetIsBusy(false);
         }
 
@@ -60,7 +60,7 @@ namespace PolicyPlus.csharp.UI
 
         private void ButtonStart_Click(object sender, EventArgs e)
         {
-            LabelProgress.Text = "";
+            LabelProgress.Text = string.Empty;
             SetIsBusy(true);
             var destination = TextDestFolder.Text;
             var isAdmin = false;

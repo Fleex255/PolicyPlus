@@ -57,8 +57,8 @@ namespace PolicyPlus.csharp.UI
 
         private void OpenUserGpo_Shown(object sender, EventArgs e)
         {
-            SidTextbox.Text = "";
-            UsernameTextbox.Text = "";
+            SidTextbox.Text = string.Empty;
+            UsernameTextbox.Text = string.Empty;
         }
 
         private void OpenUserGpo_KeyUp(object sender, KeyEventArgs e)

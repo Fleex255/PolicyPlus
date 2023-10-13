@@ -146,7 +146,7 @@ namespace PolicyPlus.csharp.UI
             {
                 if (CompLocalOption.Checked)
                 {
-                    SelectedComputer = new PolicyLoader(PolicyLoaderSource.LocalGpo, "", false);
+                    SelectedComputer = new PolicyLoader(PolicyLoaderSource.LocalGpo, string.Empty, false);
                 }
                 else if (CompRegistryOption.Checked)
                 {
@@ -158,7 +158,7 @@ namespace PolicyPlus.csharp.UI
                 }
                 else
                 {
-                    SelectedComputer = new PolicyLoader(PolicyLoaderSource.Null, "", false);
+                    SelectedComputer = new PolicyLoader(PolicyLoaderSource.Null, string.Empty, false);
                 }
             }
             catch (Exception ex)
@@ -170,7 +170,7 @@ namespace PolicyPlus.csharp.UI
             {
                 if (UserLocalOption.Checked)
                 {
-                    SelectedUser = new PolicyLoader(PolicyLoaderSource.LocalGpo, "", true);
+                    SelectedUser = new PolicyLoader(PolicyLoaderSource.LocalGpo, string.Empty, true);
                 }
                 else if (UserRegistryOption.Checked)
                 {
@@ -190,7 +190,7 @@ namespace PolicyPlus.csharp.UI
                 }
                 else
                 {
-                    SelectedUser = new PolicyLoader(PolicyLoaderSource.Null, "", true);
+                    SelectedUser = new PolicyLoader(PolicyLoaderSource.Null, string.Empty, true);
                 }
             }
             catch (Exception ex)

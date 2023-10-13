@@ -93,7 +93,7 @@ namespace PolicyPlus.csharp.UI
         {
             if (IdTextbox.Text == " ")
             {
-                IdTextbox.Text = ""; // It's set to a single space in the designer
+                IdTextbox.Text = string.Empty; // It's set to a single space in the designer
             }
 
             _ = IdTextbox.Focus();

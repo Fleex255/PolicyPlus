@@ -16,7 +16,7 @@ namespace PolicyPlus.csharp.UI
             OptDeleteOne.Checked = false;
             OptPurge.Checked = false;
             TextKey.Text = containerKey;
-            TextValueName.Text = "";
+            TextValueName.Text = string.Empty;
             return ShowDialog();
         }
 

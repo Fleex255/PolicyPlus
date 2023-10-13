@@ -20,7 +20,7 @@ namespace PolicyPlus.csharp.UI
             _source = pol;
             TextBranch.Text = branch;
             TextRoot.Text = isUser ? @"HKEY_CURRENT_USER\" : @"HKEY_LOCAL_MACHINE\";
-            TextReg.Text = "";
+            TextReg.Text = string.Empty;
             return ShowDialog();
         }
 

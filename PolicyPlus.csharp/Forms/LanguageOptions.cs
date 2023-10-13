@@ -29,7 +29,7 @@ namespace PolicyPlus.csharp.UI
                 _ = MessageBox.Show("Please enter a valid language code.", "Warning", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                 return;
             }
-            if ((selection ?? "") == (_originalLanguage ?? ""))
+            if ((selection ?? string.Empty) == (_originalLanguage ?? string.Empty))
             {
                 DialogResult = DialogResult.Cancel;
             }

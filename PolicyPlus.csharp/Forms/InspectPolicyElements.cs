@@ -42,8 +42,8 @@ namespace PolicyPlus.csharp.UI
                 presNode.ImageIndex = 20; // Form
                 foreach (var presElem in policy.Presentation.Elements)
                 {
-                    var presPartNode = presNode.Nodes.Add("Presentation element (type: " + presElem.ElementType + ")" + (!string.IsNullOrEmpty(presElem.Id) ? ", ID: " + presElem.Id + "" : ""));
-                    switch (presElem.ElementType ?? "")
+                    var presPartNode = presNode.Nodes.Add("Presentation element (type: " + presElem.ElementType + ")" + (!string.IsNullOrEmpty(presElem.Id) ? ", ID: " + presElem.Id + string.Empty : string.Empty));
+                    switch (presElem.ElementType ?? string.Empty)
                     {
                         case "text":
                             {
@@ -145,7 +145,7 @@ namespace PolicyPlus.csharp.UI
                         continue;
                     }
 
-                    var elem = policy.RawPolicy.Elements.First(e => (e.Id ?? "") == (presElem.Id ?? ""));
+                    var elem = policy.RawPolicy.Elements.First(e => (e.Id ?? string.Empty) == (presElem.Id ?? string.Empty));
                     var elemNode = presPartNode.Nodes.Add("Policy element (type: " + elem.ElementType + ")");
                     elemNode.ImageIndex = 31; // Brick
                     if (!string.IsNullOrEmpty(elem.ClientExtension))
@@ -163,7 +163,7 @@ namespace PolicyPlus.csharp.UI
                         elemNode.Nodes.Add("Registry value: " + elem.RegistryValue).ImageIndex = 13;
                     }
 
-                    switch (elem.ElementType ?? "")
+                    switch (elem.ElementType ?? string.Empty)
                     {
                         case "decimal":
                             {

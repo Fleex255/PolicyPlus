@@ -53,7 +53,7 @@ namespace PolicyPlus.csharp.UI
                     var simpleWords = new List<string>();
                     var wildcards = new List<string>();
                     var quotedStrings = new List<string>();
-                    var partialQuotedString = "";
+                    var partialQuotedString = string.Empty;
                     for (int n = 0, loopTo = rawSplitted.Length - 1; n <= loopTo; n++)
                     {
                         var curString = rawSplitted[n];
@@ -63,7 +63,7 @@ namespace PolicyPlus.csharp.UI
                             if (curString.EndsWith("\""))
                             {
                                 quotedStrings.Add(CleanupStr(partialQuotedString));
-                                partialQuotedString = "";
+                                partialQuotedString = string.Empty;
                             }
                         }
                         else if (curString.StartsWith("\""))
@@ -108,7 +108,7 @@ namespace PolicyPlus.csharp.UI
         {
             var cleanText = CleanupStr(searchedText);
             var wordsInText = cleanText.Split();
-            return simpleWords.All(w => wordsInText.Contains(w)) && wildcards.All(w => wordsInText.Any(wit => string.Equals(wit, w, StringComparison.Ordinal))) && quotedStrings.All(w => cleanText.Contains(" " + w + " ") || cleanText.StartsWith(w + " ") || cleanText.EndsWith(" " + w) || (cleanText ?? "") == (w ?? "")); // Plain search terms
+            return simpleWords.All(w => wordsInText.Contains(w)) && wildcards.All(w => wordsInText.Any(wit => string.Equals(wit, w, StringComparison.Ordinal))) && quotedStrings.All(w => cleanText.Contains(" " + w + " ") || cleanText.StartsWith(w + " ") || cleanText.EndsWith(" " + w) || (cleanText ?? string.Empty) == (w ?? string.Empty)); // Plain search terms
         }
 
         // Wildcards Quoted strings

@@ -82,7 +82,7 @@ namespace PolicyPlus.csharp.Models.Sources
 
         public static RegFile Load(StreamReader reader, string prefix)
         {
-            if ((reader.ReadLine() ?? "") != RegSignature)
+            if ((reader.ReadLine() ?? string.Empty) != RegSignature)
             {
                 throw new InvalidDataException("Incorrect REG signature");
             }
@@ -115,7 +115,7 @@ namespace PolicyPlus.csharp.Models.Sources
                             break;
                         }
 
-                        var valueName = "";
+                        var valueName = string.Empty;
                         string data;
                         if (valueLine.StartsWith("@"))
                         {

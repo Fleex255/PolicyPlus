@@ -38,7 +38,7 @@ namespace PolicyPlus.csharp.UI
         private void EditSetting_Shown(object sender, EventArgs e)
         {
             SettingNameLabel.Text = _currentSetting.DisplayName;
-            SupportedTextbox.Text = _currentSetting.SupportedOn is null ? "" : _currentSetting.SupportedOn.DisplayName;
+            SupportedTextbox.Text = _currentSetting.SupportedOn is null ? string.Empty : _currentSetting.SupportedOn.DisplayName;
 
             HelpTextbox.Text = Main.PrettifyDescription(_currentSetting.DisplayExplanation);
             if (_currentSetting.RawPolicy.Section == AdmxPolicySection.Both)
@@ -86,7 +86,7 @@ namespace PolicyPlus.csharp.UI
             var elemDict = _currentSetting.RawPolicy.Elements.ToDictionary(e => e.Id);
             foreach (var pres in _currentSetting.Presentation.Elements)
             {
-                switch (pres.ElementType ?? "")
+                switch (pres.ElementType ?? string.Empty)
                 {
                     case "text": // A plain label
                         {
@@ -97,7 +97,7 @@ namespace PolicyPlus.csharp.UI
                                 AutoSize = true,
                                 Margin = new Padding(3, 6, 3, 6)
                             };
-                            AddControl(textPres.Id, label, "", ref curTabIndex);
+                            AddControl(textPres.Id, label, string.Empty, ref curTabIndex);
                             break;
                         }
                     case "decimalTextBox": // Numeric spin box or a plain text box restricted to numbers
@@ -181,7 +181,7 @@ namespace PolicyPlus.csharp.UI
                             }
 
                             checkbox.Checked = checkPres.DefaultState;
-                            AddControl(pres.Id, checkbox, "", ref curTabIndex);
+                            AddControl(pres.Id, checkbox, string.Empty, ref curTabIndex);
                             break;
                         }
                     case "comboBox": // Text box with suggestions, not tested because it's not used in any default ADML
@@ -423,7 +423,7 @@ namespace PolicyPlus.csharp.UI
             else
             {
                 CommentTextbox.Enabled = true;
-                CommentTextbox.Text = "";
+                CommentTextbox.Text = string.Empty;
             }
         }
 
@@ -439,7 +439,7 @@ namespace PolicyPlus.csharp.UI
                     foreach (var elem in _currentSetting.RawPolicy.Elements)
                     {
                         var uiControl = _elementControls[elem.Id];
-                        switch (elem.ElementType ?? "")
+                        switch (elem.ElementType ?? string.Empty)
                         {
                             case "decimal":
                                 {

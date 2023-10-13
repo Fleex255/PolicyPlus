@@ -47,10 +47,10 @@ namespace PolicyPlus.csharp.UI
             OpenLastAdmxSource();
             var compLoaderType =
                 (PolicyLoaderSource)(int)_configuration.GetValue("CompSourceType", 0)!;
-            var compLoaderData = _configuration.GetValue("CompSourceData", "");
+            var compLoaderData = _configuration.GetValue("CompSourceData", string.Empty);
             var userLoaderType =
                 (PolicyLoaderSource)(int)_configuration.GetValue("UserSourceType", 0)!;
-            var userLoaderData = _configuration.GetValue("UserSourceData", "");
+            var userLoaderData = _configuration.GetValue("UserSourceData", string.Empty);
             try
             {
                 OpenPolicyLoaders(new PolicyLoader(userLoaderType, userLoaderData?.ToString()!, true),
@@ -61,8 +61,8 @@ namespace PolicyPlus.csharp.UI
                 _ = MessageBox.Show("The previous policy sources are not accessible. The defaults will be loaded.", "Warning", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                 _configuration.SetValue("CompSourceType", (int)PolicyLoaderSource.LocalGpo);
                 _configuration.SetValue("UserSourceType", (int)PolicyLoaderSource.LocalGpo);
-                OpenPolicyLoaders(new PolicyLoader(PolicyLoaderSource.LocalGpo, "", true),
-                    new PolicyLoader(PolicyLoaderSource.LocalGpo, "", false), true);
+                OpenPolicyLoaders(new PolicyLoader(PolicyLoaderSource.LocalGpo, string.Empty, true),
+                    new PolicyLoader(PolicyLoaderSource.LocalGpo, string.Empty, false), true);
             }
 
             var dialog = new OpenPol();
@@ -115,8 +115,8 @@ namespace PolicyPlus.csharp.UI
             catch (Exception ex)
             {
                 _admxWorkspace = new AdmxBundle();
-                var loadFailReason = "";
-                if ((admxSource ?? "") != (defaultAdmxSource ?? ""))
+                var loadFailReason = string.Empty;
+                if ((admxSource ?? string.Empty) != (defaultAdmxSource ?? string.Empty))
                 {
                     if (MessageBox.Show($"Policy definitions could not be loaded from \"{admxSource}\": {ex.Message}{Environment.NewLine}{Environment.NewLine}Load from the default location?",
                     "Welcome", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
@@ -398,7 +398,7 @@ namespace PolicyPlus.csharp.UI
                 var section = policy.RawPolicy.Section;
                 return section switch
                 {
-                    AdmxPolicySection.Both when (userState ?? "") == (machState ?? "") => userState + " (2)",
+                    AdmxPolicySection.Both when (userState ?? string.Empty) == (machState ?? string.Empty) => userState + " (2)",
                     AdmxPolicySection.Both when userState == "Not Configured" => machState + " (C)",
                     AdmxPolicySection.Both when machState == "Not Configured" => userState + " (U)",
                     AdmxPolicySection.Both => "Mixed",
@@ -433,7 +433,7 @@ namespace PolicyPlus.csharp.UI
             var compComment = GetPolicyComment(policy, AdmxPolicySection.Machine);
             if (string.IsNullOrEmpty(userComment) && string.IsNullOrEmpty(compComment))
             {
-                return "";
+                return string.Empty;
             }
 
             if (!string.IsNullOrEmpty(userComment) && !string.IsNullOrEmpty(compComment))
@@ -888,7 +888,7 @@ namespace PolicyPlus.csharp.UI
         private void ComboAppliesTo_SelectedIndexChanged(object sender, EventArgs e)
         {
             // When the user chooses a different section to work with
-            _viewPolicyTypes = (ComboAppliesTo.Text ?? "") switch
+            _viewPolicyTypes = (ComboAppliesTo.Text ?? string.Empty) switch
             {
                 "User" => AdmxPolicySection.User,
                 "Computer" => AdmxPolicySection.Machine,
@@ -1011,8 +1011,8 @@ namespace PolicyPlus.csharp.UI
 
                 _configuration.SetValue("CompSourceType", (int)_compPolicyLoader.Source);
                 _configuration.SetValue("UserSourceType", (int)_userPolicyLoader.Source);
-                _configuration.SetValue("CompSourceData", _compPolicyLoader.LoaderData ?? "");
-                _configuration.SetValue("UserSourceData", _userPolicyLoader.LoaderData ?? "");
+                _configuration.SetValue("CompSourceData", _compPolicyLoader.LoaderData ?? string.Empty);
+                _configuration.SetValue("UserSourceData", _userPolicyLoader.LoaderData ?? string.Empty);
 
                 _ = MessageBox.Show($"Success.{Environment.NewLine}{Environment.NewLine}User policies: {userStatus}.{Environment.NewLine}{Environment.NewLine}Computer policies: {compStatus}.",
     "Warning", MessageBoxButtons.OK, MessageBoxIcon.Information);

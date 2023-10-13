@@ -15,8 +15,8 @@ namespace PolicyPlus.csharp.UI
 
         public DialogResult PresentDialog(IPolicySource target)
         {
-            TextReg.Text = "";
-            TextRoot.Text = "";
+            TextReg.Text = string.Empty;
+            TextRoot.Text = string.Empty;
             _policySource = target;
             return ShowDialog();
         }
@@ -35,7 +35,7 @@ namespace PolicyPlus.csharp.UI
             {
                 try
                 {
-                    var reg = RegFile.Load(ofd.FileName, "");
+                    var reg = RegFile.Load(ofd.FileName, string.Empty);
                     TextRoot.Text = reg.GuessPrefix();
                     if (reg.HasDefaultValues())
                     {

@@ -23,7 +23,7 @@ namespace PolicyPlus.csharp.Models
             var policyComments = xmlDoc.GetElementsByTagName("policyComments")[0];
             foreach (XmlNode child in policyComments.ChildNodes)
             {
-                switch (child.LocalName ?? "")
+                switch (child.LocalName ?? string.Empty)
                 {
                     case "policyNamespaces": // ADMX file prefixes
                         {
@@ -138,7 +138,7 @@ namespace PolicyPlus.csharp.Models
         {
             // Save the CMTX data to a fully compliant XML document
             var xml = new XmlDocument();
-            var declaration = xml.CreateXmlDeclaration("1.0", "utf-8", "");
+            var declaration = xml.CreateXmlDeclaration("1.0", "utf-8", string.Empty);
             _ = xml.AppendChild(declaration);
             var policyComments = xml.CreateElement("policyComments");
             policyComments.SetAttribute("xmlns:xsd", "http://www.w3.org/2001/XMLSchema");

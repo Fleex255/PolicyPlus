@@ -33,7 +33,7 @@ namespace PolicyPlus.csharp.Models.Sources.Admx
             adml.Revision = decimal.Parse(policyDefinitionResources.Attributes["revision"].Value, System.Globalization.CultureInfo.InvariantCulture);
             foreach (XmlNode child in policyDefinitionResources.ChildNodes)
             {
-                switch (child.LocalName ?? "")
+                switch (child.LocalName ?? string.Empty)
                 {
                     case "displayName":
                         {
@@ -86,7 +86,7 @@ namespace PolicyPlus.csharp.Models.Sources.Admx
                 foreach (XmlNode uiElement in presElement.ChildNodes)
                 {
                     PresentationElement? presPart = null;
-                    switch (uiElement.LocalName ?? "")
+                    switch (uiElement.LocalName ?? string.Empty)
                     {
                         case "text":
                             {
@@ -112,7 +112,7 @@ namespace PolicyPlus.csharp.Models.Sources.Admx
                                 var textPart = new TextBoxPresentationElement();
                                 foreach (XmlNode textboxInfo in uiElement.ChildNodes)
                                 {
-                                    switch (textboxInfo.LocalName ?? "")
+                                    switch (textboxInfo.LocalName ?? string.Empty)
                                     {
                                         case "label":
                                             {
@@ -146,7 +146,7 @@ namespace PolicyPlus.csharp.Models.Sources.Admx
                                 };
                                 foreach (XmlNode comboInfo in uiElement.ChildNodes)
                                 {
-                                    switch (comboInfo.LocalName ?? "")
+                                    switch (comboInfo.LocalName ?? string.Empty)
                                     {
                                         case "label":
                                             {

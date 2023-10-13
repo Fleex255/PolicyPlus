@@ -65,7 +65,7 @@ namespace PolicyPlus.csharp.Models
                     }
                 case PolicyLoaderSource.Null:
                     {
-                        _mainSourcePath = "";
+                        _mainSourcePath = string.Empty;
                         break;
                     }
                 default:
@@ -222,7 +222,7 @@ namespace PolicyPlus.csharp.Models
                         return "saved to disk and invoked policy refresh";
                     }
                 default:
-                    return "";
+                    return string.Empty;
             }
         }
 
@@ -325,7 +325,7 @@ namespace PolicyPlus.csharp.Models
                 PolicyLoaderSource.SidGpo => "User GPO",
                 PolicyLoaderSource.NtUserDat => "User hive",
                 PolicyLoaderSource.Null => "Scratch space",
-                _ => ""
+                _ => string.Empty
             };
             if (!string.IsNullOrEmpty(LoaderData))
             {

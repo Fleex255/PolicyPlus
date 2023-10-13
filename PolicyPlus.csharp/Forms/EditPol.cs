@@ -76,7 +76,7 @@ namespace PolicyPlus.csharp.UI
                 }
                 else
                 {
-                    var text = "";
+                    var text = string.Empty;
                     switch (data)
                     {
                         case string[] strings:
@@ -199,14 +199,14 @@ namespace PolicyPlus.csharp.UI
                 _ = MessageBox.Show("The key name is not valid.", "Warning", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                 return;
             }
-            var containerKey = (LsvPol.SelectedItems.Count > 0 ? LsvPol.SelectedItems[0].Tag : "").ToString();
+            var containerKey = (LsvPol.SelectedItems.Count > 0 ? LsvPol.SelectedItems[0].Tag : string.Empty).ToString();
             if (!IsKeyNameAvailable(containerKey!, keyName))
             {
                 _ = MessageBox.Show("The key name is already taken.", "Warning", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                 return;
             }
             var newPath = string.IsNullOrEmpty(containerKey) ? keyName : containerKey + @"\" + keyName;
-            EditingPol.SetValue(newPath, "", Array.CreateInstance(typeof(byte), 0), RegistryValueKind.None);
+            EditingPol.SetValue(newPath, string.Empty, Array.CreateInstance(typeof(byte), 0), RegistryValueKind.None);
             UpdateTree();
             SelectKey(newPath);
         }
@@ -264,7 +264,7 @@ namespace PolicyPlus.csharp.UI
             object defaultData;
             if (kind is RegistryValueKind.String or RegistryValueKind.ExpandString)
             {
-                defaultData = "";
+                defaultData = string.Empty;
             }
             else if (kind is RegistryValueKind.DWord or RegistryValueKind.QWord)
             {
@@ -342,7 +342,7 @@ namespace PolicyPlus.csharp.UI
 
         private void ButtonForget_Click(object sender, EventArgs e)
         {
-            var containerKey = "";
+            var containerKey = string.Empty;
             var tag = LsvPol.SelectedItems[0].Tag;
             if (tag is string)
             {
@@ -455,7 +455,7 @@ namespace PolicyPlus.csharp.UI
         private void ButtonExport_Click(object sender, EventArgs e)
         {
             var dialog = new ExportReg();
-            var branch = "";
+            var branch = string.Empty;
             if (LsvPol.SelectedItems.Count > 0)
             {
                 branch = LsvPol.SelectedItems[0].Tag.ToString();

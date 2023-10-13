@@ -86,7 +86,7 @@ namespace PolicyPlus.csharp.Models.Sources.Admx
                 foreach (var langSubdir in Directory.EnumerateDirectories(Path.GetDirectoryName(admxPath)!))
                 {
                     var langSubdirTitle = Path.GetFileName(langSubdir);
-                    if ((langSubdirTitle.Split('-')[0] ?? "") != (language ?? ""))
+                    if ((langSubdirTitle.Split('-')[0] ?? string.Empty) != (language ?? string.Empty))
                     {
                         continue;
                     }
@@ -286,7 +286,7 @@ namespace PolicyPlus.csharp.Models.Sources.Admx
             // Find a localized string from a display code
             if (string.IsNullOrEmpty(displayCode))
             {
-                return "";
+                return string.Empty;
             }
 
             if (!displayCode.StartsWith("$(string."))

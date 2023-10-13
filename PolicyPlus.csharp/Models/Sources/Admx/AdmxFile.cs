@@ -34,7 +34,7 @@ namespace PolicyPlus.csharp.Models.Sources.Admx
             var policyDefinitions = xmlDoc.GetElementsByTagName("policyDefinitions")[0];
             foreach (XmlNode child in policyDefinitions.ChildNodes)
             {
-                switch (child.LocalName ?? "")
+                switch (child.LocalName ?? string.Empty)
                 {
                     case "policyNamespaces": // Referenced namespaces and current namespace
                         {
@@ -199,7 +199,7 @@ namespace PolicyPlus.csharp.Models.Sources.Admx
                                     RegistryKey = polElement.Attributes["key"].Value
                                 };
                                 var polClass = polElement.Attributes["class"].Value;
-                                policy.Section = (polClass ?? "") switch
+                                policy.Section = (polClass ?? string.Empty) switch
                                 {
                                     "Machine" => AdmxPolicySection.Machine,
                                     "User" => AdmxPolicySection.User,
@@ -212,7 +212,7 @@ namespace PolicyPlus.csharp.Models.Sources.Admx
                                 policy.AffectedValues = LoadOnOffValList("enabledValue", "disabledValue", "enabledList", "disabledList", polElement);
                                 foreach (XmlNode polInfo in polElement.ChildNodes)
                                 {
-                                    switch (polInfo.LocalName ?? "")
+                                    switch (polInfo.LocalName ?? string.Empty)
                                     {
                                         case "parentCategory":
                                             {
@@ -230,7 +230,7 @@ namespace PolicyPlus.csharp.Models.Sources.Admx
                                                 foreach (XmlNode uiElement in polInfo.ChildNodes)
                                                 {
                                                     PolicyElement? entry = null;
-                                                    switch (uiElement.LocalName ?? "")
+                                                    switch (uiElement.LocalName ?? string.Empty)
                                                     {
                                                         case "decimal":
                                                             {
@@ -353,19 +353,19 @@ namespace PolicyPlus.csharp.Models.Sources.Admx
             var regList = new PolicyRegistryList();
             foreach (XmlNode subElement in node.ChildNodes)
             {
-                if ((subElement.Name ?? "") == (onValueName ?? ""))
+                if ((subElement.Name ?? string.Empty) == (onValueName ?? string.Empty))
                 {
                     regList.OnValue = LoadRegItem(subElement);
                 }
-                else if ((subElement.Name ?? "") == (offValueName ?? ""))
+                else if ((subElement.Name ?? string.Empty) == (offValueName ?? string.Empty))
                 {
                     regList.OffValue = LoadRegItem(subElement);
                 }
-                else if ((subElement.Name ?? "") == (onListName ?? ""))
+                else if ((subElement.Name ?? string.Empty) == (onListName ?? string.Empty))
                 {
                     regList.OnValueList = LoadOneRegList(subElement);
                 }
-                else if ((subElement.Name ?? "") == (offListName ?? ""))
+                else if ((subElement.Name ?? string.Empty) == (offListName ?? string.Empty))
                 {
                     regList.OffValueList = LoadOneRegList(subElement);
                 }
@@ -441,7 +441,7 @@ namespace PolicyPlus.csharp.Models.Sources.Admx
         {
             foreach (XmlNode subproductElement in node.ChildNodes)
             {
-                if ((subproductElement.LocalName ?? "") != (childTagName ?? ""))
+                if ((subproductElement.LocalName ?? string.Empty) != (childTagName ?? string.Empty))
                 {
                     continue;
                 }

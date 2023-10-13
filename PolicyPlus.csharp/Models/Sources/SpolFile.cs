@@ -91,7 +91,7 @@ namespace PolicyPlus.csharp.Models.Sources
                     singlePolicy.Comment = commentText.ToString();
                 }
 
-                singlePolicy.BasicState = (NextLine(allLines).Trim().ToLowerInvariant() ?? "") switch
+                singlePolicy.BasicState = (NextLine(allLines).Trim().ToLowerInvariant() ?? string.Empty) switch
                 {
                     "not configured" => PolicyState.NotConfigured,
                     "enabled" => PolicyState.Enabled,

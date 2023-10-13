@@ -37,7 +37,7 @@ namespace PolicyPlus.csharp.UI
             }
             else
             {
-                ParentTextbox.Text = "";
+                ParentTextbox.Text = string.Empty;
             }
         }
 

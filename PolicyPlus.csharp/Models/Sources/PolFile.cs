@@ -189,10 +189,10 @@ namespace PolicyPlus.csharp.Models
         public bool WillDeleteValue(string key, string value)
         {
             var willDelete = false;
-            var keyRoot = GetDictKey(key, "");
+            var keyRoot = GetDictKey(key, string.Empty);
             foreach (var kv in _entries.Where(e => e.Key.StartsWith(keyRoot)))
             {
-                if ((kv.Key ?? "") == (GetDictKey(key, "**del." + value) ?? ""))
+                if ((kv.Key ?? string.Empty) == (GetDictKey(key, "**del." + value) ?? string.Empty))
                 {
                     willDelete = true;
                 }
@@ -200,16 +200,16 @@ namespace PolicyPlus.csharp.Models
                 {
                     willDelete = true;
                 }
-                else if ((kv.Key ?? "") == (GetDictKey(key, "**deletevalues") ?? ""))
+                else if ((kv.Key ?? string.Empty) == (GetDictKey(key, "**deletevalues") ?? string.Empty))
                 {
                     var lowerVal = value.ToLowerInvariant();
                     var deletedValues = kv.Value.AsString().Split(";");
-                    if (deletedValues.Any(s => (s.ToLowerInvariant() ?? "") == (lowerVal ?? "")))
+                    if (deletedValues.Any(s => (s.ToLowerInvariant() ?? string.Empty) == (lowerVal ?? string.Empty)))
                     {
                         willDelete = true;
                     }
                 }
-                else if ((kv.Key ?? "") == (GetDictKey(key, value) ?? ""))
+                else if ((kv.Key ?? string.Empty) == (GetDictKey(key, value) ?? string.Empty))
                 {
                     willDelete = false; // In case the key is cleared out before setting the values
                 }
@@ -221,7 +221,7 @@ namespace PolicyPlus.csharp.Models
 
         public List<string> GetValueNames(string key, bool onlyValues)
         {
-            var prefix = GetDictKey(key, "");
+            var prefix = GetDictKey(key, string.Empty);
             return (from k in _entries.Keys where k.StartsWith(prefix) select _casePreservation[k].Split(@"\\", 2)[1] into valName where !(onlyValues && valName.StartsWith("**")) select valName).ToList();
         }
 
@@ -300,7 +300,7 @@ namespace PolicyPlus.csharp.Models
         public List<string> GetKeyNames(string key)
         {
             var subkeyNames = new List<string>();
-            var prefix = string.IsNullOrEmpty(key) ? "" : key + @"\"; // Let an empty key name mean the root
+            var prefix = string.IsNullOrEmpty(key) ? string.Empty : key + @"\"; // Let an empty key name mean the root
             foreach (var entry in _entries.Keys.Where(e => e.StartsWith(prefix, StringComparison.InvariantCultureIgnoreCase)))
             {
                 if (entry.StartsWith(prefix + @"\", StringComparison.InvariantCultureIgnoreCase))

@@ -51,7 +51,7 @@ namespace PolicyPlus.csharp.Models
                         case "list":
                             {
                                 var neededValues = 0;
-                                if (policySource.WillDeleteValue(elemKey, ""))
+                                if (policySource.WillDeleteValue(elemKey, string.Empty))
                                 {
                                     deletedElements++;
                                     neededValues = 1;
@@ -188,7 +188,7 @@ namespace PolicyPlus.csharp.Models
                             return false;
                         }
 
-                        return (sourceVal.ToString() ?? "") == (value.StringValue ?? "");
+                        return (sourceVal.ToString() ?? string.Empty) == (value.StringValue ?? string.Empty);
                     }
 
                 default:
@@ -229,12 +229,12 @@ namespace PolicyPlus.csharp.Models
                         continue;
                     }
 
-                    if ((a.DisplayExplanation ?? "") != (b.DisplayExplanation ?? ""))
+                    if ((a.DisplayExplanation ?? string.Empty) != (b.DisplayExplanation ?? string.Empty))
                     {
                         continue;
                     }
 
-                    if ((a.RawPolicy.RegistryKey ?? "") != (b.RawPolicy.RegistryKey ?? ""))
+                    if ((a.RawPolicy.RegistryKey ?? string.Empty) != (b.RawPolicy.RegistryKey ?? string.Empty))
                     {
                         continue;
                     }
@@ -260,7 +260,7 @@ namespace PolicyPlus.csharp.Models
             foreach (var elem in policy.RawPolicy.Elements)
             {
                 var elemKey = string.IsNullOrEmpty(elem.RegistryKey) ? policy.RawPolicy.RegistryKey : elem.RegistryKey;
-                switch (elem.ElementType ?? "")
+                switch (elem.ElementType ?? string.Empty)
                 {
                     case "decimal":
                         {
@@ -405,8 +405,8 @@ namespace PolicyPlus.csharp.Models
             {
                 AddReg(rawpol.RegistryKey, rawpol.RegistryValue, entries);
             }
-            AddSingleList(rawpol.AffectedValues.OnValueList, "", rawpol, entries);
-            AddSingleList(rawpol.AffectedValues.OffValueList, "", rawpol, entries);
+            AddSingleList(rawpol.AffectedValues.OnValueList, string.Empty, rawpol, entries);
+            AddSingleList(rawpol.AffectedValues.OffValueList, string.Empty, rawpol, entries);
             if (rawpol.Elements is not null)
             {
                 foreach (var elem in rawpol.Elements)
@@ -417,7 +417,7 @@ namespace PolicyPlus.csharp.Models
                         AddReg(elemKey, elem.RegistryValue, entries);
                     }
 
-                    switch (elem.ElementType ?? "")
+                    switch (elem.ElementType ?? string.Empty)
                     {
                         case "boolean":
                             {
@@ -449,7 +449,7 @@ namespace PolicyPlus.csharp.Models
                                 }
                                 else
                                 {
-                                    AddReg(elemKey, "", entries);
+                                    AddReg(elemKey, string.Empty, entries);
                                 }
 
                                 break;
@@ -519,7 +519,7 @@ namespace PolicyPlus.csharp.Models
 #pragma warning disable CS8602 // Dereference of a possibly null reference.
                                 var optionData = options[elem.Id];
 #pragma warning restore CS8602 // Dereference of a possibly null reference.
-                                switch (elem.ElementType ?? "")
+                                switch (elem.ElementType ?? string.Empty)
                                 {
                                     case "decimal":
                                         {

@@ -23,7 +23,7 @@ namespace PolicyPlus.csharp.UI
 
         public DialogResult PresentDialog()
         {
-            TextName.Text = "";
+            TextName.Text = string.Empty;
             ComboKind.SelectedIndex = 0;
             var dlgRes = ShowDialog();
             if (dlgRes == DialogResult.OK)
