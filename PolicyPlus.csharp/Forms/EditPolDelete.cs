@@ -17,7 +17,7 @@ namespace PolicyPlus.csharp.UI
             OptPurge.Checked = false;
             TextKey.Text = containerKey;
             TextValueName.Text = "";
-            return ShowDialog(this);
+            return ShowDialog();
         }
 
         private void ButtonOK_Click(object sender, EventArgs e)

@@ -66,7 +66,7 @@ namespace PolicyPlus.csharp.UI
             {
                 CategoryTextbox.Text = "<uncategorized>";
             }
-            _ = ShowDialog(this);
+            _ = ShowDialog();
         }
 
         private void SupportButton_Click(object sender, EventArgs e) => new DetailSupport().PresentDialog(_selectedPolicy.SupportedOn);

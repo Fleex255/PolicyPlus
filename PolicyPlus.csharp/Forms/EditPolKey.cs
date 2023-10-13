@@ -27,7 +27,7 @@ namespace PolicyPlus.csharp.UI
         public string PresentDialog(string initialName)
         {
             TextName.Text = initialName;
-            return ShowDialog(this) == DialogResult.OK ? TextName.Text : string.Empty;
+            return ShowDialog() == DialogResult.OK ? TextName.Text : string.Empty;
         }
     }
 }

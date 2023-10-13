@@ -41,7 +41,7 @@ namespace PolicyPlus.csharp.UI
         {
             OptUser.Enabled = userEnabled;
             OptComputer.Enabled = compEnabled;
-            return ShowDialog(this);
+            return ShowDialog();
         }
     }
 }

@@ -15,7 +15,7 @@ namespace PolicyPlus.csharp.UI
             TextData.Text = initialData;
             TextData.Select();
             TextData.SelectAll();
-            return ShowDialog(this);
+            return ShowDialog();
         }
 
         private void EditPolStringData_KeyDown(object sender, KeyEventArgs e)

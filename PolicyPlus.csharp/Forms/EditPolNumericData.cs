@@ -16,7 +16,7 @@ namespace PolicyPlus.csharp.UI
             NumData.Maximum = isQword ? ulong.MaxValue : uint.MaxValue;
             NumData.Value = initialData;
             NumData.Select();
-            return ShowDialog(this);
+            return ShowDialog();
         }
 
         private void CheckHexadecimal_CheckedChanged(object sender, EventArgs e) => NumData.Hexadecimal = CheckHexadecimal.Checked;

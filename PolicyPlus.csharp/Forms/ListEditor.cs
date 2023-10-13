@@ -38,7 +38,7 @@ namespace PolicyPlus.csharp.UI
                 }
             }
             FinalData = null;
-            return ShowDialog(this);
+            return ShowDialog();
         }
 
         private void OkButton_Click(object sender, EventArgs e)

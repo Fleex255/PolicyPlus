@@ -21,14 +21,14 @@ namespace PolicyPlus.csharp.UI
             TextBranch.Text = branch;
             TextRoot.Text = isUser ? @"HKEY_CURRENT_USER\" : @"HKEY_LOCAL_MACHINE\";
             TextReg.Text = "";
-            return ShowDialog(this);
+            return ShowDialog();
         }
 
         private void ButtonBrowse_Click(object sender, EventArgs e)
         {
             using var sfd = new SaveFileDialog();
             sfd.Filter = "Registry scripts|*.reg";
-            if (sfd.ShowDialog(this) == DialogResult.OK)
+            if (sfd.ShowDialog() == DialogResult.OK)
             {
                 TextReg.Text = sfd.FileName;
             }

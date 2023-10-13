@@ -23,7 +23,7 @@ namespace PolicyPlus.csharp.UI
             _definitions = workspace.SupportDefinitions.Values;
             UpdateListing();
             ChName.Width = LsvSupport.ClientRectangle.Width - ChDefinedIn.Width - SystemInformation.VerticalScrollBarWidth;
-            _ = ShowDialog(this);
+            _ = ShowDialog();
         }
 
         public void UpdateListing()

@@ -41,7 +41,7 @@ namespace PolicyPlus.csharp.UI
             _searchPending = true;
             _hasSearched = true;
             _lastSelectedIndex = -1;
-            return ShowDialog(this);
+            return ShowDialog();
         }
 
         public DialogResult PresentDialog()
@@ -55,7 +55,7 @@ namespace PolicyPlus.csharp.UI
             _cancelingSearch = false;
             _cancelDueToFormClose = false;
             _searchPending = false;
-            return ShowDialog(this);
+            return ShowDialog();
         }
 
         public void ClearSearch()

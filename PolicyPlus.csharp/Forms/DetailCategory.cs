@@ -15,7 +15,7 @@ namespace PolicyPlus.csharp.UI
         public void PresentDialog(PolicyPlusCategory category)
         {
             PrepareDialog(category);
-            _ = ShowDialog(this);
+            _ = ShowDialog();
         }
 
         private void PrepareDialog(PolicyPlusCategory category)

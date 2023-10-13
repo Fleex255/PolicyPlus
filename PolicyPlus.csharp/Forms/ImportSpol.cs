@@ -18,7 +18,7 @@ namespace PolicyPlus.csharp.UI
         {
             using var ofd = new OpenFileDialog();
             ofd.Filter = "Semantic Policy files|*.spol|All files|*.*";
-            if (ofd.ShowDialog(this) == DialogResult.OK)
+            if (ofd.ShowDialog() == DialogResult.OK)
             {
                 TextSpol.Text = File.ReadAllText(ofd.FileName);
             }

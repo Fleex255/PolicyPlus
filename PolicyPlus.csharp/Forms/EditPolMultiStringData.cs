@@ -22,7 +22,7 @@ namespace PolicyPlus.csharp.UI
             TextName.Text = valueName;
             TextData.Lines = initialData;
             TextData.Select();
-            return ShowDialog(this);
+            return ShowDialog();
         }
     }
 }

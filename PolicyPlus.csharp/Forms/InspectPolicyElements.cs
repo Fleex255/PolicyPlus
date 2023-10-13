@@ -264,7 +264,7 @@ namespace PolicyPlus.csharp.UI
             }
             // Make SelectedImageIndex always be the same as ImageIndex
             NormalizeSelIndex(InfoTreeview.Nodes);
-            _ = ShowDialog(this);
+            _ = ShowDialog();
         }
 
         private static void AddList(PolicyRegistryList regList, TreeNodeCollection nodes, bool hasValue)

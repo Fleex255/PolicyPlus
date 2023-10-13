@@ -19,7 +19,7 @@ namespace PolicyPlus.csharp.UI
         public DialogResult PresentDialog(params Dictionary<string, string>[] commentDicts)
         {
             _commentSources = commentDicts.Where(d => d is not null).ToArray();
-            return ShowDialog(this);
+            return ShowDialog();
         }
 
         private void FindByText_KeyUp(object sender, KeyEventArgs e)

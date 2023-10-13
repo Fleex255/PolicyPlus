@@ -25,7 +25,7 @@ namespace PolicyPlus.csharp.UI
             AllowedProductsTreeview.Nodes.Clear();
             AddProductsToNodeCollection(workspace.Products.Values, AllowedProductsTreeview.Nodes); // Recursively add products
             PrepareDialog(configuration);
-            return ShowDialog(this);
+            return ShowDialog();
         }
 
         private void AddProductsToNodeCollection(IEnumerable<PolicyPlusProduct> products, TreeNodeCollection nodes)

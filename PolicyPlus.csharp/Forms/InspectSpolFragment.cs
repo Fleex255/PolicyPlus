@@ -25,7 +25,7 @@ namespace PolicyPlus.csharp.UI
             _ = AddSection(AdmxPolicySection.User);
             _spolFragment = sb.ToString();
             UpdateTextbox();
-            return ShowDialog(this);
+            return ShowDialog();
 
             bool AddSection(AdmxPolicySection section)
             {

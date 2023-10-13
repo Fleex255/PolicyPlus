@@ -18,7 +18,7 @@ namespace PolicyPlus.csharp.UI
         {
             _originalLanguage = currentLanguage;
             TextAdmlLanguage.Text = currentLanguage;
-            return ShowDialog(this);
+            return ShowDialog();
         }
 
         private void ButtonOK_Click(object sender, EventArgs e)

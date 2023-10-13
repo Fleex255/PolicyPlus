@@ -819,7 +819,7 @@ namespace PolicyPlus.csharp.UI
             // Show the Open ADMX Folder dialog and load the policy definitions
 
             var dialog = new OpenAdmxFolder();
-            if (dialog.ShowDialog(this) != DialogResult.OK)
+            if (dialog.ShowDialog() != DialogResult.OK)
             {
                 return;
             }
@@ -853,7 +853,7 @@ namespace PolicyPlus.csharp.UI
             using var ofd = new OpenFileDialog();
             ofd.Filter = "Policy definitions files|*.admx";
             ofd.Title = "Open ADMX file";
-            if (ofd.ShowDialog(this) != DialogResult.OK)
+            if (ofd.ShowDialog() != DialogResult.OK)
             {
                 return;
             }
@@ -982,7 +982,7 @@ namespace PolicyPlus.csharp.UI
         {
             // Show the Open Policy Resources dialog and open its loaders
             var dialog = new OpenPol();
-            if (dialog.ShowDialog(this) == DialogResult.OK)
+            if (dialog.ShowDialog() == DialogResult.OK)
             {
                 OpenPolicyLoaders(dialog.SelectedUser, dialog.SelectedComputer,
                     false);
@@ -1097,7 +1097,7 @@ namespace PolicyPlus.csharp.UI
         {
             // Show the Find By Registry window and start the search
             var dialog = new FindByRegistry();
-            if (dialog.ShowDialog(this) == DialogResult.OK)
+            if (dialog.ShowDialog() == DialogResult.OK)
             {
                 ShowSearchDialog(dialog.Searcher);
             }
@@ -1166,7 +1166,7 @@ namespace PolicyPlus.csharp.UI
         private void ImportSemanticPolicyToolStripMenuItem_Click(object sender, EventArgs e)
         {
             var dialog = new ImportSpol();
-            if (dialog.ShowDialog(this) != DialogResult.OK)
+            if (dialog.ShowDialog() != DialogResult.OK)
             {
                 return;
             }
@@ -1191,7 +1191,7 @@ namespace PolicyPlus.csharp.UI
             // Open a POL file and write it to a policy source
             using var ofd = new OpenFileDialog();
             ofd.Filter = "POL files|*.pol";
-            if (ofd.ShowDialog(this) != DialogResult.OK)
+            if (ofd.ShowDialog() != DialogResult.OK)
             {
                 return;
             }
@@ -1229,7 +1229,7 @@ namespace PolicyPlus.csharp.UI
 
             var dialog = new OpenSection();
 
-            if (sfd.ShowDialog(this) != DialogResult.OK ||
+            if (sfd.ShowDialog() != DialogResult.OK ||
                 dialog.PresentDialog(true, true) != DialogResult.OK)
             {
                 return;
@@ -1253,7 +1253,7 @@ namespace PolicyPlus.csharp.UI
         {
             // Show the Acquire ADMX Files dialog and load the new ADMX files
             var dialog = new DownloadAdmx();
-            if (dialog.ShowDialog(this) != DialogResult.OK ||
+            if (dialog.ShowDialog() != DialogResult.OK ||
                 string.IsNullOrEmpty(dialog.NewPolicySourceFolder))
             {
                 return;

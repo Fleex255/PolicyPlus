@@ -18,14 +18,14 @@ namespace PolicyPlus.csharp.UI
             TextReg.Text = "";
             TextRoot.Text = "";
             _policySource = target;
-            return ShowDialog(this);
+            return ShowDialog();
         }
 
         private void ButtonBrowse_Click(object sender, EventArgs e)
         {
             using var ofd = new OpenFileDialog();
             ofd.Filter = "Registry scripts|*.reg";
-            if (ofd.ShowDialog(this) != DialogResult.OK)
+            if (ofd.ShowDialog() != DialogResult.OK)
             {
                 return;
             }

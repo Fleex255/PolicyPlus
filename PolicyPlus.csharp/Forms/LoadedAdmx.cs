@@ -27,7 +27,7 @@ namespace PolicyPlus.csharp.UI
             LoadedAdmx_SizeChanged(null, null);
             ChNamespace.Width -= SystemInformation.VerticalScrollBarWidth; // For some reason, this only needs to be taken into account on the first draw
             _bundle = workspace;
-            _ = ShowDialog(this);
+            _ = ShowDialog();
         }
 
         private void LsvAdmx_DoubleClick(object sender, EventArgs e) => new DetailAdmx().PresentDialog((AdmxFile)LsvAdmx.SelectedItems[0].Tag, _bundle);

@@ -25,7 +25,7 @@ namespace PolicyPlus.csharp.UI
         {
             TextName.Text = "";
             ComboKind.SelectedIndex = 0;
-            var dlgRes = ShowDialog(this);
+            var dlgRes = ShowDialog();
             if (dlgRes == DialogResult.OK)
             {
                 SelectedKind = ComboKind.SelectedIndex switch

@@ -76,7 +76,7 @@ namespace PolicyPlus.csharp.UI
         private void ButtonBrowse_Click(object sender, EventArgs e)
         {
             using var fbd = new FolderBrowserDialog();
-            if (fbd.ShowDialog(this) == DialogResult.OK)
+            if (fbd.ShowDialog() == DialogResult.OK)
             {
                 TextFolder.Text = fbd.SelectedPath;
             }

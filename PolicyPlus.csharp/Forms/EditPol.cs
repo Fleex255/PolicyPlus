@@ -135,7 +135,7 @@ namespace PolicyPlus.csharp.UI
             UpdateTree();
             ChItem.Width = LsvPol.ClientSize.Width - ChValue.Width - SystemInformation.VerticalScrollBarWidth;
             LsvPol_SelectedIndexChanged(null, null);
-            _ = ShowDialog(this);
+            _ = ShowDialog();
         }
 
         private void ButtonSave_Click(object sender, EventArgs e) => DialogResult = DialogResult.OK;

@@ -95,7 +95,7 @@ namespace PolicyPlus.csharp.UI
             using var sfd = new SaveFileDialog();
             sfd.OverwritePrompt = false;
             sfd.Filter = "Registry policy files|*.pol";
-            if (sfd.ShowDialog(this) == DialogResult.OK)
+            if (sfd.ShowDialog() == DialogResult.OK)
             {
                 destTextbox.Text = sfd.FileName;
             }
@@ -133,7 +133,7 @@ namespace PolicyPlus.csharp.UI
         {
             // Browse for a user Registry hive
             var dialog = new OpenUserRegistry();
-            if (dialog.ShowDialog(this) == DialogResult.OK)
+            if (dialog.ShowDialog() == DialogResult.OK)
             {
                 UserHivePathTextbox.Text = dialog.SelectedFilePath;
             }
@@ -205,7 +205,7 @@ namespace PolicyPlus.csharp.UI
         {
             // Browse for a per-user GPO
             var dialog = new OpenUserGpo();
-            if (dialog.ShowDialog(this) == DialogResult.OK)
+            if (dialog.ShowDialog() == DialogResult.OK)
             {
                 UserGpoSidTextbox.Text = dialog.SelectedSid;
             }

@@ -40,7 +40,7 @@ namespace PolicyPlus.csharp.UI
                 s => ((PolicyPlusSupport)s).RawSupport.Id,
                 s => ((PolicyPlusSupport)s).DisplayName);
 
-            _ = ShowDialog(this);
+            _ = ShowDialog();
         }
 
         private static void FillListview(ListView control, IEnumerable collection, Func<object, string> idSelector, Func<object, string> nameSelector)

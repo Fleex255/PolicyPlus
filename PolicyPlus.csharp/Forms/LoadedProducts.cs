@@ -37,7 +37,7 @@ namespace PolicyPlus.csharp.UI
 
                 lsv.Columns[0].Width = lsv.ClientRectangle.Width - lastColWidths - SystemInformation.VerticalScrollBarWidth;
             }
-            _ = ShowDialog(this);
+            _ = ShowDialog();
         }
 
         public void UpdateMajorList()
