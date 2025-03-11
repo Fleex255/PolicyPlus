@@ -1,7 +1,7 @@
 ﻿Imports System.ComponentModel
 Public Class DownloadAdmx
-    Const MicrosoftMsiDownloadLink As String = "https://download.microsoft.com/download/4/e/0/4e0fe8d7-ba82-4354-9cc2-18ac02cfd6b5/Administrative%20Templates%20(.admx)%20for%20Windows%2010%20November%202021%20Update.msi"
-    Const PolicyDefinitionsMsiSubdirectory As String = "\Microsoft Group Policy\Windows 10 November 2021 Update (21H2)\PolicyDefinitions"
+    Const MicrosoftMsiDownloadLink As String = "https://download.microsoft.com/download/9/5/b/95be347e-c49e-4ede-a205-467c85eb1674/Administrative%20Templates%20(.admx)%20for%20Windows%2011%20Sep%202024%20Update.msi"
+    Const PolicyDefinitionsMsiSubdirectory As String = "\Microsoft Group Policy\Windows 11 Sep 2024 Update (24H2)\PolicyDefinitions"
     Dim Downloading As Boolean = False
     Public NewPolicySourceFolder As String
     Private Sub ButtonBrowse_Click(sender As Object, e As EventArgs) Handles ButtonBrowse.Click
@@ -80,7 +80,7 @@ Public Class DownloadAdmx
                                       IO.Directory.CreateDirectory(tempPath)
                                       failPhase = "download the package"
                                       setProgress("Downloading MSI from Microsoft...")
-                                      Dim downloadPath = tempPath & "W10Admx.msi"
+                                      Dim downloadPath = tempPath & "W11Admx.msi"
                                       Using webcli As New Net.WebClient
                                           webcli.DownloadFile(MicrosoftMsiDownloadLink, downloadPath)
                                       End Using
