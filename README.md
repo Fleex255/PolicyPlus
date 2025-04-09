@@ -45,10 +45,10 @@ The `RefreshPolicyEx` native function has reduced functionality on editions with
 so while Policy Plus can edit the local GPO and apply the changes to the Registry, 
 a reboot or logon/logoff cycle is required for some policy changes to take effect.
 
-While the UI allows the creation and editing of per-user GPOs, their settings cannot be applied on these limited editions of Windows.
-If you need to change a policy setting for only one user, open the "user hive" source instead.
-Per-user local GPOs, a fairly arcane Windows feature, are not to be confused with policies that apply to the User section.
-Policy Plus supports user policies on Home editions just as well as computer policies.
+When saving User policies, the simulated policy refresh from the local GPO to the Registry is done only for the current user.
+Similarly, editing per-user local GPOs (a fairly arcane Windows feature not to be confused with the User section),
+has no effect on these limited editions of Windows.
+To change a policy for a different user, modify their Registry directly by opening a "user hive" or "local Registry" source.
 
 ## Status
 Policy Plus is usable on all editions. It can load and save all policy sources successfully. More features may be still to come, though.
