@@ -31,9 +31,9 @@ you can switch sections with the "Editing for" drop-down. Click OK to keep the c
 changes to it will not be committed to disk until you use *File | Save Policies* (Ctrl+S).
 
 ## System requirements
-Policy Plus requires .NET Framework 4.5 or newer. That can be installed on Windows Vista or newer,
-and comes preinstalled on Windows 8 or newer.
-Policy Plus should also work on the corresponding server OSes: Windows Server 2008 or newer.
+Policy Plus requires .NET Framework 4.5.2 or newer. That can be installed on Windows Vista or newer,
+and comes preinstalled on Windows 10 or newer.
+Policy Plus should also work on the corresponding server OSes: Windows Server 2008 (SP2) or newer.
 The standard [.NET Framework hardware requirements](https://docs.microsoft.com/en-us/dotnet/framework/get-started/system-requirements)
 are sufficient for Policy Plus.
 
