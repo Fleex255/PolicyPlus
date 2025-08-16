@@ -56,7 +56,7 @@ Public Class PolFile
             Stream.Read(data, 0, length)
             ped.Data = data
             Stream.BaseStream.Position += 2 ' "]"
-            pol.Entries.Add(pol.GetDictKey(key, value), ped)
+            pol.Entries(pol.GetDictKey(key, value)) = ped
         Loop
         Return pol
     End Function
