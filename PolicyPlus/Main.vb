@@ -16,6 +16,8 @@ Public Class Main
     Dim ViewPolicyTypes As AdmxPolicySection = AdmxPolicySection.Both
     Dim ViewFilteredOnly As Boolean = False
     Private Sub Main_Load(sender As Object, e As EventArgs) Handles MyBase.Load
+        ' Enable the newest TLS versions supported by this Framework version (keeping Tls for Vista compatibility)
+        Net.ServicePointManager.SecurityProtocol = Net.SecurityProtocolType.Tls Or Net.SecurityProtocolType.Tls11 Or Net.SecurityProtocolType.Tls12
         ' Create the configuration manager (for the Registry)
         Configuration = New ConfigurationStorage(RegistryHive.CurrentUser, "Software\Policy Plus")
         ' Restore the last ADMX source and policy loaders
