@@ -203,15 +203,16 @@ Public Class Main
         ' Should this policy be shown considering the current filter and active sections?
         If Not PolicyVisibleInSection(Policy, ViewPolicyTypes) Then Return False
         If ViewFilteredOnly Then
-            Dim visibleAfterFilter As Boolean = False
             If (ViewPolicyTypes And AdmxPolicySection.Machine) > 0 And PolicyVisibleInSection(Policy, AdmxPolicySection.Machine) Then
-                If IsPolicyVisibleAfterFilter(Policy, False) Then visibleAfterFilter = True
-            ElseIf (ViewPolicyTypes And AdmxPolicySection.User) > 0 And PolicyVisibleInSection(Policy, AdmxPolicySection.User) Then
-                If IsPolicyVisibleAfterFilter(Policy, True) Then visibleAfterFilter = True
+                If IsPolicyVisibleAfterFilter(Policy, False) Then Return True
             End If
-            If Not visibleAfterFilter Then Return False
+            If (ViewPolicyTypes And AdmxPolicySection.User) > 0 And PolicyVisibleInSection(Policy, AdmxPolicySection.User) Then
+                If IsPolicyVisibleAfterFilter(Policy, True) Then Return True
+            End If
+            Return False
+        Else
+            Return True
         End If
-        Return True
     End Function
     Sub MoveToVisibleCategoryAndReload()
         ' Move up in the categories tree until a visible one is found
