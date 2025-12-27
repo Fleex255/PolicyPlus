@@ -50,7 +50,7 @@
                        ' Do the searching
                        Dim isStringAHit = Function(SearchedText As String) As Boolean
                                               Dim cleanText = cleanupStr(SearchedText)
-                                              Dim wordsInText = Split(cleanText)
+                                              Dim wordsInText = cleanText.Split(" "c, vbCr, vbLf)
                                               Return simpleWords.All(Function(w) wordsInText.Contains(w)) And ' Plain search terms
                                                 wildcards.All(Function(w) wordsInText.Any(Function(wit) wit Like w)) And ' Wildcards
                                                 quotedStrings.All(Function(w) cleanText.Contains(" " & w & " ") Or cleanText.StartsWith(w & " ") Or ' Quoted strings
